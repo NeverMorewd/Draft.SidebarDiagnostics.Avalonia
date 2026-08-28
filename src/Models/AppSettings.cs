@@ -23,7 +23,8 @@ public sealed record AppSettings
     public string? SelectedGpuId { get; init; }
     public List<ExternalMetricDefinition> ExternalMetrics { get; init; } = [];
     public string? DisplayId { get; init; }
-    public DockEdge DockEdge { get; init; }
+    public DockEdge DockEdge { get; init; } = DockEdge.Right;
+    public bool ReserveScreenSpace { get; init; } = true;
     public double VerticalPosition { get; init; }
 
     public AppSettings Normalize() => this with

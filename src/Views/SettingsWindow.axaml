@@ -67,6 +67,8 @@
                                        Increment="5"
                                        FormatString="0%" />
                     </Grid>
+                    <CheckBox Content="Reserve the docked area on Windows"
+                              IsChecked="{Binding ReserveScreenSpace}" />
                 </StackPanel>
             </Border>
 

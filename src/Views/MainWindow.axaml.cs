@@ -15,6 +15,7 @@ public partial class MainWindow : Window
     private MainViewModel? _viewModel;
     private readonly DispatcherTimer _placementTimer;
     private readonly double _preferredHeight;
+    private readonly IReservedScreenSpaceService _reservedScreenSpace = ReservedScreenSpaceService.Create();
 
     public MainWindow()
     {
@@ -41,7 +42,7 @@ public partial class MainWindow : Window
         }
 
         e.Cancel = true;
-        Hide();
+        HideSidebar();
     }
 
     private void OnDataContextChanged(object? sender, EventArgs e)
@@ -69,6 +70,7 @@ public partial class MainWindow : Window
     {
         Screens.Changed -= OnScreensChanged;
         _placementTimer.Stop();
+        _reservedScreenSpace.Dispose();
         if (_viewModel is not null)
         {
             _viewModel.SettingsApplied -= OnSettingsApplied;
@@ -89,7 +91,7 @@ public partial class MainWindow : Window
         SchedulePlacement();
         if (!_settingsInitialized && viewModel.Settings.StartMinimized && IsVisible)
         {
-            Hide();
+            HideSidebar();
         }
 
         _settingsInitialized = true;
@@ -165,12 +167,42 @@ public partial class MainWindow : Window
             return;
         }
 
+        var reserveSpace = _reservedScreenSpace.IsSupported
+            && _viewModel.Settings.ReserveScreenSpace
+            && _viewModel.Settings.DockEdge != DockEdge.None;
+
+        if (reserveSpace && !_reservedScreenSpace.IsRegistered)
+        {
+            Position = new PixelPoint(placement.X, placement.Y);
+        }
+
+        if (reserveSpace)
+        {
+            var handle = TryGetPlatformHandle()?.Handle ?? 0;
+            _reservedScreenSpace.Apply(handle, _viewModel.Settings.DockEdge, Width);
+            return;
+        }
+
+        _reservedScreenSpace.Remove();
+
         Height = placement.Height;
         var position = new PixelPoint(placement.X, placement.Y);
         if (Position != position)
         {
             Position = position;
         }
+    }
+
+    public void ShowSidebar()
+    {
+        Show();
+        SchedulePlacement();
+    }
+
+    public void HideSidebar()
+    {
+        _reservedScreenSpace.Remove();
+        Hide();
     }
 
     private async void OpenSettings(object? sender, RoutedEventArgs e)

@@ -12,13 +12,13 @@ public sealed partial class ApplicationViewModel(
     [RelayCommand]
     private void ShowWindow()
     {
-        mainWindow.Show();
+        mainWindow.ShowSidebar();
         mainWindow.WindowState = Avalonia.Controls.WindowState.Normal;
         mainWindow.Activate();
     }
 
     [RelayCommand]
-    private void HideWindow() => mainWindow.Hide();
+    private void HideWindow() => mainWindow.HideSidebar();
 
     [RelayCommand]
     private void Exit()
