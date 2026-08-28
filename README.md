@@ -14,6 +14,7 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 - Vendor-neutral multi-GPU summaries for Intel, AMD, and NVIDIA devices
 - Safe external JSON metric cards from local files or explicit HTTP endpoints
 - Resilient multi-display placement with mixed-DPI edge docking and primary-display fallback
+- High-density CPU, memory, GPU, drive, network, and hardware detail sections
 - Configurable clock, machine name, units, sidebar width, and opacity
 - Tray controls and native launch-at-login integration on all three platforms
 - Atomic JSON settings persistence

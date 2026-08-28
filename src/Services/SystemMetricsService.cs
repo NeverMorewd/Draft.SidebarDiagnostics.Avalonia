@@ -51,6 +51,7 @@ public sealed class SystemMetricsService : ISystemMetricsService
                 SystemMetricsSnapshot.Empty.Platform,
                 platformMetrics.CpuUsagePercent,
                 platformMetrics.MemoryUsedBytes,
+                platformMetrics.MemoryTotalBytes,
                 Math.Clamp(memoryUsage, 0, 100),
                 storageUsage,
                 downloadRate,

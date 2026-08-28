@@ -37,7 +37,7 @@ public static class SensorCatalog
                 reading.Type,
                 reading.Unit,
                 true,
-                preference?.IsVisible ?? (preferenceById.Count == 0 && index < 12),
+                preference?.IsVisible ?? preferenceById.Count == 0,
                 preference?.IsPinned ?? false,
                 preference?.SortOrder ?? nextOrder++,
                 preference?.CustomName));
@@ -70,7 +70,7 @@ public static class SensorCatalog
     public static IReadOnlyList<HardwareSensorReading> SelectVisible(
         IEnumerable<HardwareSensorReading> readings,
         IEnumerable<SensorPreference> preferences,
-        int defaultLimit = 12)
+        int defaultLimit = int.MaxValue)
     {
         var readingList = readings.ToArray();
         var readingById = readingList.ToDictionary(reading => reading.Id, StringComparer.Ordinal);

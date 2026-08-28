@@ -79,7 +79,7 @@ public sealed class SensorCatalogTests
     }
 
     [Fact]
-    public void InitialCatalogShowsOnlyTheDefaultLimit()
+    public void InitialCatalogShowsAllDiscoveredSensors()
     {
         var readings = Enumerable.Range(0, 15)
             .Select(index => Reading($"sensor-{index:D2}", $"Sensor {index:D2}"))
@@ -87,7 +87,7 @@ public sealed class SensorCatalogTests
 
         var catalog = SensorCatalog.Build(readings, []);
 
-        Assert.Equal(12, catalog.Count(entry => entry.IsVisible));
+        Assert.Equal(15, catalog.Count(entry => entry.IsVisible));
     }
 
     private static HardwareSensorReading Reading(string id, string name) =>
