@@ -1,0 +1,103 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
+        xmlns:controls="using:SidebarDiagnostics.App.Controls"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="360"
+        d:DesignHeight="920"
+        x:Class="SidebarDiagnostics.App.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/sidebar.ico"
+        Title="Sidebar Diagnostics"
+        Width="360"
+        MinWidth="320"
+        Height="920"
+        MinHeight="620"
+        Topmost="True"
+        Background="#0B0F17">
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Border Grid.Row="0" Padding="24,24,24,18" BorderBrush="#1B2535" BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Spacing="3">
+                    <TextBlock Text="SIDEBAR DIAGNOSTICS" FontSize="11" FontWeight="SemiBold" Foreground="#7DD3FC" LetterSpacing="1.8" />
+                    <TextBlock Text="{Binding MachineName}" IsVisible="{Binding IsMachineNameVisible}" FontSize="22" FontWeight="SemiBold" Foreground="#F8FAFC" />
+                    <TextBlock Text="{Binding PlatformName}" FontSize="12" Foreground="#94A3B8" />
+                    <TextBlock Margin="0,8,0,0" Text="{Binding ClockText}" IsVisible="{Binding IsClockVisible}" FontSize="13" Foreground="#CBD5E1" />
+                </StackPanel>
+                <Button Grid.Column="1"
+                        Width="42"
+                        Height="42"
+                        Padding="0"
+                        CornerRadius="14"
+                        Background="#122033"
+                        Foreground="#7DD3FC"
+                        ToolTip.Tip="Settings"
+                        Click="OpenSettings">
+                    <TextBlock Text="⚙" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="16,18">
+            <ItemsControl ItemsSource="{Binding Metrics}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MetricCardViewModel">
+                        <Border Margin="0,0,0,12" Padding="18" CornerRadius="16" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                                <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" Foreground="#CBD5E1" />
+                                <Border Grid.Column="1" Width="8" Height="8" CornerRadius="4" Background="{Binding EffectiveAccentColor}" />
+                                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="0,8,0,2" Text="{Binding Value}" FontSize="30" FontWeight="SemiBold" Foreground="#F8FAFC" />
+                                <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10,0,0" RowDefinitions="Auto,Auto">
+                                    <TextBlock Text="{Binding Detail}" FontSize="10" Foreground="#64748B" LetterSpacing="1.2" />
+                                    <ProgressBar Grid.Row="1" Margin="0,8,0,0" Height="4" Minimum="0" Maximum="100" Value="{Binding Progress}" Foreground="{Binding EffectiveAccentColor}" Background="#253044" />
+                                </Grid>
+                                <controls:Sparkline Grid.Row="3"
+                                                    Grid.ColumnSpan="2"
+                                                    Margin="0,14,0,0"
+                                                    Height="42"
+                                                    Values="{Binding History}"
+                                                    Stroke="{Binding EffectiveAccentColor}"
+                                                    StrokeThickness="2" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+                <StackPanel Margin="4,8,4,12" Spacing="3">
+                    <TextBlock Text="HARDWARE SENSORS" FontSize="10" FontWeight="SemiBold" Foreground="#7DD3FC" LetterSpacing="1.5" />
+                    <TextBlock Text="{Binding HardwareStatus}" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" />
+                </StackPanel>
+                <ItemsControl ItemsSource="{Binding HardwareSensors}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:HardwareSensorViewModel">
+                            <Border Margin="0,0,0,8" Padding="14,11" CornerRadius="12" Background="#101722" BorderBrush="#1B2535" BorderThickness="1">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                                        <TextBlock Text="{Binding Device}" FontSize="10" Foreground="#64748B" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="{Binding Value}" FontSize="16" FontWeight="SemiBold" Foreground="#FCA5A5" VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="2" Padding="20,15" BorderBrush="#1B2535" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Ellipse Width="7" Height="7" Fill="#34D399" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Margin="9,0" Text="{Binding StatusText}" FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2" Text="{Binding LastUpdated}" FontSize="11" Foreground="#64748B" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

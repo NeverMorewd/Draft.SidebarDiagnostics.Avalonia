@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore SidebarDiagnostics.slnx --locked-mode
+      - run: dotnet build SidebarDiagnostics.slnx -c Release --no-restore
+      - run: dotnet test SidebarDiagnostics.slnx -c Release --no-build
+
+  publish:
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+            archive: zip
+          - os: ubuntu-latest
+            rid: linux-x64
+            archive: tar
+          - os: macos-latest
+            rid: osx-x64
+            archive: app
+          - os: macos-latest
+            rid: osx-arm64
+            archive: app
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore src/SidebarDiagnostics.App.csproj --locked-mode --runtime ${{ matrix.rid }}
+      - run: dotnet publish src/SidebarDiagnostics.App.csproj -c Release -r ${{ matrix.rid }} --self-contained true --no-restore -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o artifacts/publish
+      - name: Add legal files
+        shell: pwsh
+        run: Copy-Item README.md,LICENSE.md,NOTICE.md,THIRD-PARTY-NOTICES.md artifacts/publish
+      - name: Package Windows
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: |
+          Compress-Archive artifacts/publish/* artifacts/SidebarDiagnostics-${{ matrix.rid }}.zip
+          (Get-FileHash artifacts/SidebarDiagnostics-${{ matrix.rid }}.zip -Algorithm SHA256).Hash.ToLower() + '  SidebarDiagnostics-${{ matrix.rid }}.zip' | Set-Content artifacts/SidebarDiagnostics-${{ matrix.rid }}.zip.sha256
+      - name: Package Linux
+        if: matrix.archive == 'tar'
+        shell: bash
+        run: |
+          tar -C artifacts/publish -czf artifacts/SidebarDiagnostics-${{ matrix.rid }}.tar.gz .
+          cd artifacts && sha256sum SidebarDiagnostics-${{ matrix.rid }}.tar.gz > SidebarDiagnostics-${{ matrix.rid }}.tar.gz.sha256
+      - name: Package macOS application
+        if: matrix.archive == 'app'
+        shell: bash
+        run: |
+          app="artifacts/Sidebar Diagnostics.app"
+          mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
+          cp -R artifacts/publish/. "$app/Contents/MacOS/"
+          cp src/Assets/sidebar.ico "$app/Contents/Resources/sidebar.ico"
+          sed "s/__VERSION__/${GITHUB_REF_NAME#v}/g" packaging/macos/Info.plist > "$app/Contents/Info.plist"
+          chmod +x "$app/Contents/MacOS/SidebarDiagnostics.App"
+          ditto -c -k --sequesterRsrc --keepParent "$app" artifacts/SidebarDiagnostics-${{ matrix.rid }}.zip
+          cd artifacts && shasum -a 256 SidebarDiagnostics-${{ matrix.rid }}.zip > SidebarDiagnostics-${{ matrix.rid }}.zip.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SidebarDiagnostics-${{ matrix.rid }}
+          path: |
+            artifacts/*.zip
+            artifacts/*.tar.gz
+            artifacts/*.sha256
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: SidebarDiagnostics-*
+          path: artifacts
+          merge-multiple: true
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" artifacts/* --verify-tag --generate-notes --title "Sidebar Diagnostics ${GITHUB_REF_NAME}"

@@ -1,0 +1,74 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
+        x:Class="SidebarDiagnostics.App.Views.SettingsWindow"
+        x:DataType="vm:SettingsViewModel"
+        Title="Sidebar Diagnostics Settings"
+        Width="440"
+        Height="780"
+        MinWidth="400"
+        MinHeight="600"
+        WindowStartupLocation="CenterOwner"
+        Background="#0B0F17">
+    <ScrollViewer>
+        <StackPanel Margin="28" Spacing="22">
+            <StackPanel Spacing="4">
+                <TextBlock Text="SETTINGS" FontSize="11" FontWeight="SemiBold" Foreground="#7DD3FC" LetterSpacing="1.8" />
+                <TextBlock Text="Monitoring preferences" FontSize="24" FontWeight="SemiBold" Foreground="#F8FAFC" />
+                <TextBlock Text="Changes apply immediately and persist across sessions." FontSize="12" Foreground="#94A3B8" />
+            </StackPanel>
+
+            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Refresh interval" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <NumericUpDown Value="{Binding RefreshIntervalMilliseconds}" Minimum="250" Maximum="10000" Increment="250" FormatString="0 ms" />
+                </StackPanel>
+            </Border>
+
+            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Appearance" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <Grid ColumnDefinitions="*,110" RowDefinitions="Auto,Auto" RowSpacing="10">
+                        <TextBlock Text="Sidebar width" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <NumericUpDown Grid.Column="1" Value="{Binding SidebarWidth}" Minimum="320" Maximum="640" Increment="10" FormatString="0 px" />
+                        <TextBlock Grid.Row="1" Text="Opacity" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding BackgroundOpacity}" Minimum="0.35" Maximum="1" Increment="0.05" FormatString="0%" />
+                    </Grid>
+                    <CheckBox Content="Show machine name" IsChecked="{Binding ShowMachineName}" />
+                    <CheckBox Content="Show clock and date" IsChecked="{Binding ShowClock}" />
+                    <CheckBox Content="Use 24-hour clock" IsChecked="{Binding Use24HourClock}" />
+                    <CheckBox Content="Show temperatures in Fahrenheit" IsChecked="{Binding UseFahrenheit}" />
+                </StackPanel>
+            </Border>
+
+            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Alert thresholds" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <Grid ColumnDefinitions="*,100" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                        <TextBlock Text="CPU" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <NumericUpDown Grid.Column="1" Value="{Binding CpuAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
+                        <TextBlock Grid.Row="1" Text="Memory" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding MemoryAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
+                        <TextBlock Grid.Row="2" Text="Storage" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding StorageAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
+                        <TextBlock Grid.Row="3" Text="Network" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding NetworkAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <CheckBox Content="Keep the sidebar above other windows" IsChecked="{Binding AlwaysOnTop}" />
+                    <CheckBox Content="Launch at login" IsChecked="{Binding LaunchAtLogin}" />
+                    <CheckBox Content="Start minimized" IsChecked="{Binding StartMinimized}" />
+                </StackPanel>
+            </Border>
+
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                <Button Grid.Column="1" Content="Cancel" Command="{Binding CancelCommand}" />
+                <Button Grid.Column="2" Content="Save changes" Command="{Binding SaveCommand}" Classes="accent" />
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

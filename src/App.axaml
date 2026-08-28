@@ -1,0 +1,33 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="SidebarDiagnostics.App.App"
+             xmlns:local="using:SidebarDiagnostics.App"
+             xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
+             x:DataType="vm:ApplicationViewModel"
+             RequestedThemeVariant="Dark">
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme DensityStyle="Compact" />
+    </Application.Styles>
+
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon Icon="/Assets/sidebar.ico"
+                      ToolTipText="Sidebar Diagnostics"
+                      Command="{Binding ShowWindowCommand}">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="Show sidebar" Command="{Binding ShowWindowCommand}" />
+                        <NativeMenuItem Header="Hide sidebar" Command="{Binding HideWindowCommand}" />
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Header="Exit" Command="{Binding ExitCommand}" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
+</Application>

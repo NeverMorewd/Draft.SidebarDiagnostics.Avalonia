@@ -1,0 +1,45 @@
+# WPF Migration Parity
+
+This audit compares the Avalonia port with the public features and settings of the original WPF application. It distinguishes portable behavior from Windows shell integration.
+
+## Monitoring
+
+| Original capability | Port status | Notes |
+| --- | --- | --- |
+| CPU utilization | Complete | Native provider on every platform. |
+| Memory utilization and used memory | Complete | Native provider on every platform. |
+| Logical drive utilization | Redesigned | The compact view presents the primary volume. |
+| Network download and upload | Complete | Aggregate interface throughput. |
+| Hardware sensors | Platform-limited | Broad LibreHardwareMonitor support on Windows; hwmon temperatures on Linux; no stable public macOS equivalent. |
+| Live graphs | Complete | Every primary metric has bounded history. |
+| Dedicated configurable graph window | Redesigned | Integrated charts replace the secondary window. |
+| External and local IP display | Not migrated | Omitted to avoid external calls and accidental address disclosure. |
+
+## Presentation and settings
+
+| Original capability | Port status | Notes |
+| --- | --- | --- |
+| Compact sidebar | Complete | Responsive Avalonia layout. |
+| Machine name, clock, date, and 12/24-hour format | Complete | Individually configurable. |
+| Alert thresholds | Complete | CPU, memory, storage, and network thresholds. |
+| Celsius and Fahrenheit | Complete | Applied to temperature values. |
+| Width, opacity, always-on-top, start minimized | Complete | Persisted cross-platform settings. |
+| UI scale, fonts, alignment, offsets, and arbitrary colors | Redesigned | The port uses a curated accessible design system. |
+| Per-monitor and per-sensor configuration | Not migrated | Current UI uses concise automatic selection. |
+| Localization | Not migrated | Current release is English-only. |
+
+## Desktop integration
+
+| Original capability | Port status | Notes |
+| --- | --- | --- |
+| Tray show, hide, and exit | Complete | Avalonia desktop integration. |
+| Launch at login | Complete | Native implementation on all three platforms. |
+| Windows AppBar reserved work area | Windows-only gap | No cross-platform shell equivalent. |
+| Edge docking and multi-monitor repositioning | Partial | The window remains freely positionable. |
+| Click-through and Alt-Tab/tool-window modes | Not migrated | Require platform window-manager adapters. |
+| Global hotkeys | Not migrated | Require separate Windows, macOS, X11, and Wayland implementations. |
+| Automatic application updates | Replaced | GitHub Releases provide immutable checksummed packages. |
+
+## Acceptance baseline
+
+The cross-platform scope covers monitoring, persistence, alerts, charts, tray behavior, and startup integration on each supported operating system. Windows-shell-only behavior is tracked explicitly and is never represented as portable functionality.
