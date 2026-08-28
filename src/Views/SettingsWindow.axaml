@@ -44,7 +44,7 @@
             <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
                 <StackPanel Spacing="14">
                     <TextBlock Text="Alert thresholds" FontWeight="SemiBold" Foreground="#E2E8F0" />
-                    <Grid ColumnDefinitions="*,100" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                    <Grid ColumnDefinitions="*,100" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
                         <TextBlock Text="CPU" VerticalAlignment="Center" Foreground="#CBD5E1" />
                         <NumericUpDown Grid.Column="1" Value="{Binding CpuAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
                         <TextBlock Grid.Row="1" Text="Memory" VerticalAlignment="Center" Foreground="#CBD5E1" />
@@ -53,7 +53,27 @@
                         <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding StorageAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
                         <TextBlock Grid.Row="3" Text="Network" VerticalAlignment="Center" Foreground="#CBD5E1" />
                         <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding NetworkAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
+                        <TextBlock Grid.Row="4" Text="GPU" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding GpuAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
                     </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Primary GPU" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <TextBlock Text="Select the device represented by the GPU summary card."
+                               FontSize="11"
+                               Foreground="#94A3B8"
+                               TextWrapping="Wrap" />
+                    <ComboBox ItemsSource="{Binding GpuDevices}"
+                              SelectedItem="{Binding SelectedGpu}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:GpuDeviceOption">
+                                <TextBlock Text="{Binding DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
             </Border>
 

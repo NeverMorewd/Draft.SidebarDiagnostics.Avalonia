@@ -17,7 +17,8 @@ public sealed class AppSettingsTests : IDisposable
             CpuAlertThreshold = -1,
             MemoryAlertThreshold = 101,
             StorageAlertThreshold = 0,
-            NetworkAlertThreshold = 500
+            NetworkAlertThreshold = 500,
+            GpuAlertThreshold = 500
         };
 
         var normalized = settings.Normalize();
@@ -27,6 +28,7 @@ public sealed class AppSettingsTests : IDisposable
         Assert.Equal(100, normalized.MemoryAlertThreshold);
         Assert.Equal(1, normalized.StorageAlertThreshold);
         Assert.Equal(100, normalized.NetworkAlertThreshold);
+        Assert.Equal(100, normalized.GpuAlertThreshold);
     }
 
     [Fact]

@@ -9,5 +9,7 @@ public enum HardwareSensorType
     Load,
     Fan,
     Power,
-    Throughput
+    Throughput,
+    Data,
+    SmallData
 }

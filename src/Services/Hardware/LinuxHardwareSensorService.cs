@@ -38,10 +38,13 @@ public sealed class LinuxHardwareSensorService : IHardwareSensorService
                 var label = await ReadOptionalTextAsync(labelPath, cancellationToken) ?? Path.GetFileNameWithoutExtension(inputPath);
                 var deviceId = $"linux:hwmon:{deviceName.Trim()}";
                 var sensorId = $"{deviceId}:{Path.GetFileName(inputPath)}";
+                var vendor = DetectVendor(deviceName);
                 readings.Add(new HardwareSensorReading(
                     sensorId,
                     deviceId,
                     deviceName.Trim(),
+                    DetectDeviceType(deviceName),
+                    vendor,
                     label.Trim(),
                     HardwareSensorType.Temperature,
                     millidegrees / 1000d,
@@ -50,6 +53,23 @@ public sealed class LinuxHardwareSensorService : IHardwareSensorService
         }
 
         return readings;
+    }
+
+    private static HardwareDeviceType DetectDeviceType(string deviceName) =>
+        deviceName.Contains("amdgpu", StringComparison.OrdinalIgnoreCase)
+        || deviceName.Contains("i915", StringComparison.OrdinalIgnoreCase)
+        || deviceName.Contains("nouveau", StringComparison.OrdinalIgnoreCase)
+        || deviceName.Contains("nvidia", StringComparison.OrdinalIgnoreCase)
+            ? HardwareDeviceType.Gpu
+            : HardwareDeviceType.Unknown;
+
+    private static HardwareVendor DetectVendor(string deviceName)
+    {
+        if (deviceName.Contains("amdgpu", StringComparison.OrdinalIgnoreCase)) return HardwareVendor.Amd;
+        if (deviceName.Contains("i915", StringComparison.OrdinalIgnoreCase)) return HardwareVendor.Intel;
+        if (deviceName.Contains("nouveau", StringComparison.OrdinalIgnoreCase)
+            || deviceName.Contains("nvidia", StringComparison.OrdinalIgnoreCase)) return HardwareVendor.Nvidia;
+        return HardwareVendor.Unknown;
     }
 
     private static async Task<string?> ReadOptionalTextAsync(string path, CancellationToken cancellationToken)
