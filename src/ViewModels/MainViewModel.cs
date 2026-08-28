@@ -60,10 +60,12 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
 
     public IReadOnlyList<HardwareSensorReading> LatestHardwareReadings { get; private set; } = [];
     public IReadOnlyList<GpuSnapshot> LatestGpuSnapshots { get; private set; } = [];
+    public IReadOnlyList<DisplayDescriptor> AvailableDisplays { get; private set; } = [];
 
     public AppSettings Settings { get; private set; } = AppSettings.Default;
 
     public event EventHandler? SettingsApplied;
+    public event EventHandler? DisplaysChanged;
 
     public MainViewModel()
         : this(
@@ -234,6 +236,12 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     public ValueTask<ExternalMetricSnapshot> PreviewExternalMetricAsync(
         ExternalMetricDefinition definition,
         CancellationToken cancellationToken) => _externalMetricService.PreviewAsync(definition, cancellationToken);
+
+    public void UpdateDisplays(IReadOnlyList<DisplayDescriptor> displays)
+    {
+        AvailableDisplays = displays;
+        DisplaysChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     private async Task UpdateExternalMetricsAsync()
     {
