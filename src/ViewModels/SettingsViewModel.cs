@@ -60,6 +60,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
 
     public ObservableCollection<SensorOptionViewModel> Sensors { get; } = [];
     public ObservableCollection<GpuDeviceOption> GpuDevices { get; } = [];
+    public ObservableCollection<ExternalMetricOptionViewModel> ExternalMetrics { get; } = [];
 
     [ObservableProperty]
     public partial GpuDeviceOption? SelectedGpu { get; set; }
@@ -101,6 +102,11 @@ public sealed partial class SettingsViewModel : ViewModelBase
             option.MoveRequested += MoveSensor;
             Sensors.Add(option);
         }
+
+        foreach (var definition in settings.ExternalMetrics)
+        {
+            AddExternalMetric(definition);
+        }
     }
 
     [RelayCommand]
@@ -126,7 +132,8 @@ public sealed partial class SettingsViewModel : ViewModelBase
             SensorPreferences = Sensors
                 .Select((sensor, index) => sensor.ToPreference(index))
                 .ToList(),
-            SelectedGpuId = SelectedGpu?.DeviceId
+            SelectedGpuId = SelectedGpu?.DeviceId,
+            ExternalMetrics = ExternalMetrics.Select(metric => metric.ToDefinition()).ToList()
         };
 
         await _mainViewModel.SaveSettingsAsync(settings, CancellationToken.None);
@@ -152,5 +159,15 @@ public sealed partial class SettingsViewModel : ViewModelBase
         {
             Sensors.Move(currentIndex, targetIndex);
         }
+    }
+
+    [RelayCommand]
+    private void AddExternalMetric() => AddExternalMetric(new ExternalMetricDefinition());
+
+    private void AddExternalMetric(ExternalMetricDefinition definition)
+    {
+        var option = new ExternalMetricOptionViewModel(definition, _mainViewModel.PreviewExternalMetricAsync);
+        option.RemoveRequested += metric => ExternalMetrics.Remove(metric);
+        ExternalMetrics.Add(option);
     }
 }

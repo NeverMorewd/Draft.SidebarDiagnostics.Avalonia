@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SidebarDiagnostics.App.Models;
 using SidebarDiagnostics.App.Services;
+using SidebarDiagnostics.App.Services.ExternalMetrics;
 using SidebarDiagnostics.App.Services.Hardware;
 using SidebarDiagnostics.App.Services.Startup;
 
@@ -15,10 +16,12 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     private readonly ISettingsStore _settingsStore;
     private readonly IHardwareSensorService _hardwareSensorService;
     private readonly IAutoStartService _autoStartService;
+    private readonly IExternalMetricService _externalMetricService;
     private readonly DispatcherTimer _timer;
     private readonly SemaphoreSlim _refreshGate = new(1, 1);
     private readonly CancellationTokenSource _lifetimeCancellation = new();
     private bool _isDisposed;
+    private readonly Dictionary<string, MetricCardViewModel> _externalMetricCards = new(StringComparer.Ordinal);
 
     [ObservableProperty]
     public partial string MachineName { get; set; } = Environment.MachineName;
@@ -67,7 +70,8 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             new SystemMetricsService(),
             new JsonSettingsStore(),
             HardwareSensorServiceFactory.Create(),
-            AutoStartServiceFactory.Create())
+            AutoStartServiceFactory.Create(),
+            new ExternalMetricService())
     {
     }
 
@@ -75,12 +79,14 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         ISystemMetricsService metricsService,
         ISettingsStore settingsStore,
         IHardwareSensorService hardwareSensorService,
-        IAutoStartService autoStartService)
+        IAutoStartService autoStartService,
+        IExternalMetricService externalMetricService)
     {
         _metricsService = metricsService;
         _settingsStore = settingsStore;
         _hardwareSensorService = hardwareSensorService;
         _autoStartService = autoStartService;
+        _externalMetricService = externalMetricService;
         _timer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Background, OnTick);
         _timer.Start();
         _ = InitializeAsync();
@@ -145,6 +151,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             Metrics[2].Update($"{snapshot.StorageUsagePercent:F0}%", "PRIMARY VOLUME", snapshot.StorageUsagePercent);
             Metrics[3].Update($"{FormatBytes(snapshot.DownloadBytesPerSecond)}/s", $"UP {FormatBytes(snapshot.UploadBytesPerSecond)}/s", snapshot.NetworkActivityPercent);
             UpdateGpuMetric();
+            await UpdateExternalMetricsAsync();
 
             HardwareSensors.Clear();
             var catalogById = SensorCatalog.Build(hardwareReadings, Settings.SensorPreferences)
@@ -224,6 +231,37 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             gpu.LoadPercent ?? 0);
     }
 
+    public ValueTask<ExternalMetricSnapshot> PreviewExternalMetricAsync(
+        ExternalMetricDefinition definition,
+        CancellationToken cancellationToken) => _externalMetricService.PreviewAsync(definition, cancellationToken);
+
+    private async Task UpdateExternalMetricsAsync()
+    {
+        var snapshots = await _externalMetricService.ReadAsync(Settings.ExternalMetrics, _lifetimeCancellation.Token);
+        var activeIds = snapshots.Select(snapshot => snapshot.Id).ToHashSet(StringComparer.Ordinal);
+        foreach (var obsolete in _externalMetricCards.Where(pair => !activeIds.Contains(pair.Key)).ToArray())
+        {
+            Metrics.Remove(obsolete.Value);
+            _externalMetricCards.Remove(obsolete.Key);
+        }
+
+        foreach (var snapshot in snapshots)
+        {
+            if (!_externalMetricCards.TryGetValue(snapshot.Id, out var card))
+            {
+                card = new MetricCardViewModel(snapshot.Title, "Waiting", "EXTERNAL JSON", "#38BDF8", 101);
+                _externalMetricCards.Add(snapshot.Id, card);
+                Metrics.Add(card);
+            }
+
+            card.Title = snapshot.Title;
+            card.Update(
+                snapshot.Value is { } value ? $"{value:F2}{snapshot.Unit}" : "Unavailable",
+                snapshot.IsSuccess ? "EXTERNAL JSON" : snapshot.Status.ToUpperInvariant(),
+                snapshot.Progress);
+        }
+    }
+
     private string FormatSensorValue(HardwareSensorReading reading)
     {
         if (Settings.UseFahrenheit && reading.Unit == "°C")
@@ -242,5 +280,6 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         _lifetimeCancellation.Cancel();
         _metricsService.Dispose();
         _hardwareSensorService.Dispose();
+        _externalMetricService.Dispose();
     }
 }

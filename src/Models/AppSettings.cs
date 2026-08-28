@@ -21,6 +21,7 @@ public sealed record AppSettings
     public double BackgroundOpacity { get; init; } = 1;
     public List<SensorPreference> SensorPreferences { get; init; } = [];
     public string? SelectedGpuId { get; init; }
+    public List<ExternalMetricDefinition> ExternalMetrics { get; init; } = [];
 
     public AppSettings Normalize() => this with
     {
@@ -42,6 +43,19 @@ public sealed record AppSettings
             {
                 CustomName = string.IsNullOrWhiteSpace(preference.CustomName) ? null : preference.CustomName.Trim(),
                 SortOrder = index
+            })
+            .ToList(),
+        ExternalMetrics = ExternalMetrics
+            .Where(definition => !string.IsNullOrWhiteSpace(definition.Id))
+            .GroupBy(definition => definition.Id, StringComparer.Ordinal)
+            .Select(group => group.Last() with
+            {
+                Id = group.Key.Trim(),
+                Title = string.IsNullOrWhiteSpace(group.Last().Title) ? "External metric" : group.Last().Title.Trim(),
+                Source = group.Last().Source.Trim(),
+                JsonPath = group.Last().JsonPath.Trim(),
+                Unit = group.Last().Unit.Trim(),
+                RefreshIntervalSeconds = Math.Clamp(group.Last().RefreshIntervalSeconds, 5, 3600)
             })
             .ToList()
     };

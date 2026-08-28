@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using SidebarDiagnostics.App.Services;
 using SidebarDiagnostics.App.Services.Hardware;
+using SidebarDiagnostics.App.Services.ExternalMetrics;
 using SidebarDiagnostics.App.Services.Startup;
 using SidebarDiagnostics.App.ViewModels;
 using SidebarDiagnostics.App.Views;
@@ -28,7 +29,12 @@ public partial class App : Application
             var autoStartService = AutoStartServiceFactory.Create();
             var mainWindow = new MainWindow
             {
-                DataContext = new MainViewModel(metricsService, settingsStore, hardwareSensorService, autoStartService),
+                DataContext = new MainViewModel(
+                    metricsService,
+                    settingsStore,
+                    hardwareSensorService,
+                    autoStartService,
+                    new ExternalMetricService()),
             };
             desktop.MainWindow = mainWindow;
             DataContext = new ApplicationViewModel(desktop, mainWindow);

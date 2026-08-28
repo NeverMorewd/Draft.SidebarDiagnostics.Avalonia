@@ -10,7 +10,8 @@ public sealed partial class MetricCardViewModel(
     string accentColor,
     double alertThreshold) : ObservableObject
 {
-    public string Title { get; } = title;
+    [ObservableProperty]
+    public partial string Title { get; set; } = title;
     public string AccentColor { get; } = accentColor;
     public MetricHistory History { get; } = new(60);
 
