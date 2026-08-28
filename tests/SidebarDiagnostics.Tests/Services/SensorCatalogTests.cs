@@ -1,0 +1,103 @@
+using SidebarDiagnostics.App.Models;
+using SidebarDiagnostics.App.Services.Hardware;
+using Xunit;
+
+namespace SidebarDiagnostics.Tests.Services;
+
+public sealed class SensorCatalogTests
+{
+    [Fact]
+    public void BuildPreservesUnavailablePreferences()
+    {
+        SensorPreference[] preferences =
+        [
+            new()
+            {
+                SensorId = "missing",
+                CustomName = "Coolant",
+                IsPinned = true,
+                SortOrder = 0
+            }
+        ];
+
+        var entry = Assert.Single(SensorCatalog.Build([], preferences));
+
+        Assert.False(entry.IsAvailable);
+        Assert.Equal("Coolant", entry.DisplayName);
+        Assert.True(entry.IsPinned);
+    }
+
+    [Fact]
+    public void SelectVisibleAppliesVisibilityPinningAndOrder()
+    {
+        HardwareSensorReading[] readings =
+        [
+            Reading("cpu", "CPU"),
+            Reading("fan", "Fan"),
+            Reading("water", "Water")
+        ];
+        SensorPreference[] preferences =
+        [
+            Preference("cpu", true, false, 0),
+            Preference("fan", false, false, 1),
+            Preference("water", true, true, 2)
+        ];
+
+        var selected = SensorCatalog.SelectVisible(readings, preferences);
+
+        Assert.Collection(
+            selected,
+            reading => Assert.Equal("water", reading.Id),
+            reading => Assert.Equal("cpu", reading.Id));
+    }
+
+    [Fact]
+    public void BuildUsesStableIdentityWhenNamesChange()
+    {
+        var preference = Preference("device:sensor", true, false, 0) with { CustomName = "Package" };
+        var reading = Reading("device:sensor", "Renamed upstream sensor");
+
+        var entry = Assert.Single(SensorCatalog.Build([reading], [preference]));
+
+        Assert.True(entry.IsAvailable);
+        Assert.Equal("Package", entry.DisplayName);
+    }
+
+    [Fact]
+    public void DefaultSelectionIsDeterministicAndBounded()
+    {
+        HardwareSensorReading[] readings =
+        [
+            Reading("z", "Z"),
+            Reading("a", "A"),
+            Reading("b", "B")
+        ];
+
+        var selected = SensorCatalog.SelectVisible(readings, [], 2);
+
+        Assert.Equal(["a", "b"], selected.Select(reading => reading.Id));
+    }
+
+    [Fact]
+    public void InitialCatalogShowsOnlyTheDefaultLimit()
+    {
+        var readings = Enumerable.Range(0, 15)
+            .Select(index => Reading($"sensor-{index:D2}", $"Sensor {index:D2}"))
+            .ToArray();
+
+        var catalog = SensorCatalog.Build(readings, []);
+
+        Assert.Equal(12, catalog.Count(entry => entry.IsVisible));
+    }
+
+    private static HardwareSensorReading Reading(string id, string name) =>
+        new(id, "device", "Device", name, HardwareSensorType.Temperature, 42, "°C");
+
+    private static SensorPreference Preference(string id, bool isVisible, bool isPinned, int order) => new()
+    {
+        SensorId = id,
+        IsVisible = isVisible,
+        IsPinned = isPinned,
+        SortOrder = order
+    };
+}

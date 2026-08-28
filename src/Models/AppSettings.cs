@@ -18,6 +18,7 @@ public sealed record AppSettings
     public bool UseFahrenheit { get; init; }
     public int SidebarWidth { get; init; } = 360;
     public double BackgroundOpacity { get; init; } = 1;
+    public List<SensorPreference> SensorPreferences { get; init; } = [];
 
     public AppSettings Normalize() => this with
     {
@@ -27,6 +28,18 @@ public sealed record AppSettings
         StorageAlertThreshold = Math.Clamp(StorageAlertThreshold, 1, 100),
         NetworkAlertThreshold = Math.Clamp(NetworkAlertThreshold, 1, 100),
         SidebarWidth = Math.Clamp(SidebarWidth, 320, 640),
-        BackgroundOpacity = Math.Clamp(BackgroundOpacity, 0.35, 1)
+        BackgroundOpacity = Math.Clamp(BackgroundOpacity, 0.35, 1),
+        SensorPreferences = SensorPreferences
+            .Where(preference => !string.IsNullOrWhiteSpace(preference.SensorId))
+            .Select(preference => preference with { SensorId = preference.SensorId.Trim() })
+            .GroupBy(preference => preference.SensorId, StringComparer.Ordinal)
+            .Select(group => group.Last())
+            .OrderBy(preference => preference.SortOrder)
+            .Select((preference, index) => preference with
+            {
+                CustomName = string.IsNullOrWhiteSpace(preference.CustomName) ? null : preference.CustomName.Trim(),
+                SortOrder = index
+            })
+            .ToList()
     };
 }

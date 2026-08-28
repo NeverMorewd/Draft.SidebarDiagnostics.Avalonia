@@ -45,9 +45,17 @@ public sealed class WindowsHardwareSensorService : IHardwareSensorService
 
         foreach (var sensor in hardware.Sensors)
         {
-            if (sensor.Value is { } value && TryGetUnit(sensor.SensorType, out var unit))
+            if (sensor.Value is { } value && TryMapType(sensor.SensorType, out var type, out var unit))
             {
-                readings.Add(new HardwareSensorReading(hardware.Name, sensor.Name, value, unit));
+                var deviceId = $"windows:{hardware.Identifier}";
+                readings.Add(new HardwareSensorReading(
+                    $"{deviceId}:{sensor.Identifier}",
+                    deviceId,
+                    hardware.Name,
+                    sensor.Name,
+                    type,
+                    value,
+                    unit));
             }
         }
 
@@ -57,18 +65,18 @@ public sealed class WindowsHardwareSensorService : IHardwareSensorService
         }
     }
 
-    private static bool TryGetUnit(SensorType sensorType, out string unit)
+    private static bool TryMapType(SensorType sensorType, out HardwareSensorType type, out string unit)
     {
-        unit = sensorType switch
+        (type, unit) = sensorType switch
         {
-            SensorType.Temperature => "°C",
-            SensorType.Clock => " MHz",
-            SensorType.Voltage => " V",
-            SensorType.Load => "%",
-            SensorType.Fan => " RPM",
-            SensorType.Power => " W",
-            SensorType.Throughput => " B/s",
-            _ => string.Empty
+            SensorType.Temperature => (HardwareSensorType.Temperature, "°C"),
+            SensorType.Clock => (HardwareSensorType.Clock, " MHz"),
+            SensorType.Voltage => (HardwareSensorType.Voltage, " V"),
+            SensorType.Load => (HardwareSensorType.Load, "%"),
+            SensorType.Fan => (HardwareSensorType.Fan, " RPM"),
+            SensorType.Power => (HardwareSensorType.Power, " W"),
+            SensorType.Throughput => (HardwareSensorType.Throughput, " B/s"),
+            _ => (HardwareSensorType.Unknown, string.Empty)
         };
 
         return unit.Length > 0;

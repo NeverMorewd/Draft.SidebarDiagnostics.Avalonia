@@ -49,7 +49,38 @@ public sealed class AppSettingsTests : IDisposable
         await store.SaveAsync(expected, TestContext.Current.CancellationToken);
         var actual = await store.LoadAsync(TestContext.Current.CancellationToken);
 
-        Assert.Equal(expected, actual);
+        Assert.Equivalent(expected, actual);
+    }
+
+    [Fact]
+    public void NormalizeDeduplicatesAndReordersSensorPreferences()
+    {
+        var settings = new AppSettings
+        {
+            SensorPreferences =
+            [
+                new SensorPreference { SensorId = " sensor-a ", CustomName = " Package ", SortOrder = 10 },
+                new SensorPreference { SensorId = "sensor-b", SortOrder = 5 },
+                new SensorPreference { SensorId = "sensor-a", CustomName = "Final", SortOrder = 20 },
+                new SensorPreference { SensorId = " ", SortOrder = 0 }
+            ]
+        };
+
+        var preferences = settings.Normalize().SensorPreferences;
+
+        Assert.Collection(
+            preferences,
+            preference =>
+            {
+                Assert.Equal("sensor-b", preference.SensorId);
+                Assert.Equal(0, preference.SortOrder);
+            },
+            preference =>
+            {
+                Assert.Equal("sensor-a", preference.SensorId);
+                Assert.Equal("Final", preference.CustomName);
+                Assert.Equal(1, preference.SortOrder);
+            });
     }
 
     [Fact]

@@ -59,6 +59,51 @@
 
             <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
                 <StackPanel Spacing="12">
+                    <TextBlock Text="Hardware sensors" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <TextBlock Text="Choose, rename, pin, and order the readings shown in the sidebar."
+                               FontSize="11"
+                               Foreground="#94A3B8"
+                               TextWrapping="Wrap" />
+                    <TextBox Text="{Binding SensorSearchText}" PlaceholderText="Search sensors" />
+                    <ItemsControl ItemsSource="{Binding Sensors}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:SensorOptionViewModel">
+                                <Border IsVisible="{Binding IsMatch}"
+                                        Margin="0,0,0,8"
+                                        Padding="10"
+                                        CornerRadius="10"
+                                        Background="#0B1220"
+                                        BorderBrush="#1F2937"
+                                        BorderThickness="1">
+                                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowSpacing="7">
+                                        <CheckBox IsChecked="{Binding IsVisible}" VerticalAlignment="Center" />
+                                        <StackPanel Grid.Column="1" Spacing="1">
+                                            <TextBlock Text="{Binding Sensor}" FontSize="12" Foreground="#E2E8F0" />
+                                            <TextBlock Text="{Binding Device}" FontSize="10" Foreground="#64748B" TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
+                                            <Button Content="↑" Command="{Binding MoveUpCommand}" Padding="7,3" />
+                                            <Button Content="↓" Command="{Binding MoveDownCommand}" Padding="7,3" />
+                                        </StackPanel>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                                 Text="{Binding CustomName}"
+                                                 PlaceholderText="Custom display name" />
+                                        <CheckBox Grid.Row="2" Grid.Column="1" Content="Pin to top" IsChecked="{Binding IsPinned}" />
+                                        <TextBlock Grid.Row="2" Grid.Column="2"
+                                                   Text="{Binding Availability}"
+                                                   FontSize="10"
+                                                   Foreground="#64748B"
+                                                   VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+                <StackPanel Spacing="12">
                     <CheckBox Content="Keep the sidebar above other windows" IsChecked="{Binding AlwaysOnTop}" />
                     <CheckBox Content="Launch at login" IsChecked="{Binding LaunchAtLogin}" />
                     <CheckBox Content="Start minimized" IsChecked="{Binding StartMinimized}" />

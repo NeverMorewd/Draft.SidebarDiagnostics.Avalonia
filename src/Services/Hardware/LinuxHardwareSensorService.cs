@@ -36,7 +36,16 @@ public sealed class LinuxHardwareSensorService : IHardwareSensorService
 
                 var labelPath = inputPath.Replace("_input", "_label", StringComparison.Ordinal);
                 var label = await ReadOptionalTextAsync(labelPath, cancellationToken) ?? Path.GetFileNameWithoutExtension(inputPath);
-                readings.Add(new HardwareSensorReading(deviceName.Trim(), label.Trim(), millidegrees / 1000d, "°C"));
+                var deviceId = $"linux:hwmon:{deviceName.Trim()}";
+                var sensorId = $"{deviceId}:{Path.GetFileName(inputPath)}";
+                readings.Add(new HardwareSensorReading(
+                    sensorId,
+                    deviceId,
+                    deviceName.Trim(),
+                    label.Trim(),
+                    HardwareSensorType.Temperature,
+                    millidegrees / 1000d,
+                    "°C"));
             }
         }
 
