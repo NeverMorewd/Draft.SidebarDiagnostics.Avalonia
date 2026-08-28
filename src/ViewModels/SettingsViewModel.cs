@@ -61,6 +61,17 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public ObservableCollection<SensorOptionViewModel> Sensors { get; } = [];
     public ObservableCollection<GpuDeviceOption> GpuDevices { get; } = [];
     public ObservableCollection<ExternalMetricOptionViewModel> ExternalMetrics { get; } = [];
+    public ObservableCollection<DisplayOption> Displays { get; } = [];
+    public IReadOnlyList<DockEdge> DockEdges { get; } = Enum.GetValues<DockEdge>();
+
+    [ObservableProperty]
+    public partial DisplayOption? SelectedDisplay { get; set; }
+
+    [ObservableProperty]
+    public partial DockEdge DockEdge { get; set; }
+
+    [ObservableProperty]
+    public partial double VerticalPositionPercent { get; set; }
 
     [ObservableProperty]
     public partial GpuDeviceOption? SelectedGpu { get; set; }
@@ -87,6 +98,17 @@ public sealed partial class SettingsViewModel : ViewModelBase
         UseFahrenheit = settings.UseFahrenheit;
         SidebarWidth = settings.SidebarWidth;
         BackgroundOpacity = settings.BackgroundOpacity;
+        DockEdge = settings.DockEdge;
+        VerticalPositionPercent = settings.VerticalPosition * 100;
+
+        foreach (var display in mainViewModel.AvailableDisplays)
+        {
+            Displays.Add(new DisplayOption(display.Id, display.Name, display.IsPrimary));
+        }
+
+        SelectedDisplay = Displays.FirstOrDefault(display => display.Id == settings.DisplayId)
+            ?? Displays.FirstOrDefault(display => display.IsPrimary)
+            ?? Displays.FirstOrDefault();
 
         foreach (var gpu in mainViewModel.LatestGpuSnapshots)
         {
@@ -133,7 +155,10 @@ public sealed partial class SettingsViewModel : ViewModelBase
                 .Select((sensor, index) => sensor.ToPreference(index))
                 .ToList(),
             SelectedGpuId = SelectedGpu?.DeviceId,
-            ExternalMetrics = ExternalMetrics.Select(metric => metric.ToDefinition()).ToList()
+            ExternalMetrics = ExternalMetrics.Select(metric => metric.ToDefinition()).ToList(),
+            DisplayId = SelectedDisplay?.Id,
+            DockEdge = DockEdge,
+            VerticalPosition = VerticalPositionPercent / 100
         };
 
         await _mainViewModel.SaveSettingsAsync(settings, CancellationToken.None);

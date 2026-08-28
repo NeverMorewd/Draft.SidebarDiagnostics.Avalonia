@@ -22,6 +22,9 @@ public sealed record AppSettings
     public List<SensorPreference> SensorPreferences { get; init; } = [];
     public string? SelectedGpuId { get; init; }
     public List<ExternalMetricDefinition> ExternalMetrics { get; init; } = [];
+    public string? DisplayId { get; init; }
+    public DockEdge DockEdge { get; init; }
+    public double VerticalPosition { get; init; }
 
     public AppSettings Normalize() => this with
     {
@@ -33,6 +36,7 @@ public sealed record AppSettings
         GpuAlertThreshold = Math.Clamp(GpuAlertThreshold, 1, 100),
         SidebarWidth = Math.Clamp(SidebarWidth, 320, 640),
         BackgroundOpacity = Math.Clamp(BackgroundOpacity, 0.35, 1),
+        VerticalPosition = Math.Clamp(VerticalPosition, 0, 1),
         SensorPreferences = SensorPreferences
             .Where(preference => !string.IsNullOrWhiteSpace(preference.SensorId))
             .Select(preference => preference with { SensorId = preference.SensorId.Trim() })
