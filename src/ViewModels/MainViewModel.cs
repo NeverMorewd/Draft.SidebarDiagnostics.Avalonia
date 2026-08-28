@@ -54,6 +54,8 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
 
     public ObservableCollection<HardwareSensorViewModel> HardwareSensors { get; } = [];
 
+    public IReadOnlyList<HardwareSensorReading> LatestHardwareReadings { get; private set; } = [];
+
     public AppSettings Settings { get; private set; } = AppSettings.Default;
 
     public event EventHandler? SettingsApplied;
@@ -126,6 +128,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         {
             var snapshot = await _metricsService.GetSnapshotAsync(_lifetimeCancellation.Token);
             var hardwareReadings = await _hardwareSensorService.ReadAsync(_lifetimeCancellation.Token);
+            LatestHardwareReadings = hardwareReadings;
             PlatformName = snapshot.Platform;
             LastUpdated = snapshot.Timestamp.ToLocalTime().ToString("HH:mm:ss", CultureInfo.CurrentCulture);
             ClockText = snapshot.Timestamp.ToLocalTime().ToString(
@@ -139,14 +142,14 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             Metrics[3].Update($"{FormatBytes(snapshot.DownloadBytesPerSecond)}/s", $"UP {FormatBytes(snapshot.UploadBytesPerSecond)}/s", snapshot.NetworkActivityPercent);
 
             HardwareSensors.Clear();
-            foreach (var reading in hardwareReadings
-                         .OrderBy(reading => reading.Device, StringComparer.OrdinalIgnoreCase)
-                         .ThenBy(reading => reading.Sensor, StringComparer.OrdinalIgnoreCase)
-                         .Take(12))
+            var catalogById = SensorCatalog.Build(hardwareReadings, Settings.SensorPreferences)
+                .ToDictionary(entry => entry.SensorId, StringComparer.Ordinal);
+            foreach (var reading in SensorCatalog.SelectVisible(hardwareReadings, Settings.SensorPreferences))
             {
+                var catalogEntry = catalogById[reading.Id];
                 HardwareSensors.Add(new HardwareSensorViewModel(
                     reading.Device,
-                    reading.Sensor,
+                    catalogEntry.DisplayName,
                     FormatSensorValue(reading)));
             }
 

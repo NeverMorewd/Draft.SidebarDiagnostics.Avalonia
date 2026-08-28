@@ -10,6 +10,7 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 - CPU, memory, primary-volume, and aggregate network monitoring
 - Live bounded charts and configurable alert thresholds
 - Broad hardware sensor support on Windows and hwmon temperatures on Linux
+- Searchable hardware sensor catalog with visibility, pinning, ordering, and custom names
 - Configurable clock, machine name, units, sidebar width, and opacity
 - Tray controls and native launch-at-login integration on all three platforms
 - Atomic JSON settings persistence

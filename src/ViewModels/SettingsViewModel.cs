@@ -1,6 +1,8 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SidebarDiagnostics.App.Models;
+using SidebarDiagnostics.App.Services.Hardware;
 
 namespace SidebarDiagnostics.App.ViewModels;
 
@@ -50,6 +52,11 @@ public sealed partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     public partial double BackgroundOpacity { get; set; }
 
+    [ObservableProperty]
+    public partial string SensorSearchText { get; set; } = string.Empty;
+
+    public ObservableCollection<SensorOptionViewModel> Sensors { get; } = [];
+
     public event EventHandler? Saved;
     public event EventHandler? Cancelled;
 
@@ -71,6 +78,13 @@ public sealed partial class SettingsViewModel : ViewModelBase
         UseFahrenheit = settings.UseFahrenheit;
         SidebarWidth = settings.SidebarWidth;
         BackgroundOpacity = settings.BackgroundOpacity;
+
+        foreach (var entry in SensorCatalog.Build(mainViewModel.LatestHardwareReadings, settings.SensorPreferences))
+        {
+            var option = new SensorOptionViewModel(entry);
+            option.MoveRequested += MoveSensor;
+            Sensors.Add(option);
+        }
     }
 
     [RelayCommand]
@@ -91,7 +105,10 @@ public sealed partial class SettingsViewModel : ViewModelBase
             Use24HourClock = Use24HourClock,
             UseFahrenheit = UseFahrenheit,
             SidebarWidth = SidebarWidth,
-            BackgroundOpacity = BackgroundOpacity
+            BackgroundOpacity = BackgroundOpacity,
+            SensorPreferences = Sensors
+                .Select((sensor, index) => sensor.ToPreference(index))
+                .ToList()
         };
 
         await _mainViewModel.SaveSettingsAsync(settings, CancellationToken.None);
@@ -100,4 +117,22 @@ public sealed partial class SettingsViewModel : ViewModelBase
 
     [RelayCommand]
     private void Cancel() => Cancelled?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSensorSearchTextChanged(string value)
+    {
+        foreach (var sensor in Sensors)
+        {
+            sensor.UpdateSearch(value);
+        }
+    }
+
+    private void MoveSensor(SensorOptionViewModel sensor, int offset)
+    {
+        var currentIndex = Sensors.IndexOf(sensor);
+        var targetIndex = Math.Clamp(currentIndex + offset, 0, Sensors.Count - 1);
+        if (currentIndex >= 0 && currentIndex != targetIndex)
+        {
+            Sensors.Move(currentIndex, targetIndex);
+        }
+    }
 }
