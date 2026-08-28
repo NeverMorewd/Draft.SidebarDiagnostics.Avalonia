@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using SidebarDiagnostics.App.Models;
 using SidebarDiagnostics.App.Services;
 using SidebarDiagnostics.App.Services.ExternalMetrics;
+using SidebarDiagnostics.App.Services.Diagnostics;
 using SidebarDiagnostics.App.Services.Hardware;
 using SidebarDiagnostics.App.Services.Startup;
 
@@ -61,6 +62,9 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     public IReadOnlyList<HardwareSensorReading> LatestHardwareReadings { get; private set; } = [];
     public IReadOnlyList<GpuSnapshot> LatestGpuSnapshots { get; private set; } = [];
     public IReadOnlyList<DisplayDescriptor> AvailableDisplays { get; private set; } = [];
+
+    [ObservableProperty]
+    public partial IReadOnlyList<DiagnosticSection> DiagnosticSections { get; set; } = [];
 
     public AppSettings Settings { get; private set; } = AppSettings.Default;
 
@@ -170,6 +174,10 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             HardwareStatus = HardwareSensors.Count > 0
                 ? $"{HardwareSensors.Count} hardware sensors"
                 : _hardwareSensorService.CapabilityMessage;
+            DiagnosticSections = DetailedDiagnosticsBuilder.Build(
+                snapshot,
+                SensorCatalog.SelectVisible(hardwareReadings, Settings.SensorPreferences),
+                Settings.UseFahrenheit);
         }
         catch (OperationCanceledException) when (_lifetimeCancellation.IsCancellationRequested)
         {

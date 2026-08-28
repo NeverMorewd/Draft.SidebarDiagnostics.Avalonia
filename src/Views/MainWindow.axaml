@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
         xmlns:controls="using:SidebarDiagnostics.App.Controls"
+        xmlns:models="using:SidebarDiagnostics.App.Models"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
@@ -70,11 +71,49 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-                <StackPanel Margin="4,8,4,12" Spacing="3">
+                <ItemsControl ItemsSource="{Binding DiagnosticSections}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:DiagnosticSection">
+                            <Border Margin="0,0,0,10"
+                                    Padding="14"
+                                    CornerRadius="14"
+                                    Background="#101722"
+                                    BorderBrush="#1F2937"
+                                    BorderThickness="1">
+                                <StackPanel Spacing="9">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="9">
+                                        <Border Width="4" CornerRadius="2" Background="{Binding AccentColor}" />
+                                        <StackPanel Grid.Column="1" Spacing="1">
+                                            <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" />
+                                            <TextBlock Text="{Binding Subtitle}" FontSize="10" Foreground="#64748B" TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <ItemsControl ItemsSource="{Binding Metrics}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:DiagnosticMetric">
+                                                <Grid ColumnDefinitions="*,Auto" Margin="0,2">
+                                                    <TextBlock Text="{Binding Label}" FontSize="11" Foreground="#94A3B8" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Grid.Column="1"
+                                                               Margin="10,0,0,0"
+                                                               Text="{Binding Value}"
+                                                               FontSize="11"
+                                                               FontWeight="Medium"
+                                                               Foreground="#E2E8F0"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel IsVisible="False" Margin="4,8,4,12" Spacing="3">
                     <TextBlock Text="HARDWARE SENSORS" FontSize="10" FontWeight="SemiBold" Foreground="#7DD3FC" LetterSpacing="1.5" />
                     <TextBlock Text="{Binding HardwareStatus}" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" />
                 </StackPanel>
-                <ItemsControl ItemsSource="{Binding HardwareSensors}">
+                <ItemsControl IsVisible="False" ItemsSource="{Binding HardwareSensors}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:HardwareSensorViewModel">
                             <Border Margin="0,0,0,8" Padding="14,11" CornerRadius="12" Background="#101722" BorderBrush="#1B2535" BorderThickness="1">
