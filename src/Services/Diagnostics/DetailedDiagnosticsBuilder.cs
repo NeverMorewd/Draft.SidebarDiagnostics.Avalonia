@@ -1,19 +1,61 @@
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using SidebarDiagnostics.App.Models;
+using SidebarDiagnostics.App.Services.Hardware;
 
 namespace SidebarDiagnostics.App.Services.Diagnostics;
 
 public static class DetailedDiagnosticsBuilder
 {
-    public static IReadOnlyList<DiagnosticSection> Build(SystemMetricsSnapshot snapshot, IReadOnlyList<HardwareSensorReading> readings, bool fahrenheit)
+    public static IReadOnlyList<DiagnosticSection> Build(
+        SystemMetricsSnapshot snapshot,
+        IReadOnlyList<HardwareSensorReading> readings,
+        bool fahrenheit,
+        IReadOnlyList<GpuSnapshot>? gpuSnapshots = null)
     {
         var sections = new List<DiagnosticSection> { BuildCpu(snapshot, readings, fahrenheit), BuildMemory(snapshot, readings, fahrenheit) };
-        sections.AddRange(BuildHardware(readings.Where(x => x.DeviceType == HardwareDeviceType.Gpu), "#FB923C", fahrenheit));
+        sections.AddRange(BuildGpus(readings, gpuSnapshots ?? GpuMetricsMapper.Map(readings), fahrenheit));
         sections.AddRange(BuildDrives(readings, fahrenheit));
         sections.Add(BuildNetwork(snapshot));
         sections.AddRange(BuildHardware(readings.Where(x => x.DeviceType is HardwareDeviceType.Motherboard or HardwareDeviceType.Controller), "#F472B6", fahrenheit));
         return sections.Where(x => x.Metrics.Count > 0).ToArray();
+    }
+
+    private static IEnumerable<DiagnosticSection> BuildGpus(
+        IReadOnlyList<HardwareSensorReading> readings,
+        IReadOnlyList<GpuSnapshot> snapshots,
+        bool fahrenheit)
+    {
+        var readingsByDevice = readings
+            .Where(reading => reading.DeviceType == HardwareDeviceType.Gpu)
+            .GroupBy(reading => reading.DeviceId, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.AsEnumerable(), StringComparer.Ordinal);
+
+        foreach (var gpu in snapshots)
+        {
+            var metrics = new List<DiagnosticMetric>();
+            if (gpu.DedicatedMemoryUsedBytes is { } used)
+            {
+                metrics.Add(new("VRAM used", FormatBytes(used)));
+            }
+            if (gpu.DedicatedMemoryTotalBytes is { } total)
+            {
+                metrics.Add(new("VRAM total", FormatBytes(total)));
+                if (gpu.DedicatedMemoryUsedBytes is { } usedBytes)
+                {
+                    metrics.Add(new("VRAM free", FormatBytes(Math.Max(0, total - usedBytes))));
+                }
+            }
+            if (gpu.SharedMemoryUsedBytes is { } shared)
+            {
+                metrics.Add(new("Shared memory used", FormatBytes(shared)));
+            }
+            if (readingsByDevice.TryGetValue(gpu.DeviceId, out var deviceReadings))
+            {
+                metrics.AddRange(MapSensors(deviceReadings, fahrenheit));
+            }
+            yield return new(gpu.DeviceId, "GPU", gpu.Name, "#FB923C", Deduplicate(metrics));
+        }
     }
 
     private static DiagnosticSection BuildCpu(SystemMetricsSnapshot snapshot, IReadOnlyList<HardwareSensorReading> readings, bool fahrenheit)

@@ -35,7 +35,7 @@ public sealed class SystemMetricsService : ISystemMetricsService
             var memoryUsage = platformMetrics.MemoryTotalBytes > 0
                 ? platformMetrics.MemoryUsedBytes * 100d / platformMetrics.MemoryTotalBytes
                 : 0;
-            var storageUsage = ReadStorageUsage();
+            var storage = ReadStorage();
 
             var (receivedBytes, sentBytes) = ReadNetworkTotals();
             var downloadRate = Math.Max(0, receivedBytes - _lastReceivedBytes) / elapsed;
@@ -53,21 +53,24 @@ public sealed class SystemMetricsService : ISystemMetricsService
                 platformMetrics.MemoryUsedBytes,
                 platformMetrics.MemoryTotalBytes,
                 Math.Clamp(memoryUsage, 0, 100),
-                storageUsage,
+                storage.UsagePercent,
+                storage.UsedBytes,
+                storage.TotalBytes,
                 downloadRate,
                 uploadRate,
                 networkActivity);
         }
     }
 
-    private static double ReadStorageUsage()
+    private static (double UsagePercent, long UsedBytes, long TotalBytes) ReadStorage()
     {
         var root = Path.GetPathRoot(AppContext.BaseDirectory);
-        if (string.IsNullOrWhiteSpace(root)) return 0;
+        if (string.IsNullOrWhiteSpace(root)) return (0, 0, 0);
 
         var drive = new DriveInfo(root);
-        if (!drive.IsReady || drive.TotalSize <= 0) return 0;
-        return (drive.TotalSize - drive.AvailableFreeSpace) * 100d / drive.TotalSize;
+        if (!drive.IsReady || drive.TotalSize <= 0) return (0, 0, 0);
+        var used = drive.TotalSize - drive.AvailableFreeSpace;
+        return (used * 100d / drive.TotalSize, used, drive.TotalSize);
     }
 
     private static (long Received, long Sent) ReadNetworkTotals()

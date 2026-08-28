@@ -17,6 +17,8 @@ public sealed class DetailedDiagnosticsBuilderTests
             8L * 1024 * 1024 * 1024,
             75,
             50,
+            150L * 1024 * 1024 * 1024,
+            200L * 1024 * 1024 * 1024,
             1024,
             512,
             1);
@@ -29,6 +31,23 @@ public sealed class DetailedDiagnosticsBuilderTests
         Assert.Contains(memory.Metrics, metric => metric.Label == "Used" && metric.Value == "6.0 GB");
         Assert.Contains(memory.Metrics, metric => metric.Label == "Free" && metric.Value == "2.0 GB");
         Assert.Contains(memory.Metrics, metric => metric.Label == "Total" && metric.Value == "8.0 GB");
+    }
+
+    [Fact]
+    public void BuildIncludesNormalizedGpuMemoryCapacity()
+    {
+        HardwareSensorReading[] readings =
+        [
+            Reading("gpu-a", "GPU A", "GPU Memory Used", HardwareSensorType.Data, 2, " GB"),
+            Reading("gpu-a", "GPU A", "GPU Memory Total", HardwareSensorType.Data, 8, " GB")
+        ];
+
+        var gpu = Assert.Single(DetailedDiagnosticsBuilder.Build(SystemMetricsSnapshot.Empty, readings, false),
+            section => section.Id == "gpu-a");
+
+        Assert.Contains(gpu.Metrics, metric => metric.Label == "VRAM used" && metric.Value == "2.0 GB");
+        Assert.Contains(gpu.Metrics, metric => metric.Label == "VRAM free" && metric.Value == "6.0 GB");
+        Assert.Contains(gpu.Metrics, metric => metric.Label == "VRAM total" && metric.Value == "8.0 GB");
     }
 
     [Fact]
