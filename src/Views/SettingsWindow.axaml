@@ -124,6 +124,60 @@
 
             <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
                 <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel>
+                            <TextBlock Text="External JSON metrics" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                            <TextBlock Text="Read numeric values from local files or explicit HTTP endpoints."
+                                       FontSize="11"
+                                       Foreground="#94A3B8"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="Add source" Command="{Binding AddExternalMetricCommand}" />
+                    </Grid>
+                    <ItemsControl ItemsSource="{Binding ExternalMetrics}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ExternalMetricOptionViewModel">
+                                <Border Margin="0,0,0,10" Padding="12" CornerRadius="10" Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1">
+                                    <StackPanel Spacing="8">
+                                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                            <TextBox Text="{Binding Title}" PlaceholderText="Card title" />
+                                            <CheckBox Grid.Column="1" Content="Enabled" IsChecked="{Binding IsEnabled}" VerticalAlignment="Center" />
+                                            <Button Grid.Column="2" Content="Remove" Command="{Binding RemoveCommand}" />
+                                        </Grid>
+                                        <ComboBox ItemsSource="{Binding SourceKinds}" SelectedItem="{Binding SourceKind}" />
+                                        <TextBox Text="{Binding Source}" PlaceholderText="File path or https:// endpoint" />
+                                        <Grid ColumnDefinitions="*,100" ColumnSpacing="8">
+                                            <TextBox Text="{Binding JsonPath}" PlaceholderText="JSON path, for example router.download" />
+                                            <TextBox Grid.Column="1" Text="{Binding Unit}" PlaceholderText="Unit" />
+                                        </Grid>
+                                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                                            <NumericUpDown Value="{Binding Minimum}" FormatString="0.##" />
+                                            <NumericUpDown Grid.Column="1" Value="{Binding Maximum}" FormatString="0.##" />
+                                            <NumericUpDown Grid.Column="2"
+                                                           Value="{Binding RefreshIntervalSeconds}"
+                                                           Minimum="5"
+                                                           Maximum="3600"
+                                                           FormatString="0 sec" />
+                                        </Grid>
+                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                            <Button Content="Test source" Command="{Binding TestCommand}" />
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding PreviewStatus}"
+                                                       FontSize="10"
+                                                       Foreground="#94A3B8"
+                                                       TextWrapping="Wrap"
+                                                       VerticalAlignment="Center" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+                <StackPanel Spacing="12">
                     <CheckBox Content="Keep the sidebar above other windows" IsChecked="{Binding AlwaysOnTop}" />
                     <CheckBox Content="Launch at login" IsChecked="{Binding LaunchAtLogin}" />
                     <CheckBox Content="Start minimized" IsChecked="{Binding StartMinimized}" />
