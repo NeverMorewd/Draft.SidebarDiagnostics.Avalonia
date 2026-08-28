@@ -49,12 +49,14 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         new("CPU", "0%", "SYSTEM LOAD", "#7DD3FC", AppSettings.Default.CpuAlertThreshold),
         new("Memory", "0 MB", "SYSTEM USED", "#C4B5FD", AppSettings.Default.MemoryAlertThreshold),
         new("Storage", "0%", "PRIMARY VOLUME", "#6EE7B7", AppSettings.Default.StorageAlertThreshold),
-        new("Network", "0 B/s", "DOWNLOAD", "#FDE68A", AppSettings.Default.NetworkAlertThreshold)
+        new("Network", "0 B/s", "DOWNLOAD", "#FDE68A", AppSettings.Default.NetworkAlertThreshold),
+        new("GPU", "Unavailable", "NO SUPPORTED GPU METRICS", "#FB923C", AppSettings.Default.GpuAlertThreshold)
     ];
 
     public ObservableCollection<HardwareSensorViewModel> HardwareSensors { get; } = [];
 
     public IReadOnlyList<HardwareSensorReading> LatestHardwareReadings { get; private set; } = [];
+    public IReadOnlyList<GpuSnapshot> LatestGpuSnapshots { get; private set; } = [];
 
     public AppSettings Settings { get; private set; } = AppSettings.Default;
 
@@ -108,6 +110,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         Metrics[1].AlertThreshold = settings.MemoryAlertThreshold;
         Metrics[2].AlertThreshold = settings.StorageAlertThreshold;
         Metrics[3].AlertThreshold = settings.NetworkAlertThreshold;
+        Metrics[4].AlertThreshold = settings.GpuAlertThreshold;
         IsMachineNameVisible = settings.ShowMachineName;
         IsClockVisible = settings.ShowClock;
     }
@@ -129,6 +132,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             var snapshot = await _metricsService.GetSnapshotAsync(_lifetimeCancellation.Token);
             var hardwareReadings = await _hardwareSensorService.ReadAsync(_lifetimeCancellation.Token);
             LatestHardwareReadings = hardwareReadings;
+            LatestGpuSnapshots = GpuMetricsMapper.Map(hardwareReadings);
             PlatformName = snapshot.Platform;
             LastUpdated = snapshot.Timestamp.ToLocalTime().ToString("HH:mm:ss", CultureInfo.CurrentCulture);
             ClockText = snapshot.Timestamp.ToLocalTime().ToString(
@@ -140,6 +144,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             Metrics[1].Update(FormatBytes(snapshot.MemoryUsedBytes), "SYSTEM USED", snapshot.MemoryUsagePercent);
             Metrics[2].Update($"{snapshot.StorageUsagePercent:F0}%", "PRIMARY VOLUME", snapshot.StorageUsagePercent);
             Metrics[3].Update($"{FormatBytes(snapshot.DownloadBytesPerSecond)}/s", $"UP {FormatBytes(snapshot.UploadBytesPerSecond)}/s", snapshot.NetworkActivityPercent);
+            UpdateGpuMetric();
 
             HardwareSensors.Clear();
             var catalogById = SensorCatalog.Build(hardwareReadings, Settings.SensorPreferences)
@@ -183,6 +188,40 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         }
 
         return $"{value:F1} {units[unit]}";
+    }
+
+    private void UpdateGpuMetric()
+    {
+        var gpu = LatestGpuSnapshots.FirstOrDefault(candidate => candidate.DeviceId == Settings.SelectedGpuId)
+            ?? (LatestGpuSnapshots.Count > 0 ? LatestGpuSnapshots[0] : null);
+        if (gpu is null)
+        {
+            Metrics[4].Update("Unavailable", "NO SUPPORTED GPU METRICS", 0);
+            return;
+        }
+
+        var value = gpu.LoadPercent is { } load ? $"{load:F0}%" : "Available";
+        var details = new List<string>();
+        if (gpu.TemperatureCelsius is { } temperature)
+        {
+            details.Add(Settings.UseFahrenheit
+                ? $"{(temperature * 9 / 5) + 32:F0}°F"
+                : $"{temperature:F0}°C");
+        }
+
+        if (gpu.DedicatedMemoryUsedBytes is { } used)
+        {
+            details.Add($"{FormatBytes(used)} VRAM");
+        }
+        else if (gpu.SharedMemoryUsedBytes is { } shared)
+        {
+            details.Add($"{FormatBytes(shared)} SHARED");
+        }
+
+        Metrics[4].Update(
+            value,
+            details.Count > 0 ? string.Join(" · ", details) : gpu.Name.ToUpperInvariant(),
+            gpu.LoadPercent ?? 0);
     }
 
     private string FormatSensorValue(HardwareSensorReading reading)

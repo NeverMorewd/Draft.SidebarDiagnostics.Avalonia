@@ -91,7 +91,16 @@ public sealed class SensorCatalogTests
     }
 
     private static HardwareSensorReading Reading(string id, string name) =>
-        new(id, "device", "Device", name, HardwareSensorType.Temperature, 42, "°C");
+        new(
+            id,
+            "device",
+            "Device",
+            HardwareDeviceType.Unknown,
+            HardwareVendor.Unknown,
+            name,
+            HardwareSensorType.Temperature,
+            42,
+            "°C");
 
     private static SensorPreference Preference(string id, bool isVisible, bool isPinned, int order) => new()
     {

@@ -26,6 +26,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial double NetworkAlertThreshold { get; set; }
 
     [ObservableProperty]
+    public partial double GpuAlertThreshold { get; set; }
+
+    [ObservableProperty]
     public partial bool AlwaysOnTop { get; set; }
 
     [ObservableProperty]
@@ -56,6 +59,10 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial string SensorSearchText { get; set; } = string.Empty;
 
     public ObservableCollection<SensorOptionViewModel> Sensors { get; } = [];
+    public ObservableCollection<GpuDeviceOption> GpuDevices { get; } = [];
+
+    [ObservableProperty]
+    public partial GpuDeviceOption? SelectedGpu { get; set; }
 
     public event EventHandler? Saved;
     public event EventHandler? Cancelled;
@@ -69,6 +76,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         MemoryAlertThreshold = settings.MemoryAlertThreshold;
         StorageAlertThreshold = settings.StorageAlertThreshold;
         NetworkAlertThreshold = settings.NetworkAlertThreshold;
+        GpuAlertThreshold = settings.GpuAlertThreshold;
         AlwaysOnTop = settings.AlwaysOnTop;
         LaunchAtLogin = settings.LaunchAtLogin;
         StartMinimized = settings.StartMinimized;
@@ -78,6 +86,14 @@ public sealed partial class SettingsViewModel : ViewModelBase
         UseFahrenheit = settings.UseFahrenheit;
         SidebarWidth = settings.SidebarWidth;
         BackgroundOpacity = settings.BackgroundOpacity;
+
+        foreach (var gpu in mainViewModel.LatestGpuSnapshots)
+        {
+            GpuDevices.Add(new GpuDeviceOption(gpu.DeviceId, gpu.Name, gpu.Vendor));
+        }
+
+        SelectedGpu = GpuDevices.FirstOrDefault(gpu => gpu.DeviceId == settings.SelectedGpuId)
+            ?? GpuDevices.FirstOrDefault();
 
         foreach (var entry in SensorCatalog.Build(mainViewModel.LatestHardwareReadings, settings.SensorPreferences))
         {
@@ -97,6 +113,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             MemoryAlertThreshold = MemoryAlertThreshold,
             StorageAlertThreshold = StorageAlertThreshold,
             NetworkAlertThreshold = NetworkAlertThreshold,
+            GpuAlertThreshold = GpuAlertThreshold,
             AlwaysOnTop = AlwaysOnTop,
             LaunchAtLogin = LaunchAtLogin,
             StartMinimized = StartMinimized,
@@ -108,7 +125,8 @@ public sealed partial class SettingsViewModel : ViewModelBase
             BackgroundOpacity = BackgroundOpacity,
             SensorPreferences = Sensors
                 .Select((sensor, index) => sensor.ToPreference(index))
-                .ToList()
+                .ToList(),
+            SelectedGpuId = SelectedGpu?.DeviceId
         };
 
         await _mainViewModel.SaveSettingsAsync(settings, CancellationToken.None);

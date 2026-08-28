@@ -42,6 +42,8 @@ public sealed class WindowsHardwareSensorService : IHardwareSensorService
     {
         cancellationToken.ThrowIfCancellationRequested();
         hardware.Update();
+        var deviceType = MapDeviceType(hardware.HardwareType);
+        var vendor = MapVendor(hardware.HardwareType, hardware.Name);
 
         foreach (var sensor in hardware.Sensors)
         {
@@ -52,6 +54,8 @@ public sealed class WindowsHardwareSensorService : IHardwareSensorService
                     $"{deviceId}:{sensor.Identifier}",
                     deviceId,
                     hardware.Name,
+                    deviceType,
+                    vendor,
                     sensor.Name,
                     type,
                     value,
@@ -76,10 +80,43 @@ public sealed class WindowsHardwareSensorService : IHardwareSensorService
             SensorType.Fan => (HardwareSensorType.Fan, " RPM"),
             SensorType.Power => (HardwareSensorType.Power, " W"),
             SensorType.Throughput => (HardwareSensorType.Throughput, " B/s"),
+            SensorType.Data => (HardwareSensorType.Data, " GB"),
+            SensorType.SmallData => (HardwareSensorType.SmallData, " MB"),
             _ => (HardwareSensorType.Unknown, string.Empty)
         };
 
         return unit.Length > 0;
+    }
+
+    private static HardwareDeviceType MapDeviceType(HardwareType hardwareType) => hardwareType switch
+    {
+        HardwareType.Cpu => HardwareDeviceType.Cpu,
+        HardwareType.GpuAmd or HardwareType.GpuIntel or HardwareType.GpuNvidia => HardwareDeviceType.Gpu,
+        HardwareType.Memory => HardwareDeviceType.Memory,
+        HardwareType.Motherboard => HardwareDeviceType.Motherboard,
+        HardwareType.Storage => HardwareDeviceType.Storage,
+        HardwareType.SuperIO or HardwareType.EmbeddedController => HardwareDeviceType.Controller,
+        _ => HardwareDeviceType.Unknown
+    };
+
+    private static HardwareVendor MapVendor(HardwareType hardwareType, string name)
+    {
+        if (hardwareType == HardwareType.GpuAmd || name.Contains("AMD", StringComparison.OrdinalIgnoreCase))
+        {
+            return HardwareVendor.Amd;
+        }
+
+        if (hardwareType == HardwareType.GpuIntel || name.Contains("Intel", StringComparison.OrdinalIgnoreCase))
+        {
+            return HardwareVendor.Intel;
+        }
+
+        if (hardwareType == HardwareType.GpuNvidia || name.Contains("NVIDIA", StringComparison.OrdinalIgnoreCase))
+        {
+            return HardwareVendor.Nvidia;
+        }
+
+        return HardwareVendor.Unknown;
     }
 
     public void Dispose()
