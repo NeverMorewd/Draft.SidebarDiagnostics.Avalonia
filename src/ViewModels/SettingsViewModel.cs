@@ -71,6 +71,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial DockEdge DockEdge { get; set; }
 
     [ObservableProperty]
+    public partial bool ReserveScreenSpace { get; set; }
+
+    [ObservableProperty]
     public partial double VerticalPositionPercent { get; set; }
 
     [ObservableProperty]
@@ -99,6 +102,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         SidebarWidth = settings.SidebarWidth;
         BackgroundOpacity = settings.BackgroundOpacity;
         DockEdge = settings.DockEdge;
+        ReserveScreenSpace = settings.ReserveScreenSpace;
         VerticalPositionPercent = settings.VerticalPosition * 100;
 
         foreach (var display in mainViewModel.AvailableDisplays)
@@ -158,6 +162,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             ExternalMetrics = ExternalMetrics.Select(metric => metric.ToDefinition()).ToList(),
             DisplayId = SelectedDisplay?.Id,
             DockEdge = DockEdge,
+            ReserveScreenSpace = ReserveScreenSpace,
             VerticalPosition = VerticalPositionPercent / 100
         };
 
