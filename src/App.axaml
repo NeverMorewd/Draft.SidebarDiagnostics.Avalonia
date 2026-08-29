@@ -17,7 +17,7 @@
     </Application.DataTemplates>
 
     <Application.Styles>
-        <SimpleTheme />
+        <FluentTheme DensityStyle="Compact" />
         <StyleInclude Source="avares://SidebarDiagnostics.App/Styles/SidebarTheme.axaml" />
     </Application.Styles>
 

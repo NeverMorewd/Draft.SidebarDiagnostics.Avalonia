@@ -129,10 +129,10 @@
           "SkiaSharp.NativeAssets.WebAssembly": "3.119.4"
         }
       },
-      "Avalonia.Themes.Simple": {
+      "Avalonia.Themes.Fluent": {
         "type": "Transitive",
         "resolved": "12.1.1",
-        "contentHash": "G8PXe46MfbGDAOCtNOaeisz3d3J+i8Ea71TNxCj+mZrSuR78U7lc4Rj05NwdpPlF5jb1rcAjmnVom6/443Pk0w==",
+        "contentHash": "7vdtZsM9o8I8LpU9dyiB/Ah7WB8a5V3JHLsExe4T433ynn5x57F+DBskctZuNOxml8hbe1GmtNUNkBDsqSVKVg==",
         "dependencies": {
           "Avalonia": "12.1.1"
         }
@@ -579,7 +579,7 @@
           "Avalonia": "[12.1.1, )",
           "Avalonia.Desktop": "[12.1.1, )",
           "Avalonia.Fonts.Inter": "[12.1.1, )",
-          "Avalonia.Themes.Simple": "[12.1.1, )",
+          "Avalonia.Themes.Fluent": "[12.1.1, )",
           "AvaloniaUI.DiagnosticsSupport": "[2.2.3, )",
           "CommunityToolkit.Mvvm": "[8.4.2, )",
           "LibreHardwareMonitorLib": "[0.9.6, )",
