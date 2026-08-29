@@ -50,19 +50,20 @@ public static class DetailedDiagnosticsBuilder
             metrics.Add(new("Vendor", FormatVendor(gpu.Vendor)));
             if (gpu.DedicatedMemoryUsedBytes is { } used)
             {
-                metrics.Add(new("VRAM used", FormatBytes(used)));
+                metrics.Add(Numeric("VRAM used", FormatBytes(used), $"{gpu.DeviceId}:vram-used", used / 1073741824d, "GB"));
             }
             if (gpu.DedicatedMemoryTotalBytes is { } total)
             {
                 metrics.Add(new("VRAM total", FormatBytes(total)));
                 if (gpu.DedicatedMemoryUsedBytes is { } usedBytes)
                 {
-                    metrics.Add(new("VRAM free", FormatBytes(Math.Max(0, total - usedBytes))));
+                    var free = Math.Max(0, total - usedBytes);
+                    metrics.Add(Numeric("VRAM free", FormatBytes(free), $"{gpu.DeviceId}:vram-free", free / 1073741824d, "GB"));
                 }
             }
             if (gpu.SharedMemoryUsedBytes is { } shared)
             {
-                metrics.Add(new("Shared memory used", FormatBytes(shared)));
+                metrics.Add(Numeric("Shared memory used", FormatBytes(shared), $"{gpu.DeviceId}:shared-used", shared / 1073741824d, "GB"));
             }
             if (readingsByDevice.TryGetValue(gpu.DeviceId, out var deviceReadings))
             {
@@ -81,7 +82,7 @@ public static class DetailedDiagnosticsBuilder
             new("Model", name),
             new("Vendor", FormatVendor(cpuReadings.FirstOrDefault()?.Vendor ?? HardwareVendor.Unknown)),
             new("Architecture", System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString()),
-            new("Load", $"{snapshot.CpuUsagePercent:F1}%"),
+            Numeric("Load", $"{snapshot.CpuUsagePercent:F1}%", "cpu:load", snapshot.CpuUsagePercent, "%"),
             new("Logical processors", Environment.ProcessorCount.ToString(System.Globalization.CultureInfo.InvariantCulture))
         };
         metrics.AddRange(MapSensors(cpuReadings, fahrenheit));
@@ -95,9 +96,9 @@ public static class DetailedDiagnosticsBuilder
         var metrics = new List<DiagnosticMetric>
         {
             new("Model", model),
-            new("Load", $"{snapshot.MemoryUsagePercent:F1}%"),
-            new("Used", FormatBytes(snapshot.MemoryUsedBytes)),
-            new("Free", FormatBytes(Math.Max(0, snapshot.MemoryTotalBytes - snapshot.MemoryUsedBytes))),
+            Numeric("Load", $"{snapshot.MemoryUsagePercent:F1}%", "memory:load", snapshot.MemoryUsagePercent, "%"),
+            Numeric("Used", FormatBytes(snapshot.MemoryUsedBytes), "memory:used", snapshot.MemoryUsedBytes / 1073741824d, "GB"),
+            Numeric("Free", FormatBytes(Math.Max(0, snapshot.MemoryTotalBytes - snapshot.MemoryUsedBytes)), "memory:free", Math.Max(0, snapshot.MemoryTotalBytes - snapshot.MemoryUsedBytes) / 1073741824d, "GB"),
             new("Total", FormatBytes(snapshot.MemoryTotalBytes))
         };
         metrics.AddRange(MapSensors(memoryReadings, fahrenheit));
@@ -119,8 +120,11 @@ public static class DetailedDiagnosticsBuilder
             var load = drive.TotalSize > 0 ? used * 100d / drive.TotalSize : 0;
             var metrics = new List<DiagnosticMetric>
             {
-                new("Load", $"{load:F1}%"), new("Used", FormatBytes(used)), new("Free", FormatBytes(drive.AvailableFreeSpace)),
-                new("Total", FormatBytes(drive.TotalSize)), new("Format", string.IsNullOrWhiteSpace(drive.DriveFormat) ? "Unknown" : drive.DriveFormat)
+                Numeric("Load", $"{load:F1}%", $"drive:{drive.Name}:load", load, "%"),
+                Numeric("Used", FormatBytes(used), $"drive:{drive.Name}:used", used / 1073741824d, "GB"),
+                Numeric("Free", FormatBytes(drive.AvailableFreeSpace), $"drive:{drive.Name}:free", drive.AvailableFreeSpace / 1073741824d, "GB"),
+                new("Total", FormatBytes(drive.TotalSize)),
+                new("Format", string.IsNullOrWhiteSpace(drive.DriveFormat) ? "Unknown" : drive.DriveFormat)
             };
             yield return new($"drive:{drive.Name}", "Volume", drive.Name, "#6EE7B7", Deduplicate(metrics));
         }
@@ -154,8 +158,8 @@ public static class DetailedDiagnosticsBuilder
             };
             if (index == 0)
             {
-                metrics.Add(new("Download", $"{FormatBytes(snapshot.DownloadBytesPerSecond)}/s"));
-                metrics.Add(new("Upload", $"{FormatBytes(snapshot.UploadBytesPerSecond)}/s"));
+                metrics.Add(Numeric("Download", $"{FormatBytes(snapshot.DownloadBytesPerSecond)}/s", $"network:{network.Id}:download", snapshot.DownloadBytesPerSecond / 1024d, "KB/s"));
+                metrics.Add(Numeric("Upload", $"{FormatBytes(snapshot.UploadBytesPerSecond)}/s", $"network:{network.Id}:upload", snapshot.UploadBytesPerSecond / 1024d, "KB/s"));
             }
             if (addresses.Length > 0) metrics.Add(new("IP addresses", string.Join(", ", addresses)));
             yield return new($"network:{network.Id}", "Network", network.Name, "#FDE68A", metrics);
@@ -172,7 +176,14 @@ public static class DetailedDiagnosticsBuilder
                 Deduplicate([new("Model", group.First().Device), .. MapSensors(group, fahrenheit)])));
 
     private static IEnumerable<DiagnosticMetric> MapSensors(IEnumerable<HardwareSensorReading> readings, bool fahrenheit) =>
-        readings.OrderBy(reading => reading.Type).ThenBy(reading => NaturalSensorOrder(reading.Sensor)).ThenBy(reading => reading.Sensor, StringComparer.OrdinalIgnoreCase).Select(reading => new DiagnosticMetric(reading.Sensor, FormatSensor(reading, fahrenheit)));
+        readings.OrderBy(reading => reading.Type).ThenBy(reading => NaturalSensorOrder(reading.Sensor)).ThenBy(reading => reading.Sensor, StringComparer.OrdinalIgnoreCase).Select(reading =>
+        {
+            var value = fahrenheit && reading.Type == HardwareSensorType.Temperature
+                ? (reading.Value * 9 / 5) + 32
+                : reading.Value;
+            var unit = fahrenheit && reading.Type == HardwareSensorType.Temperature ? "°F" : reading.Unit;
+            return Numeric(reading.Sensor, FormatSensor(reading, fahrenheit), reading.Id, value, unit);
+        });
 
     private static int NaturalSensorOrder(string sensor)
     {
@@ -195,6 +206,9 @@ public static class DetailedDiagnosticsBuilder
 
     private static string FormatSensor(HardwareSensorReading reading, bool fahrenheit) =>
         fahrenheit && reading.Type == HardwareSensorType.Temperature ? $"{(reading.Value * 9 / 5) + 32:F1}°F" : $"{reading.Value:F1}{reading.Unit}";
+
+    private static DiagnosticMetric Numeric(string label, string value, string id, double numericValue, string unit) =>
+        new(label, value, id, numericValue, unit);
 
     private static string FormatBytes(double bytes)
     {
