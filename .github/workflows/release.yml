@@ -42,6 +42,9 @@ jobs:
           - os: ubuntu-latest
             rid: linux-x64
             archive: tar
+          - os: ubuntu-latest
+            rid: linux-arm64
+            archive: tar
           - os: macos-latest
             rid: osx-x64
             archive: app
@@ -56,7 +59,7 @@ jobs:
           dotnet-version: 10.0.x
           cache: true
           cache-dependency-path: '**/packages.lock.json'
-      - run: dotnet restore src/SidebarDiagnostics.App.csproj --locked-mode --runtime ${{ matrix.rid }}
+      - run: dotnet restore src/SidebarDiagnostics.App.csproj --locked-mode
       - run: dotnet publish src/SidebarDiagnostics.App.csproj -c Release -r ${{ matrix.rid }} --self-contained true --no-restore -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o artifacts/publish
       - name: Add legal files
         shell: pwsh

@@ -64,17 +64,17 @@ public sealed class MacOsMetricsProvider : IPlatformMetricsProvider
                 return 0;
             }
 
-            var user = Delta(current.User, previous.Value.User);
-            var system = Delta(current.System, previous.Value.System);
-            var idle = Delta(current.Idle, previous.Value.Idle);
-            var nice = Delta(current.Nice, previous.Value.Nice);
-            var total = user + system + idle + nice;
-            return total == 0 ? 0 : (user + system + nice) * 100d / total;
+            return CpuTickUsage.Calculate(
+                previous.Value.User,
+                previous.Value.System,
+                previous.Value.Idle,
+                previous.Value.Nice,
+                current.User,
+                current.System,
+                current.Idle,
+                current.Nice);
         }
     }
-
-    private static ulong Delta(uint current, uint previous) =>
-        current >= previous ? current - previous : (ulong)uint.MaxValue - previous + current + 1;
 
     [DllImport(
         "libSystem.B.dylib",
