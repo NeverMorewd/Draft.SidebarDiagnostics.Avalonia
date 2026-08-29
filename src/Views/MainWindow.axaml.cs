@@ -19,6 +19,8 @@ public partial class MainWindow : Window
     private readonly double _preferredHeight;
     private readonly IReservedScreenSpaceService _reservedScreenSpace = ReservedScreenSpaceService.Create();
     private readonly Dictionary<string, MetricChartWindow> _metricCharts = new(StringComparer.Ordinal);
+    private SettingsWindow? _settingsWindow;
+    private AboutWindow? _aboutWindow;
 
     public MainWindow()
     {
@@ -269,22 +271,58 @@ public partial class MainWindow : Window
         window.Activate();
     }
 
-    private async void OpenSettings(object? sender, RoutedEventArgs e)
+    public async Task ShowSettingsAsync()
     {
+        if (_settingsWindow is not null)
+        {
+            _settingsWindow.Activate();
+            return;
+        }
+
         if (DataContext is not MainViewModel mainViewModel)
         {
             return;
         }
 
-        var settingsWindow = new SettingsWindow
+        _settingsWindow = new SettingsWindow
         {
             DataContext = new SettingsViewModel(mainViewModel)
         };
 
-        var saved = await settingsWindow.ShowDialog<bool>(this);
-        if (saved)
+        try
         {
-            Topmost = mainViewModel.Settings.AlwaysOnTop;
+            var saved = await _settingsWindow.ShowDialog<bool>(this);
+            if (saved)
+            {
+                Topmost = mainViewModel.Settings.AlwaysOnTop;
+            }
+        }
+        finally
+        {
+            _settingsWindow = null;
         }
     }
+
+    public async Task ShowAboutAsync()
+    {
+        if (_aboutWindow is not null)
+        {
+            _aboutWindow.Activate();
+            return;
+        }
+
+        _aboutWindow = new AboutWindow();
+        try
+        {
+            await _aboutWindow.ShowDialog(this);
+        }
+        finally
+        {
+            _aboutWindow = null;
+        }
+    }
+
+    private async void OpenSettings(object? sender, RoutedEventArgs e) => await ShowSettingsAsync();
+
+    private async void OpenAbout(object? sender, RoutedEventArgs e) => await ShowAboutAsync();
 }

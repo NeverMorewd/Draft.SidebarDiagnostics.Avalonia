@@ -10,8 +10,12 @@
         MinHeight="600"
         WindowStartupLocation="CenterOwner"
         Background="#0B0F17">
-    <ScrollViewer>
-        <StackPanel Margin="28" Spacing="22">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel
+            MaxWidth="920"
+            Margin="28"
+            HorizontalAlignment="Stretch"
+            Spacing="22">
             <StackPanel Spacing="4">
                 <TextBlock Text="SETTINGS" FontSize="11" FontWeight="SemiBold" Foreground="#7DD3FC" LetterSpacing="1.8" />
                 <TextBlock Text="Monitoring preferences" FontSize="24" FontWeight="SemiBold" Foreground="#F8FAFC" />
