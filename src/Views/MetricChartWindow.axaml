@@ -40,8 +40,11 @@
         <Grid Grid.Row="1" Margin="20,17,20,14" ColumnDefinitions="*,Auto" ColumnSpacing="20">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="12">
                 <TextBlock x:Name="CurrentValueText" FontSize="30" FontWeight="SemiBold" Foreground="#F8FAFC"/>
-                <Border Padding="8,4" Background="#0D332D" CornerRadius="8">
-                    <StackPanel Orientation="Horizontal" Spacing="6"><Ellipse Width="6" Height="6" VerticalAlignment="Center" Fill="#34D399"/><TextBlock Text="LIVE" FontSize="9" FontWeight="Bold" Foreground="#6EE7B7" LetterSpacing="1.2"/></StackPanel>
+                <Border Height="24" Padding="8,0" Background="#0D332D" CornerRadius="8">
+                    <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
+                        <Ellipse Width="6" Height="6" VerticalAlignment="Center" Fill="#34D399" />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="9" FontWeight="Bold" Foreground="#6EE7B7" LetterSpacing="1.2" LineHeight="11" Text="LIVE" />
+                    </Grid>
                 </Border>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Spacing="9">
