@@ -7,6 +7,17 @@ namespace SidebarDiagnostics.Tests.Services;
 public sealed class SensorCatalogTests
 {
     [Fact]
+    public void SelectVisibleCoalescesDuplicateProviderIds()
+    {
+        var first = Reading("duplicate", "Core 1 Load") with { Value = 10 };
+        var second = Reading("duplicate", "Core 1 Load") with { Value = 20 };
+
+        var selected = SensorCatalog.SelectVisible([first, second], []);
+
+        Assert.Single(selected);
+        Assert.Equal(10, selected[0].Value);
+    }
+    [Fact]
     public void BuildPreservesUnavailablePreferences()
     {
         SensorPreference[] preferences =
