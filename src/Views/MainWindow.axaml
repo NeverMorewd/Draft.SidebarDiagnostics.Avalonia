@@ -20,6 +20,16 @@
     Topmost="True"
     WindowDecorations="None"
     mc:Ignorable="d">
+    <Window.Styles>
+        <Style Selector="Grid.metric-row Button.metric-chart">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+        <Style Selector="Grid.metric-row:pointerover Button.metric-chart">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="IsHitTestVisible" Value="True" />
+        </Style>
+    </Window.Styles>
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
@@ -124,7 +134,7 @@
                                     <ItemsControl ItemsSource="{Binding Metrics}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="models:DiagnosticMetric">
-                                                <Grid Margin="0,2" ColumnDefinitions="110,*,Auto">
+                                                <Grid Margin="0,2" Classes="metric-row" ColumnDefinitions="110,*,Auto">
                                                     <TextBlock
                                                         FontSize="11"
                                                         Foreground="#94A3B8"
@@ -140,6 +150,7 @@
                                                         TextWrapping="Wrap" />
                                                     <Button
                                                         Grid.Column="2"
+                                                        Classes="metric-chart"
                                                         Width="26"
                                                         Height="26"
                                                         Margin="6,0,0,0"

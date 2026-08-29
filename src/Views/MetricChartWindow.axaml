@@ -45,7 +45,7 @@
                 </Border>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Spacing="9">
-                <TextBlock VerticalAlignment="Center" FontSize="11" Foreground="#71839B" Text="WINDOW"/>
+                <TextBlock VerticalAlignment="Center" FontSize="11" Foreground="#71839B" Text="TIME RANGE"/>
                 <ComboBox x:Name="DurationSelector" Width="126" SelectionChanged="ChangeDuration"/>
             </StackPanel>
         </Grid>

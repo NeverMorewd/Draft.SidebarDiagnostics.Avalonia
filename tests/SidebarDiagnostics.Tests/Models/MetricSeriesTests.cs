@@ -1,10 +1,20 @@
 using SidebarDiagnostics.App.Models;
+using SidebarDiagnostics.App.Controls;
 using Xunit;
 
 namespace SidebarDiagnostics.Tests.Models;
 
 public sealed class MetricSeriesTests
 {
+    [Fact]
+    public void ChartRangeKeepsZeroOnlyNonNegativeSeriesAboveZero()
+    {
+        var range = MetricChart.CalculateRange([new(DateTimeOffset.UtcNow, 0)]);
+
+        Assert.Equal(0, range.Minimum);
+        Assert.Equal(1, range.Maximum);
+    }
+
     [Fact]
     public void GetSamplesReturnsOnlyRequestedDuration()
     {
