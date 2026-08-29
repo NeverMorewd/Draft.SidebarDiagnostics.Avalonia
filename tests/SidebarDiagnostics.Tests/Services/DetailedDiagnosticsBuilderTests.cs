@@ -28,6 +28,7 @@ public sealed class DetailedDiagnosticsBuilderTests
         var memory = Assert.Single(sections, section => section.Id == "memory");
 
         Assert.Contains(cpu.Metrics, metric => metric.Label == "Load" && metric.Value == "25.0%");
+        Assert.Contains(cpu.Metrics, metric => metric.Label == "Model" && metric.Value == "Unknown processor");
         Assert.Contains(memory.Metrics, metric => metric.Label == "Used" && metric.Value == "6.0 GB");
         Assert.Contains(memory.Metrics, metric => metric.Label == "Free" && metric.Value == "2.0 GB");
         Assert.Contains(memory.Metrics, metric => metric.Label == "Total" && metric.Value == "8.0 GB");
@@ -65,8 +66,34 @@ public sealed class DetailedDiagnosticsBuilderTests
             .ToArray();
 
         Assert.Equal(2, gpuSections.Length);
-        Assert.Equal(2, gpuSections.Single(section => section.Id == "gpu-a").Metrics.Count);
-        Assert.Single(gpuSections.Single(section => section.Id == "gpu-b").Metrics);
+        Assert.Contains(gpuSections.Single(section => section.Id == "gpu-a").Metrics, metric => metric.Label == "Model" && metric.Value == "GPU A");
+        Assert.Contains(gpuSections.Single(section => section.Id == "gpu-b").Metrics, metric => metric.Label == "Model" && metric.Value == "GPU B");
+    }
+
+    [Fact]
+    public void BuildKeepsEveryCoreInNaturalOrder()
+    {
+        var readings = Enumerable.Range(1, 16)
+            .Reverse()
+            .Select(core => Reading("cpu", "Test CPU", $"Core {core} Load", HardwareSensorType.Load, core, "%", HardwareDeviceType.Cpu))
+            .ToArray();
+
+        var cpu = Assert.Single(DetailedDiagnosticsBuilder.Build(SystemMetricsSnapshot.Empty, readings, false), section => section.Id == "cpu");
+        var cores = cpu.Metrics.Where(metric => metric.Label.StartsWith("Core ", StringComparison.Ordinal)).ToArray();
+
+        Assert.Equal(16, cores.Length);
+        Assert.Equal("Core 1 Load", cores[0].Label);
+        Assert.Equal("Core 16 Load", cores[^1].Label);
+    }
+
+    [Fact]
+    public void BuildSeparatesPhysicalStorageModelFromLogicalVolumes()
+    {
+        var reading = Reading("disk-1", "Samsung SSD 990 PRO 2TB", "Temperature", HardwareSensorType.Temperature, 42, "°C", HardwareDeviceType.Storage);
+
+        var storage = Assert.Single(DetailedDiagnosticsBuilder.Build(SystemMetricsSnapshot.Empty, [reading], false), section => section.Id == "storage:disk-1");
+
+        Assert.Contains(storage.Metrics, metric => metric.Label == "Model" && metric.Value == "Samsung SSD 990 PRO 2TB");
     }
 
     private static HardwareSensorReading Reading(
@@ -75,11 +102,12 @@ public sealed class DetailedDiagnosticsBuilderTests
         string sensor,
         HardwareSensorType type,
         double value,
-        string unit) => new(
+        string unit,
+        HardwareDeviceType deviceType = HardwareDeviceType.Gpu) => new(
             $"{deviceId}:{sensor}",
             deviceId,
             device,
-            HardwareDeviceType.Gpu,
+            deviceType,
             HardwareVendor.Unknown,
             sensor,
             type,
