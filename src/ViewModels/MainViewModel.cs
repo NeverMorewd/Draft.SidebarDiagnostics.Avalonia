@@ -69,6 +69,9 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     public AppSettings Settings { get; private set; } = AppSettings.Default;
 
     public event EventHandler? SettingsApplied;
+    public string ShortcutStatus { get; private set; } = "Global shortcuts are initializing.";
+
+    public void UpdateShortcutStatus(string status) => ShortcutStatus = status;
     public event EventHandler? DisplaysChanged;
 
     public MainViewModel()

@@ -15,6 +15,7 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 - Safe external JSON metric cards from local files or explicit HTTP endpoints
 - Resilient multi-display placement with mixed-DPI edge docking and primary-display fallback
 - Native Windows AppBar integration that reserves the docked desktop work area
+- Configurable global shortcuts for show/focus, hide, and visibility toggle
 - High-density CPU, memory, GPU, drive, network, and hardware detail sections
 - Configurable clock, machine name, units, sidebar width, and opacity
 - Tray controls and native launch-at-login integration on all three platforms
@@ -33,6 +34,10 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 | Tray and launch at login | Supported | Supported | Supported |
 
 The detailed comparison with the WPF application is maintained in [docs/PARITY.md](docs/PARITY.md).
+
+### Global shortcut support
+
+Global shortcuts use a platform-neutral `Ctrl+Alt+Key` style syntax. Windows works without additional permissions. macOS requires Accessibility permission. X11 is supported through the native input hook. Wayland support depends on compositor and input-device permissions; the settings screen reports when the session denies global input access. Duplicate shortcuts are rejected without affecting the running monitor, and clearing a shortcut disables that action.
 
 ## Build and test
 

@@ -441,6 +441,11 @@
         "resolved": "10.0.3",
         "contentHash": "L1gcOL5kcfeeujKQbqJmpeTLsT0c6DeaJ9w6PY9oZ+/WESyya+Zj7StKguXR5j93o3o86FjcN05yufpoCz7R2g=="
       },
+      "SharpHook": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "HjDdR7NnXBM8yk3K2Tzv0zXWoZgspBxBNSU/4oa0FnIjQXEBENtvHOCS5S+Xorz8lwrdbqfMRcJ3t5do48Ml3A=="
+      },
       "SkiaSharp": {
         "type": "Transitive",
         "resolved": "3.119.4",
@@ -577,7 +582,8 @@
           "Avalonia.Themes.Fluent": "[12.1.1, )",
           "AvaloniaUI.DiagnosticsSupport": "[2.2.3, )",
           "CommunityToolkit.Mvvm": "[8.4.2, )",
-          "LibreHardwareMonitorLib": "[0.9.6, )"
+          "LibreHardwareMonitorLib": "[0.9.6, )",
+          "SharpHook": "[8.0.0, )"
         }
       }
     }

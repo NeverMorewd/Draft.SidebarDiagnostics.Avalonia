@@ -2,13 +2,24 @@ using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SidebarDiagnostics.App.Views;
+using SidebarDiagnostics.App.Services.Shortcuts;
 
 namespace SidebarDiagnostics.App.ViewModels;
 
 public sealed partial class ApplicationViewModel(
     IClassicDesktopStyleApplicationLifetime lifetime,
-    MainWindow mainWindow) : ObservableObject
+    MainWindow mainWindow,
+    MainViewModel mainViewModel,
+    GlobalShortcutService shortcuts) : ObservableObject, IDisposable
 {
+    public void Initialize()
+    {
+        mainViewModel.SettingsApplied += OnSettingsApplied;
+        shortcuts.StatusChanged += OnShortcutStatusChanged;
+        lifetime.Exit += OnExit;
+        ApplyShortcuts();
+    }
+
     [RelayCommand]
     private void ShowWindow()
     {
@@ -25,5 +36,29 @@ public sealed partial class ApplicationViewModel(
     {
         mainWindow.AllowClose = true;
         lifetime.Shutdown();
+    }
+
+    private void ToggleWindow()
+    {
+        if (mainWindow.IsVisible) HideWindow(); else ShowWindow();
+    }
+
+    private void OnSettingsApplied(object? sender, EventArgs e) => ApplyShortcuts();
+    private void OnShortcutStatusChanged(object? sender, EventArgs e) => mainViewModel.UpdateShortcutStatus(shortcuts.Status);
+    private void ApplyShortcuts()
+    {
+        var settings = mainViewModel.Settings;
+        shortcuts.Apply([
+            new("Show and focus", settings.ShowShortcut, ShowWindow),
+            new("Hide", settings.HideShortcut, HideWindow),
+            new("Toggle", settings.ToggleShortcut, ToggleWindow)]);
+        mainViewModel.UpdateShortcutStatus(shortcuts.Status);
+    }
+    private void OnExit(object? sender, ControlledApplicationLifetimeExitEventArgs e) => Dispose();
+    public void Dispose()
+    {
+        mainViewModel.SettingsApplied -= OnSettingsApplied;
+        shortcuts.StatusChanged -= OnShortcutStatusChanged;
+        shortcuts.Dispose();
     }
 }
