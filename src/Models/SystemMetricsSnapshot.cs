@@ -8,6 +8,8 @@ public sealed record SystemMetricsSnapshot(
     long MemoryTotalBytes,
     double MemoryUsagePercent,
     double StorageUsagePercent,
+    long StorageUsedBytes,
+    long StorageTotalBytes,
     double DownloadBytesPerSecond,
     double UploadBytesPerSecond,
     double NetworkActivityPercent)
@@ -15,6 +17,8 @@ public sealed record SystemMetricsSnapshot(
     public static SystemMetricsSnapshot Empty { get; } = new(
         DateTimeOffset.UtcNow,
         GetPlatformName(),
+        0,
+        0,
         0,
         0,
         0,

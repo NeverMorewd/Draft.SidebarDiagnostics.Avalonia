@@ -153,8 +153,14 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             StatusText = "Live monitoring";
 
             Metrics[0].Update($"{snapshot.CpuUsagePercent:F0}%", "SYSTEM LOAD", snapshot.CpuUsagePercent);
-            Metrics[1].Update(FormatBytes(snapshot.MemoryUsedBytes), "SYSTEM USED", snapshot.MemoryUsagePercent);
-            Metrics[2].Update($"{snapshot.StorageUsagePercent:F0}%", "PRIMARY VOLUME", snapshot.StorageUsagePercent);
+            Metrics[1].Update(
+                $"{snapshot.MemoryUsagePercent:F0}%",
+                $"{FormatBytes(snapshot.MemoryUsedBytes)} USED · {FormatBytes(snapshot.MemoryTotalBytes)} TOTAL",
+                snapshot.MemoryUsagePercent);
+            Metrics[2].Update(
+                $"{snapshot.StorageUsagePercent:F0}%",
+                $"{FormatBytes(snapshot.StorageUsedBytes)} USED · {FormatBytes(snapshot.StorageTotalBytes)} TOTAL",
+                snapshot.StorageUsagePercent);
             Metrics[3].Update($"{FormatBytes(snapshot.DownloadBytesPerSecond)}/s", $"UP {FormatBytes(snapshot.UploadBytesPerSecond)}/s", snapshot.NetworkActivityPercent);
             UpdateGpuMetric();
             await UpdateExternalMetricsAsync();
@@ -177,7 +183,8 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             DiagnosticSections = DetailedDiagnosticsBuilder.Build(
                 snapshot,
                 SensorCatalog.SelectVisible(hardwareReadings, Settings.SensorPreferences),
-                Settings.UseFahrenheit);
+                Settings.UseFahrenheit,
+                LatestGpuSnapshots);
         }
         catch (OperationCanceledException) when (_lifetimeCancellation.IsCancellationRequested)
         {
@@ -228,7 +235,9 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
 
         if (gpu.DedicatedMemoryUsedBytes is { } used)
         {
-            details.Add($"{FormatBytes(used)} VRAM");
+            details.Add(gpu.DedicatedMemoryTotalBytes is { } total
+                ? $"{FormatBytes(used)} / {FormatBytes(total)} VRAM"
+                : $"{FormatBytes(used)} VRAM USED");
         }
         else if (gpu.SharedMemoryUsedBytes is { } shared)
         {
