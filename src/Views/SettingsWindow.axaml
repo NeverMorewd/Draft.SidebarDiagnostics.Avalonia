@@ -19,6 +19,22 @@
             </StackPanel>
 
             <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Global shortcuts" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <TextBlock Text="Use modifiers plus a letter, number, or function key. Clear a field to disable it." FontSize="11" Foreground="#94A3B8" TextWrapping="Wrap" />
+                    <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="8">
+                        <TextBlock Text="Show and focus" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1" Text="{Binding ShowShortcut}" />
+                        <TextBlock Grid.Row="1" Text="Hide" VerticalAlignment="Center" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding HideShortcut}" />
+                        <TextBlock Grid.Row="2" Text="Toggle" VerticalAlignment="Center" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ToggleShortcut}" />
+                    </Grid>
+                    <TextBlock Text="{Binding ShortcutStatus}" FontSize="11" Foreground="#7DD3FC" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
                 <StackPanel Spacing="12">
                     <TextBlock Text="Refresh interval" FontWeight="SemiBold" Foreground="#E2E8F0" />
                     <NumericUpDown Value="{Binding RefreshIntervalMilliseconds}" Minimum="250" Maximum="10000" Increment="250" FormatString="0 ms" />

@@ -77,6 +77,17 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial double VerticalPositionPercent { get; set; }
 
     [ObservableProperty]
+    public partial string? ShowShortcut { get; set; }
+
+    [ObservableProperty]
+    public partial string? HideShortcut { get; set; }
+
+    [ObservableProperty]
+    public partial string? ToggleShortcut { get; set; }
+
+    public string ShortcutStatus => _mainViewModel.ShortcutStatus;
+
+    [ObservableProperty]
     public partial GpuDeviceOption? SelectedGpu { get; set; }
 
     public event EventHandler? Saved;
@@ -104,6 +115,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
         DockEdge = settings.DockEdge;
         ReserveScreenSpace = settings.ReserveScreenSpace;
         VerticalPositionPercent = settings.VerticalPosition * 100;
+        ShowShortcut = settings.ShowShortcut;
+        HideShortcut = settings.HideShortcut;
+        ToggleShortcut = settings.ToggleShortcut;
 
         foreach (var display in mainViewModel.AvailableDisplays)
         {
@@ -163,7 +177,10 @@ public sealed partial class SettingsViewModel : ViewModelBase
             DisplayId = SelectedDisplay?.Id,
             DockEdge = DockEdge,
             ReserveScreenSpace = ReserveScreenSpace,
-            VerticalPosition = VerticalPositionPercent / 100
+            VerticalPosition = VerticalPositionPercent / 100,
+            ShowShortcut = ShowShortcut,
+            HideShortcut = HideShortcut,
+            ToggleShortcut = ToggleShortcut
         };
 
         await _mainViewModel.SaveSettingsAsync(settings, CancellationToken.None);

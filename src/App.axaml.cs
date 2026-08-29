@@ -8,6 +8,7 @@ using SidebarDiagnostics.App.Services.ExternalMetrics;
 using SidebarDiagnostics.App.Services.Startup;
 using SidebarDiagnostics.App.ViewModels;
 using SidebarDiagnostics.App.Views;
+using SidebarDiagnostics.App.Services.Shortcuts;
 
 namespace SidebarDiagnostics.App;
 
@@ -27,17 +28,20 @@ public partial class App : Application
             var settingsStore = new JsonSettingsStore();
             var hardwareSensorService = HardwareSensorServiceFactory.Create();
             var autoStartService = AutoStartServiceFactory.Create();
+            var mainViewModel = new MainViewModel(
+                metricsService,
+                settingsStore,
+                hardwareSensorService,
+                autoStartService,
+                new ExternalMetricService());
             var mainWindow = new MainWindow
             {
-                DataContext = new MainViewModel(
-                    metricsService,
-                    settingsStore,
-                    hardwareSensorService,
-                    autoStartService,
-                    new ExternalMetricService()),
+                DataContext = mainViewModel,
             };
             desktop.MainWindow = mainWindow;
-            DataContext = new ApplicationViewModel(desktop, mainWindow);
+            var applicationViewModel = new ApplicationViewModel(desktop, mainWindow, mainViewModel, new GlobalShortcutService());
+            applicationViewModel.Initialize();
+            DataContext = applicationViewModel;
         }
 
         base.OnFrameworkInitializationCompleted();

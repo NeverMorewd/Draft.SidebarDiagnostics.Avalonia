@@ -26,6 +26,9 @@ public sealed record AppSettings
     public DockEdge DockEdge { get; init; } = DockEdge.Right;
     public bool ReserveScreenSpace { get; init; } = true;
     public double VerticalPosition { get; init; }
+    public string? ShowShortcut { get; init; } = "Ctrl+Alt+S";
+    public string? HideShortcut { get; init; } = "Ctrl+Alt+H";
+    public string? ToggleShortcut { get; init; } = "Ctrl+Alt+T";
 
     public AppSettings Normalize() => this with
     {

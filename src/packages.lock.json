@@ -76,6 +76,12 @@
           "System.Management": "10.0.2"
         }
       },
+      "SharpHook": {
+        "type": "Direct",
+        "requested": "[8.0.0, )",
+        "resolved": "8.0.0",
+        "contentHash": "HjDdR7NnXBM8yk3K2Tzv0zXWoZgspBxBNSU/4oa0FnIjQXEBENtvHOCS5S+Xorz8lwrdbqfMRcJ3t5do48Ml3A=="
+      },
       "Avalonia.Angle.Windows.Natives": {
         "type": "Transitive",
         "resolved": "2.1.27548.20260419",
@@ -425,6 +431,12 @@
           "System.Management": "10.0.2"
         }
       },
+      "SharpHook": {
+        "type": "Direct",
+        "requested": "[8.0.0, )",
+        "resolved": "8.0.0",
+        "contentHash": "HjDdR7NnXBM8yk3K2Tzv0zXWoZgspBxBNSU/4oa0FnIjQXEBENtvHOCS5S+Xorz8lwrdbqfMRcJ3t5do48Ml3A=="
+      },
       "Avalonia.Angle.Windows.Natives": {
         "type": "Transitive",
         "resolved": "2.1.27548.20260419",
@@ -590,6 +602,12 @@
           "System.IO.Ports": "10.0.3",
           "System.Management": "10.0.2"
         }
+      },
+      "SharpHook": {
+        "type": "Direct",
+        "requested": "[8.0.0, )",
+        "resolved": "8.0.0",
+        "contentHash": "HjDdR7NnXBM8yk3K2Tzv0zXWoZgspBxBNSU/4oa0FnIjQXEBENtvHOCS5S+Xorz8lwrdbqfMRcJ3t5do48Ml3A=="
       },
       "Avalonia.Angle.Windows.Natives": {
         "type": "Transitive",
@@ -757,6 +775,12 @@
           "System.Management": "10.0.2"
         }
       },
+      "SharpHook": {
+        "type": "Direct",
+        "requested": "[8.0.0, )",
+        "resolved": "8.0.0",
+        "contentHash": "HjDdR7NnXBM8yk3K2Tzv0zXWoZgspBxBNSU/4oa0FnIjQXEBENtvHOCS5S+Xorz8lwrdbqfMRcJ3t5do48Ml3A=="
+      },
       "Avalonia.Angle.Windows.Natives": {
         "type": "Transitive",
         "resolved": "2.1.27548.20260419",
@@ -922,6 +946,12 @@
           "System.IO.Ports": "10.0.3",
           "System.Management": "10.0.2"
         }
+      },
+      "SharpHook": {
+        "type": "Direct",
+        "requested": "[8.0.0, )",
+        "resolved": "8.0.0",
+        "contentHash": "HjDdR7NnXBM8yk3K2Tzv0zXWoZgspBxBNSU/4oa0FnIjQXEBENtvHOCS5S+Xorz8lwrdbqfMRcJ3t5do48Ml3A=="
       },
       "Avalonia.Angle.Windows.Natives": {
         "type": "Transitive",
