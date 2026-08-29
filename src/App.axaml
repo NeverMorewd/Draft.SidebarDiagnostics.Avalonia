@@ -12,6 +12,82 @@
 
     <Application.Styles>
         <FluentTheme DensityStyle="Compact" />
+        <Style Selector="TextBox, ComboBox, NumericUpDown">
+            <Setter Property="Background" Value="#0B1220" />
+            <Setter Property="BorderBrush" Value="#2A3B52" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="7" />
+            <Setter Property="Foreground" Value="#E2E8F0" />
+        </Style>
+        <Style Selector="TextBox:pointerover, ComboBox:pointerover, NumericUpDown:pointerover">
+            <Setter Property="BorderBrush" Value="#3B5874" />
+        </Style>
+        <Style Selector="TextBox:focus, TextBox:focus-within, ComboBox:focus, ComboBox:focus-within, NumericUpDown:focus, NumericUpDown:focus-within">
+            <Setter Property="BorderBrush" Value="#38BDF8" />
+        </Style>
+        <Style Selector="TextBox:disabled, ComboBox:disabled, NumericUpDown:disabled">
+            <Setter Property="Background" Value="#0B111B" />
+            <Setter Property="BorderBrush" Value="#1C293A" />
+            <Setter Property="Foreground" Value="#526278" />
+        </Style>
+        <Style Selector="NumericUpDown RepeatButton, ComboBox ToggleButton">
+            <Setter Property="Background" Value="#111C2A" />
+            <Setter Property="BorderBrush" Value="#2A3B52" />
+            <Setter Property="Foreground" Value="#9FB0C7" />
+        </Style>
+        <Style Selector="NumericUpDown RepeatButton:pointerover, ComboBox ToggleButton:pointerover">
+            <Setter Property="Background" Value="#1A2A3D" />
+            <Setter Property="BorderBrush" Value="#3B5874" />
+            <Setter Property="Foreground" Value="#E0F2FE" />
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#142033" />
+            <Setter Property="BorderBrush" Value="#2A3B52" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="7" />
+            <Setter Property="Foreground" Value="#D8E2EF" />
+        </Style>
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#1D2D43" />
+            <Setter Property="BorderBrush" Value="#3B5874" />
+            <Setter Property="Foreground" Value="#F8FAFC" />
+        </Style>
+        <Style Selector="Button:focus">
+            <Setter Property="BorderBrush" Value="#38BDF8" />
+        </Style>
+        <Style Selector="Button:disabled">
+            <Setter Property="Background" Value="#0F1724" />
+            <Setter Property="BorderBrush" Value="#1C293A" />
+            <Setter Property="Foreground" Value="#526278" />
+        </Style>
+        <Style Selector="CheckBox">
+            <Setter Property="Foreground" Value="#CBD5E1" />
+            <Setter Property="BorderBrush" Value="#3B516A" />
+        </Style>
+        <Style Selector="CheckBox:pointerover">
+            <Setter Property="BorderBrush" Value="#5B7898" />
+        </Style>
+        <Style Selector="CheckBox:checked">
+            <Setter Property="Background" Value="#0284C7" />
+            <Setter Property="BorderBrush" Value="#38BDF8" />
+        </Style>
+        <Style Selector="ComboBoxItem:pointerover">
+            <Setter Property="Background" Value="#1A2A3D" />
+            <Setter Property="Foreground" Value="#F8FAFC" />
+        </Style>
+        <Style Selector="ComboBoxItem:selected">
+            <Setter Property="Background" Value="#12314A" />
+            <Setter Property="Foreground" Value="#BAE6FD" />
+        </Style>
+        <Style Selector="ScrollBar">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="ScrollBar /template/ Thumb">
+            <Setter Property="Background" Value="#33465F" />
+        </Style>
+        <Style Selector="ScrollBar /template/ Thumb:pointerover">
+            <Setter Property="Background" Value="#4A678A" />
+        </Style>
     </Application.Styles>
 
     <TrayIcon.Icons>
