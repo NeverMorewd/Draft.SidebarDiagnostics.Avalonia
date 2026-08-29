@@ -73,11 +73,13 @@ public static class SensorCatalog
         int defaultLimit = int.MaxValue)
     {
         var readingList = readings.ToArray();
-        var readingById = readingList.ToDictionary(reading => reading.Id, StringComparer.Ordinal);
+        var readingById = readingList
+            .GroupBy(reading => reading.Id, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
         var preferenceList = preferences.ToArray();
         if (preferenceList.Length == 0)
         {
-            return readingList
+            return readingById.Values
                 .OrderBy(reading => reading.Device, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(reading => reading.Sensor, StringComparer.OrdinalIgnoreCase)
                 .Take(defaultLimit)

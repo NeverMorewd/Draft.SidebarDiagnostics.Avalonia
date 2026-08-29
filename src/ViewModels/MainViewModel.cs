@@ -145,7 +145,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         try
         {
             var snapshot = await _metricsService.GetSnapshotAsync(_lifetimeCancellation.Token);
-            var hardwareReadings = await _hardwareSensorService.ReadAsync(_lifetimeCancellation.Token);
+            var hardwareReadings = await ReadHardwareSafelyAsync(_lifetimeCancellation.Token);
             LatestHardwareReadings = hardwareReadings;
             LatestGpuSnapshots = GpuMetricsMapper.Map(hardwareReadings);
             PlatformName = snapshot.Platform;
@@ -168,37 +168,43 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             UpdateGpuMetric();
             await UpdateExternalMetricsAsync();
 
-            HardwareSensors.Clear();
-            var catalogById = SensorCatalog.Build(hardwareReadings, Settings.SensorPreferences)
-                .ToDictionary(entry => entry.SensorId, StringComparer.Ordinal);
-            foreach (var reading in SensorCatalog.SelectVisible(hardwareReadings, Settings.SensorPreferences))
-            {
-                var catalogEntry = catalogById[reading.Id];
-                HardwareSensors.Add(new HardwareSensorViewModel(
-                    reading.Device,
-                    catalogEntry.DisplayName,
-                    FormatSensorValue(reading)));
-            }
-
-            HardwareStatus = HardwareSensors.Count > 0
-                ? $"{HardwareSensors.Count} hardware sensors"
+            var visibleReadings = SensorCatalog.SelectVisible(hardwareReadings, Settings.SensorPreferences).ToArray();
+            HardwareStatus = visibleReadings.Length > 0
+                ? $"{visibleReadings.Length} hardware sensors"
                 : _hardwareSensorService.CapabilityMessage;
             DiagnosticSections = DetailedDiagnosticsBuilder.Build(
                 snapshot,
-                SensorCatalog.SelectVisible(hardwareReadings, Settings.SensorPreferences),
+                visibleReadings,
                 Settings.UseFahrenheit,
                 LatestGpuSnapshots);
         }
         catch (OperationCanceledException) when (_lifetimeCancellation.IsCancellationRequested)
         {
         }
-        catch (Exception)
+        catch (Exception exception)
         {
-            StatusText = "Metrics temporarily unavailable";
+            StatusText = $"Metrics unavailable: {exception.GetType().Name}";
         }
         finally
         {
             _refreshGate.Release();
+        }
+    }
+
+    private async ValueTask<IReadOnlyList<HardwareSensorReading>> ReadHardwareSafelyAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await _hardwareSensorService.ReadAsync(cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            HardwareStatus = $"Hardware sensors unavailable: {exception.GetType().Name}";
+            return [];
         }
     }
 

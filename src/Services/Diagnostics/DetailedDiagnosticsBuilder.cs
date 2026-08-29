@@ -14,12 +14,23 @@ public static class DetailedDiagnosticsBuilder
         IReadOnlyList<GpuSnapshot>? gpuSnapshots = null)
     {
         var sections = new List<DiagnosticSection> { BuildCpu(snapshot, readings, fahrenheit), BuildMemory(snapshot, readings, fahrenheit) };
-        sections.AddRange(BuildGpus(readings, gpuSnapshots ?? GpuMetricsMapper.Map(readings), fahrenheit));
-        sections.AddRange(BuildStorageDevices(readings, fahrenheit));
-        sections.AddRange(BuildDrives(readings, fahrenheit));
-        sections.AddRange(BuildNetworks(snapshot));
-        sections.AddRange(BuildHardware(readings.Where(x => x.DeviceType is HardwareDeviceType.Motherboard or HardwareDeviceType.Controller), "#F472B6", fahrenheit));
+        AddSafely(sections, () => BuildGpus(readings, gpuSnapshots ?? GpuMetricsMapper.Map(readings), fahrenheit));
+        AddSafely(sections, () => BuildStorageDevices(readings, fahrenheit));
+        AddSafely(sections, () => BuildDrives(readings, fahrenheit));
+        AddSafely(sections, () => BuildNetworks(snapshot));
+        AddSafely(sections, () => BuildHardware(readings.Where(x => x.DeviceType is HardwareDeviceType.Motherboard or HardwareDeviceType.Controller), "#F472B6", fahrenheit));
         return sections.Where(x => x.Metrics.Count > 0).ToArray();
+    }
+
+    private static void AddSafely(List<DiagnosticSection> sections, Func<IEnumerable<DiagnosticSection>> build)
+    {
+        try
+        {
+            sections.AddRange(build());
+        }
+        catch (Exception)
+        {
+        }
     }
 
     private static IEnumerable<DiagnosticSection> BuildGpus(
