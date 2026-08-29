@@ -5,17 +5,14 @@ namespace SidebarDiagnostics.App.Services.Platform;
 
 public sealed class MacOsMetricsProvider : IPlatformMetricsProvider
 {
+    private const int HostCpuLoadInfo = 3;
     private const int HostVmInfo64 = 4;
+    private readonly object cpuSync = new();
+    private CpuTicks? previousCpuTicks;
 
     public ValueTask<PlatformMetrics> SampleAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
-        var loadAverages = new double[3];
-        if (GetLoadAverage(loadAverages, loadAverages.Length) < 1)
-        {
-            throw new InvalidOperationException("macOS did not return a system load average.");
-        }
 
         nuint memorySizeLength = sizeof(ulong);
         if (SysctlByName("hw.memsize", out var totalMemory, ref memorySizeLength, IntPtr.Zero, 0) != 0)
@@ -35,9 +32,12 @@ public sealed class MacOsMetricsProvider : IPlatformMetricsProvider
             throw new InvalidOperationException("macOS did not return virtual memory statistics.");
         }
 
-        var usedPages = statistics.ActiveCount + statistics.InactiveCount + statistics.WireCount + statistics.CompressorPageCount;
+        var usedPages = (ulong)statistics.ActiveCount
+            + statistics.InactiveCount
+            + statistics.WireCount
+            + statistics.CompressorPageCount;
         var usedMemory = checked((long)(usedPages * pageSize));
-        var cpuUsage = loadAverages[0] * 100d / Environment.ProcessorCount;
+        var cpuUsage = ReadCpuUsage(MachHostSelf());
 
         return ValueTask.FromResult(new PlatformMetrics(
             Math.Clamp(cpuUsage, 0, 100),
@@ -45,8 +45,36 @@ public sealed class MacOsMetricsProvider : IPlatformMetricsProvider
             checked((long)totalMemory)));
     }
 
-    [DllImport("libSystem.B.dylib", EntryPoint = "getloadavg")]
-    private static extern int GetLoadAverage([Out] double[] loadAverage, int count);
+    private double ReadCpuUsage(uint host)
+    {
+        var load = new HostCpuLoadStatistics();
+        var count = (uint)(Marshal.SizeOf<HostCpuLoadStatistics>() / sizeof(int));
+        if (HostStatistics(host, HostCpuLoadInfo, ref load, ref count) != 0)
+        {
+            throw new InvalidOperationException("macOS did not return CPU load statistics.");
+        }
+
+        var current = new CpuTicks(load.User, load.System, load.Idle, load.Nice);
+        lock (cpuSync)
+        {
+            var previous = previousCpuTicks;
+            previousCpuTicks = current;
+            if (previous is null)
+            {
+                return 0;
+            }
+
+            var user = Delta(current.User, previous.Value.User);
+            var system = Delta(current.System, previous.Value.System);
+            var idle = Delta(current.Idle, previous.Value.Idle);
+            var nice = Delta(current.Nice, previous.Value.Nice);
+            var total = user + system + idle + nice;
+            return total == 0 ? 0 : (user + system + nice) * 100d / total;
+        }
+    }
+
+    private static ulong Delta(uint current, uint previous) =>
+        current >= previous ? current - previous : (ulong)uint.MaxValue - previous + current + 1;
 
     [DllImport(
         "libSystem.B.dylib",
@@ -66,7 +94,10 @@ public sealed class MacOsMetricsProvider : IPlatformMetricsProvider
     private static extern uint MachHostSelf();
 
     [DllImport("libSystem.B.dylib", EntryPoint = "host_page_size")]
-    private static extern int HostPageSize(uint host, out ulong pageSize);
+    private static extern int HostPageSize(uint host, out uint pageSize);
+
+    [DllImport("libSystem.B.dylib", EntryPoint = "host_statistics")]
+    private static extern int HostStatistics(uint host, int flavor, ref HostCpuLoadStatistics statistics, ref uint count);
 
     [DllImport("libSystem.B.dylib", EntryPoint = "host_statistics64")]
     private static extern int HostStatistics64(uint host, int flavor, ref VmStatistics64 statistics, ref uint count);
@@ -74,10 +105,10 @@ public sealed class MacOsMetricsProvider : IPlatformMetricsProvider
     [StructLayout(LayoutKind.Sequential)]
     private struct VmStatistics64
     {
-        public ulong FreeCount;
-        public ulong ActiveCount;
-        public ulong InactiveCount;
-        public ulong WireCount;
+        public uint FreeCount;
+        public uint ActiveCount;
+        public uint InactiveCount;
+        public uint WireCount;
         public ulong ZeroFillCount;
         public ulong Reactivations;
         public ulong PageIns;
@@ -93,10 +124,21 @@ public sealed class MacOsMetricsProvider : IPlatformMetricsProvider
         public ulong Compressions;
         public ulong SwapIns;
         public ulong SwapOuts;
-        public ulong CompressorPageCount;
-        public ulong ThrottledCount;
-        public ulong ExternalPageCount;
-        public ulong InternalPageCount;
+        public uint CompressorPageCount;
+        public uint ThrottledCount;
+        public uint ExternalPageCount;
+        public uint InternalPageCount;
         public ulong TotalUncompressedPagesInCompressor;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct HostCpuLoadStatistics
+    {
+        public uint User;
+        public uint System;
+        public uint Idle;
+        public uint Nice;
+    }
+
+    private readonly record struct CpuTicks(uint User, uint System, uint Idle, uint Nice);
 }
