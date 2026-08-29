@@ -23,7 +23,7 @@ public sealed class MetricSeriesCatalog
                     metric.Label,
                     section.Subtitle,
                     metric.Unit,
-                    section.AccentColor,
+                    section.AccentResourceKey,
                     metric.NumericValue!.Value,
                     timestamp);
             }

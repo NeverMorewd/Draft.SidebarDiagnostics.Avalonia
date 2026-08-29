@@ -1,3 +1,4 @@
+using SidebarDiagnostics.App.Styling;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using SidebarDiagnostics.App.Models;
@@ -18,7 +19,7 @@ public static class DetailedDiagnosticsBuilder
         AddSafely(sections, () => BuildStorageDevices(readings, fahrenheit));
         AddSafely(sections, () => BuildDrives(readings, fahrenheit));
         AddSafely(sections, () => BuildNetworks(snapshot));
-        AddSafely(sections, () => BuildHardware(readings.Where(x => x.DeviceType is HardwareDeviceType.Motherboard or HardwareDeviceType.Controller), "#F472B6", fahrenheit));
+        AddSafely(sections, () => BuildHardware(readings.Where(x => x.DeviceType is HardwareDeviceType.Motherboard or HardwareDeviceType.Controller), ThemeResourceKeys.HardwareAccent, fahrenheit));
         return sections.Where(x => x.Metrics.Count > 0).ToArray();
     }
 
@@ -69,7 +70,7 @@ public static class DetailedDiagnosticsBuilder
             {
                 metrics.AddRange(MapSensors(deviceReadings, fahrenheit));
             }
-            yield return new(gpu.DeviceId, "GPU", gpu.Name, "#FB923C", Deduplicate(metrics));
+            yield return new(gpu.DeviceId, "GPU", gpu.Name, ThemeResourceKeys.GpuAccent, Deduplicate(metrics));
         }
     }
 
@@ -86,7 +87,7 @@ public static class DetailedDiagnosticsBuilder
             new("Logical processors", Environment.ProcessorCount.ToString(System.Globalization.CultureInfo.InvariantCulture))
         };
         metrics.AddRange(MapSensors(cpuReadings, fahrenheit));
-        return new("cpu", "CPU", name, "#7DD3FC", Deduplicate(metrics));
+        return new("cpu", "CPU", name, ThemeResourceKeys.CpuAccent, Deduplicate(metrics));
     }
 
     private static DiagnosticSection BuildMemory(SystemMetricsSnapshot snapshot, IReadOnlyList<HardwareSensorReading> readings, bool fahrenheit)
@@ -102,7 +103,7 @@ public static class DetailedDiagnosticsBuilder
             new("Total", FormatBytes(snapshot.MemoryTotalBytes))
         };
         metrics.AddRange(MapSensors(memoryReadings, fahrenheit));
-        return new("memory", "RAM", model, "#C4B5FD", Deduplicate(metrics));
+        return new("memory", "RAM", model, ThemeResourceKeys.MemoryAccent, Deduplicate(metrics));
     }
 
     private static IEnumerable<DiagnosticSection> BuildDrives(IReadOnlyList<HardwareSensorReading> readings, bool fahrenheit)
@@ -126,7 +127,7 @@ public static class DetailedDiagnosticsBuilder
                 new("Total", FormatBytes(drive.TotalSize)),
                 new("Format", string.IsNullOrWhiteSpace(drive.DriveFormat) ? "Unknown" : drive.DriveFormat)
             };
-            yield return new($"drive:{drive.Name}", "Volume", drive.Name, "#6EE7B7", Deduplicate(metrics));
+            yield return new($"drive:{drive.Name}", "Volume", drive.Name, ThemeResourceKeys.StorageAccent, Deduplicate(metrics));
         }
     }
 
@@ -137,7 +138,7 @@ public static class DetailedDiagnosticsBuilder
                 $"storage:{group.Key}",
                 "Storage device",
                 group.First().Device,
-                "#6EE7B7",
+                ThemeResourceKeys.StorageAccent,
                 Deduplicate([new("Model", group.First().Device), .. MapSensors(group, fahrenheit)])));
 
     private static IEnumerable<DiagnosticSection> BuildNetworks(SystemMetricsSnapshot snapshot)
@@ -162,7 +163,7 @@ public static class DetailedDiagnosticsBuilder
                 metrics.Add(Numeric("Upload", $"{FormatBytes(snapshot.UploadBytesPerSecond)}/s", $"network:{network.Id}:upload", snapshot.UploadBytesPerSecond / 1024d, "KB/s"));
             }
             if (addresses.Length > 0) metrics.Add(new("IP addresses", string.Join(", ", addresses)));
-            yield return new($"network:{network.Id}", "Network", network.Name, "#FDE68A", metrics);
+            yield return new($"network:{network.Id}", "Network", network.Name, ThemeResourceKeys.NetworkAccent, metrics);
         }
     }
 

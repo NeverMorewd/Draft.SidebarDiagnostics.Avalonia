@@ -1,3 +1,4 @@
+using SidebarDiagnostics.App.Styling;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using Avalonia.Threading;
@@ -50,11 +51,11 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
 
     public ObservableCollection<MetricCardViewModel> Metrics { get; } =
     [
-        new("CPU", "0%", "SYSTEM LOAD", "#7DD3FC", AppSettings.Default.CpuAlertThreshold),
-        new("Memory", "0 MB", "SYSTEM USED", "#C4B5FD", AppSettings.Default.MemoryAlertThreshold),
-        new("Storage", "0%", "PRIMARY VOLUME", "#6EE7B7", AppSettings.Default.StorageAlertThreshold),
-        new("Network", "0 B/s", "DOWNLOAD", "#FDE68A", AppSettings.Default.NetworkAlertThreshold),
-        new("GPU", "Unavailable", "NO SUPPORTED GPU METRICS", "#FB923C", AppSettings.Default.GpuAlertThreshold)
+        new("CPU", "0%", "SYSTEM LOAD", ThemeResourceKeys.CpuAccent, AppSettings.Default.CpuAlertThreshold),
+        new("Memory", "0 MB", "SYSTEM USED", ThemeResourceKeys.MemoryAccent, AppSettings.Default.MemoryAlertThreshold),
+        new("Storage", "0%", "PRIMARY VOLUME", ThemeResourceKeys.StorageAccent, AppSettings.Default.StorageAlertThreshold),
+        new("Network", "0 B/s", "DOWNLOAD", ThemeResourceKeys.NetworkAccent, AppSettings.Default.NetworkAlertThreshold),
+        new("GPU", "Unavailable", "NO SUPPORTED GPU METRICS", ThemeResourceKeys.GpuAccent, AppSettings.Default.GpuAlertThreshold)
     ];
 
     public ObservableCollection<HardwareSensorViewModel> HardwareSensors { get; } = [];
@@ -283,7 +284,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         {
             if (!_externalMetricCards.TryGetValue(snapshot.Id, out var card))
             {
-                card = new MetricCardViewModel(snapshot.Title, "Waiting", "EXTERNAL JSON", "#38BDF8", 101);
+                card = new MetricCardViewModel(snapshot.Title, "Waiting", "EXTERNAL JSON", ThemeResourceKeys.ExternalAccent, 101);
                 _externalMetricCards.Add(snapshot.Id, card);
                 Metrics.Add(card);
             }

@@ -9,15 +9,25 @@ namespace SidebarDiagnostics.App.Controls;
 public sealed class MetricChart : Control
 {
     private const double Left = 72, Top = 18, Right = 18, Bottom = 38;
-    private static readonly IBrush LabelBrush = new SolidColorBrush(Color.Parse("#71839B"));
-    private static readonly Pen GridPen = new(new SolidColorBrush(Color.Parse("#223047")), 1);
-    private static readonly Pen AxisPen = new(new SolidColorBrush(Color.Parse("#354760")), 1);
     private static readonly Typeface LabelTypeface = new("Inter");
     public static readonly StyledProperty<MetricSeries?> SeriesProperty = AvaloniaProperty.Register<MetricChart, MetricSeries?>(nameof(Series));
     public static readonly StyledProperty<TimeSpan> DurationProperty = AvaloniaProperty.Register<MetricChart, TimeSpan>(nameof(Duration), TimeSpan.FromSeconds(30));
+    public static readonly StyledProperty<IBrush?> LabelBrushProperty = AvaloniaProperty.Register<MetricChart, IBrush?>(nameof(LabelBrush));
+    public static readonly StyledProperty<IBrush?> GridBrushProperty = AvaloniaProperty.Register<MetricChart, IBrush?>(nameof(GridBrush));
+    public static readonly StyledProperty<IBrush?> AxisBrushProperty = AvaloniaProperty.Register<MetricChart, IBrush?>(nameof(AxisBrush));
+    public static readonly StyledProperty<IBrush?> PointOutlineBrushProperty = AvaloniaProperty.Register<MetricChart, IBrush?>(nameof(PointOutlineBrush));
+
+    static MetricChart()
+    {
+        AffectsRender<MetricChart>(SeriesProperty, DurationProperty, LabelBrushProperty, GridBrushProperty, AxisBrushProperty, PointOutlineBrushProperty);
+    }
 
     public MetricSeries? Series { get => GetValue(SeriesProperty); set => SetValue(SeriesProperty, value); }
     public TimeSpan Duration { get => GetValue(DurationProperty); set => SetValue(DurationProperty, value); }
+    public IBrush? LabelBrush { get => GetValue(LabelBrushProperty); set => SetValue(LabelBrushProperty, value); }
+    public IBrush? GridBrush { get => GetValue(GridBrushProperty); set => SetValue(GridBrushProperty, value); }
+    public IBrush? AxisBrush { get => GetValue(AxisBrushProperty); set => SetValue(AxisBrushProperty, value); }
+    public IBrush? PointOutlineBrush { get => GetValue(PointOutlineBrushProperty); set => SetValue(PointOutlineBrushProperty, value); }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
@@ -26,7 +36,6 @@ public sealed class MetricChart : Control
             if (change.OldValue is MetricSeries oldSeries) oldSeries.Changed -= OnSeriesChanged;
             if (change.NewValue is MetricSeries newSeries) newSeries.Changed += OnSeriesChanged;
         }
-        if (change.Property == SeriesProperty || change.Property == DurationProperty) InvalidateVisual();
         base.OnPropertyChanged(change);
     }
 
@@ -44,11 +53,13 @@ public sealed class MetricChart : Control
 
     private void DrawAxes(DrawingContext context, Rect plot, double minimum, double maximum, DateTimeOffset end)
     {
+        var gridPen = new Pen(GridBrush, 1);
+        var axisPen = new Pen(AxisBrush, 1);
         for (var index = 0; index <= 4; index++)
         {
             var fraction = index / 4d;
             var y = plot.Bottom - plot.Height * fraction;
-            context.DrawLine(index == 0 ? AxisPen : GridPen, new(plot.Left, y), new(plot.Right, y));
+            context.DrawLine(index == 0 ? axisPen : gridPen, new(plot.Left, y), new(plot.Right, y));
             var label = CreateLabel(FormatValue(minimum + (maximum - minimum) * fraction, Series?.Unit));
             context.DrawText(label, new(plot.Left - label.Width - 10, y - label.Height / 2));
         }
@@ -56,7 +67,7 @@ public sealed class MetricChart : Control
         {
             var fraction = index / 3d;
             var x = plot.Left + plot.Width * fraction;
-            context.DrawLine(index == 0 ? AxisPen : GridPen, new(x, plot.Top), new(x, plot.Bottom));
+            context.DrawLine(index == 0 ? axisPen : gridPen, new(x, plot.Top), new(x, plot.Bottom));
             var timestamp = end - Duration + TimeSpan.FromTicks((long)(Duration.Ticks * fraction));
             var label = CreateLabel(timestamp.ToString(Duration <= TimeSpan.FromMinutes(1) ? "HH:mm:ss" : "HH:mm", CultureInfo.CurrentCulture));
             var labelX = Math.Clamp(x - label.Width / 2, plot.Left, plot.Right - label.Width);
@@ -80,13 +91,16 @@ public sealed class MetricChart : Control
                 if (index == 0) drawing.BeginFigure(new(x, y), false); else drawing.LineTo(new(x, y));
             }
         }
-        var color = Color.TryParse(Series!.AccentColor, out var parsed) ? parsed : Colors.DeepSkyBlue;
-        var brush = new SolidColorBrush(color);
+        var brush = Application.Current?.TryFindResource(Series!.AccentResourceKey, out var resource) == true
+                    && resource is IBrush accentBrush
+            ? accentBrush
+            : null;
+        if (brush is null) return;
         context.DrawGeometry(null, new Pen(brush, 2), geometry);
         var latest = samples[^1];
         var latestX = plot.Left + Math.Clamp((latest.Timestamp - start).TotalMilliseconds / Duration.TotalMilliseconds, 0, 1) * plot.Width;
         var latestY = plot.Bottom - (latest.Value - minimum) / range * plot.Height;
-        context.DrawEllipse(brush, new Pen(Brushes.White, 1.5), new(latestX, latestY), 3.5, 3.5);
+        context.DrawEllipse(brush, new Pen(PointOutlineBrush, 1.5), new(latestX, latestY), 3.5, 3.5);
     }
 
     internal static (double Minimum, double Maximum) CalculateRange(IReadOnlyList<MetricSample> samples)
@@ -104,7 +118,7 @@ public sealed class MetricChart : Control
         return (axisMinimum, axisMaximum);
     }
 
-    private static FormattedText CreateLabel(string text) => new(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, LabelTypeface, 10, LabelBrush);
+    private FormattedText CreateLabel(string text) => new(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, LabelTypeface, 10, LabelBrush);
     private static string FormatValue(double value, string? unit)
     {
         var number = Math.Abs(value) switch

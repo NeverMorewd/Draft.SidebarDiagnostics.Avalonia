@@ -1,3 +1,4 @@
+using SidebarDiagnostics.App.Styling;
 using SidebarDiagnostics.App.Models;
 using SidebarDiagnostics.App.Controls;
 using Xunit;
@@ -20,9 +21,9 @@ public sealed class MetricSeriesTests
     {
         var series = new MetricSeries("cpu:load");
         var now = DateTimeOffset.UtcNow;
-        series.Update("Load", "CPU", "%", "#7DD3FC", 10, now - TimeSpan.FromSeconds(40));
-        series.Update("Load", "CPU", "%", "#7DD3FC", 20, now - TimeSpan.FromSeconds(20));
-        series.Update("Load", "CPU", "%", "#7DD3FC", 30, now);
+        series.Update("Load", "CPU", "%", ThemeResourceKeys.CpuAccent, 10, now - TimeSpan.FromSeconds(40));
+        series.Update("Load", "CPU", "%", ThemeResourceKeys.CpuAccent, 20, now - TimeSpan.FromSeconds(20));
+        series.Update("Load", "CPU", "%", ThemeResourceKeys.CpuAccent, 30, now);
 
         var samples = series.GetSamples(TimeSpan.FromSeconds(30), now);
 
@@ -49,6 +50,6 @@ public sealed class MetricSeriesTests
         "cpu",
         "CPU",
         "Processor",
-        "#7DD3FC",
+        ThemeResourceKeys.CpuAccent,
         [new DiagnosticMetric("Load", $"{value}%", "cpu:load", value, "%")]);
 }

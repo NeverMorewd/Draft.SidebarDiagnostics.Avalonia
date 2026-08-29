@@ -9,7 +9,7 @@ public sealed class MetricSeries(string id)
     public string Title { get; private set; } = string.Empty;
     public string Subtitle { get; private set; } = string.Empty;
     public string Unit { get; private set; } = string.Empty;
-    public string AccentColor { get; private set; } = "#7DD3FC";
+    public string AccentResourceKey { get; private set; } = Styling.ThemeResourceKeys.CpuAccent;
     public double CurrentValue { get; private set; }
 
     public event EventHandler? Changed;
@@ -18,7 +18,7 @@ public sealed class MetricSeries(string id)
         string title,
         string subtitle,
         string unit,
-        string accentColor,
+        string accentResourceKey,
         double value,
         DateTimeOffset timestamp)
     {
@@ -30,7 +30,7 @@ public sealed class MetricSeries(string id)
         Title = title;
         Subtitle = subtitle;
         Unit = unit;
-        AccentColor = accentColor;
+        AccentResourceKey = accentResourceKey;
         CurrentValue = value;
         _samples.Add(new(timestamp, value));
         var cutoff = timestamp - Retention;
