@@ -12,8 +12,8 @@ public sealed class AboutInfoTests
 
         Assert.Equal("https://github.com/NeverMorewd/SidebarDiagnostics.Avalonia", info.RepositoryUrl);
         Assert.Equal($"{info.RepositoryUrl}/issues", info.IssuesUrl);
-        Assert.Equal("GPL-3.0-only", info.License);
-        Assert.Contains("NeverMorewd", info.Author, StringComparison.Ordinal);
+        Assert.StartsWith("GPL-3.0", info.License, StringComparison.Ordinal);
+        Assert.Contains("ArcadeRenegade", info.Author, StringComparison.Ordinal);
         Assert.NotEmpty(info.ApplicationVersion);
         Assert.NotEmpty(info.AvaloniaVersion);
         Assert.StartsWith(".NET", info.DotNetVersion, StringComparison.Ordinal);

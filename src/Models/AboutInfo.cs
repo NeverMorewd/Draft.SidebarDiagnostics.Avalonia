@@ -15,13 +15,14 @@ public sealed record AboutInfo(
 {
     public const string Repository = "https://github.com/NeverMorewd/SidebarDiagnostics.Avalonia";
     public const string Issues = $"{Repository}/issues";
+    public string LicenseNotice => $"Licensed under {License}";
 
     public static AboutInfo Create() => new(
         GetVersion(typeof(SidebarDiagnostics.App.App).Assembly),
         GetVersion(typeof(Application).Assembly),
         RuntimeInformation.FrameworkDescription,
-        "NeverMorewd; original project by ArcadeRenegade",
-        "GPL-3.0-only",
+        "Wang Dong; original project by ArcadeRenegade",
+        "GPL-3.0",
         Repository,
         Issues);
 
