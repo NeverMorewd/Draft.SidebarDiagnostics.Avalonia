@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using SidebarDiagnostics.App.Models;
+using SidebarDiagnostics.App.Styling;
 
 namespace SidebarDiagnostics.App.ViewModels;
 
@@ -7,12 +8,12 @@ public sealed partial class MetricCardViewModel(
     string title,
     string value,
     string detail,
-    string accentColor,
+    string accentResourceKey,
     double alertThreshold) : ObservableObject
 {
     [ObservableProperty]
     public partial string Title { get; set; } = title;
-    public string AccentColor { get; } = accentColor;
+    public string AccentResourceKey { get; } = accentResourceKey;
     public MetricHistory History { get; } = new(60);
 
     [ObservableProperty]
@@ -30,7 +31,7 @@ public sealed partial class MetricCardViewModel(
     public partial double Progress { get; set; }
 
     public bool IsWarning => Progress >= AlertThreshold;
-    public string EffectiveAccentColor => IsWarning ? "#FB7185" : AccentColor;
+    public string EffectiveAccentColor => IsWarning ? ThemeResourceKeys.WarningAccent : AccentResourceKey;
 
     public void Update(string value, string detail, double progress)
     {

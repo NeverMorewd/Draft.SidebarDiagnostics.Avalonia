@@ -11,7 +11,7 @@ public sealed class Sparkline : Control
         AvaloniaProperty.Register<Sparkline, MetricHistory?>(nameof(Values));
 
     public static readonly StyledProperty<IBrush?> StrokeProperty =
-        AvaloniaProperty.Register<Sparkline, IBrush?>(nameof(Stroke), Brushes.DeepSkyBlue);
+        AvaloniaProperty.Register<Sparkline, IBrush?>(nameof(Stroke));
 
     public static readonly StyledProperty<double> StrokeThicknessProperty =
         AvaloniaProperty.Register<Sparkline, double>(nameof(StrokeThickness), 1.5);

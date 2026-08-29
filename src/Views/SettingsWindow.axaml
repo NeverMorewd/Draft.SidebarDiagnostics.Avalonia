@@ -9,7 +9,7 @@
         MinWidth="400"
         MinHeight="600"
         WindowStartupLocation="CenterOwner"
-        Background="#0B0F17">
+        Background="{StaticResource BackgroundWindowBrush}">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
         <StackPanel
             MaxWidth="920"
@@ -17,15 +17,15 @@
             HorizontalAlignment="Stretch"
             Spacing="22">
             <StackPanel Spacing="4">
-                <TextBlock Text="SETTINGS" FontSize="11" FontWeight="SemiBold" Foreground="#7DD3FC" LetterSpacing="1.8" />
-                <TextBlock Text="Monitoring preferences" FontSize="24" FontWeight="SemiBold" Foreground="#F8FAFC" />
-                <TextBlock Text="Changes apply immediately and persist across sessions." FontSize="12" Foreground="#94A3B8" />
+                <TextBlock Text="SETTINGS" FontSize="{StaticResource FontSizeBody}" FontWeight="SemiBold" Foreground="{StaticResource TextAccentBrush}" LetterSpacing="1.8" />
+                <TextBlock Text="Monitoring preferences" FontSize="{StaticResource FontSizePageTitle}" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
+                <TextBlock Text="Changes apply immediately and persist across sessions." FontSize="{StaticResource FontSizeDescription}" Foreground="{StaticResource TextMutedBrush}" />
             </StackPanel>
 
-            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+            <Border Classes="card">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Global shortcuts" FontWeight="SemiBold" Foreground="#E2E8F0" />
-                    <TextBlock Text="Use modifiers plus a letter, number, or function key. Clear a field to disable it." FontSize="11" Foreground="#94A3B8" TextWrapping="Wrap" />
+                    <TextBlock Text="Global shortcuts" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" />
+                    <TextBlock Text="Use modifiers plus a letter, number, or function key. Clear a field to disable it." FontSize="{StaticResource FontSizeBody}" Foreground="{StaticResource TextMutedBrush}" TextWrapping="Wrap" />
                     <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="8">
                         <TextBlock Text="Show and focus" VerticalAlignment="Center" />
                         <TextBox Grid.Column="1" Text="{Binding ShowShortcut}" />
@@ -34,24 +34,24 @@
                         <TextBlock Grid.Row="2" Text="Toggle" VerticalAlignment="Center" />
                         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ToggleShortcut}" />
                     </Grid>
-                    <TextBlock Text="{Binding ShortcutStatus}" FontSize="11" Foreground="#7DD3FC" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding ShortcutStatus}" FontSize="{StaticResource FontSizeBody}" Foreground="{StaticResource TextAccentBrush}" TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
 
-            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+            <Border Classes="card">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="Refresh interval" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <TextBlock Text="Refresh interval" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" />
                     <NumericUpDown Value="{Binding RefreshIntervalMilliseconds}" Minimum="250" Maximum="10000" Increment="250" FormatString="0 ms" />
                 </StackPanel>
             </Border>
 
-            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+            <Border Classes="card">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="Appearance" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <TextBlock Text="Appearance" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" />
                     <Grid ColumnDefinitions="*,110" RowDefinitions="Auto,Auto" RowSpacing="10">
-                        <TextBlock Text="Sidebar width" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <TextBlock Text="Sidebar width" VerticalAlignment="Center" Foreground="{StaticResource TextBodyBrush}" />
                         <NumericUpDown Grid.Column="1" Value="{Binding SidebarWidth}" Minimum="320" Maximum="640" Increment="10" FormatString="0 px" />
-                        <TextBlock Grid.Row="1" Text="Opacity" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <TextBlock Grid.Row="1" Text="Opacity" VerticalAlignment="Center" Foreground="{StaticResource TextBodyBrush}" />
                         <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding BackgroundOpacity}" Minimum="0.35" Maximum="1" Increment="0.05" FormatString="0%" />
                     </Grid>
                     <CheckBox Content="Show machine name" IsChecked="{Binding ShowMachineName}" />
@@ -61,12 +61,12 @@
                 </StackPanel>
             </Border>
 
-            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+            <Border Classes="card">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="Display placement" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <TextBlock Text="Display placement" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" />
                     <TextBlock Text="Dock relative to a display working area. The primary display is used if the selected display is unavailable."
-                               FontSize="11"
-                               Foreground="#94A3B8"
+                               FontSize="{StaticResource FontSizeBody}"
+                               Foreground="{StaticResource TextMutedBrush}"
                                TextWrapping="Wrap" />
                     <ComboBox ItemsSource="{Binding Displays}" SelectedItem="{Binding SelectedDisplay}">
                         <ComboBox.ItemTemplate>
@@ -76,9 +76,9 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                     <Grid ColumnDefinitions="*,120" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
-                        <TextBlock Text="Dock edge" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <TextBlock Text="Dock edge" VerticalAlignment="Center" Foreground="{StaticResource TextBodyBrush}" />
                         <ComboBox Grid.Column="1" ItemsSource="{Binding DockEdges}" SelectedItem="{Binding DockEdge}" />
-                        <TextBlock Grid.Row="1" Text="Vertical position" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <TextBlock Grid.Row="1" Text="Vertical position" VerticalAlignment="Center" Foreground="{StaticResource TextBodyBrush}" />
                         <NumericUpDown Grid.Row="1"
                                        Grid.Column="1"
                                        Value="{Binding VerticalPositionPercent}"
@@ -92,30 +92,30 @@
                 </StackPanel>
             </Border>
 
-            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+            <Border Classes="card">
                 <StackPanel Spacing="14">
-                    <TextBlock Text="Alert thresholds" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <TextBlock Text="Alert thresholds" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" />
                     <Grid ColumnDefinitions="*,100" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
-                        <TextBlock Text="CPU" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <TextBlock Text="CPU" VerticalAlignment="Center" Foreground="{StaticResource TextBodyBrush}" />
                         <NumericUpDown Grid.Column="1" Value="{Binding CpuAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
-                        <TextBlock Grid.Row="1" Text="Memory" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <TextBlock Grid.Row="1" Text="Memory" VerticalAlignment="Center" Foreground="{StaticResource TextBodyBrush}" />
                         <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding MemoryAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
-                        <TextBlock Grid.Row="2" Text="Storage" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <TextBlock Grid.Row="2" Text="Storage" VerticalAlignment="Center" Foreground="{StaticResource TextBodyBrush}" />
                         <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding StorageAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
-                        <TextBlock Grid.Row="3" Text="Network" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <TextBlock Grid.Row="3" Text="Network" VerticalAlignment="Center" Foreground="{StaticResource TextBodyBrush}" />
                         <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding NetworkAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
-                        <TextBlock Grid.Row="4" Text="GPU" VerticalAlignment="Center" Foreground="#CBD5E1" />
+                        <TextBlock Grid.Row="4" Text="GPU" VerticalAlignment="Center" Foreground="{StaticResource TextBodyBrush}" />
                         <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding GpuAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
                     </Grid>
                 </StackPanel>
             </Border>
 
-            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+            <Border Classes="card">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Primary GPU" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <TextBlock Text="Primary GPU" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" />
                     <TextBlock Text="Select the device represented by the GPU summary card."
-                               FontSize="11"
-                               Foreground="#94A3B8"
+                               FontSize="{StaticResource FontSizeBody}"
+                               Foreground="{StaticResource TextMutedBrush}"
                                TextWrapping="Wrap" />
                     <ComboBox ItemsSource="{Binding GpuDevices}"
                               SelectedItem="{Binding SelectedGpu}">
@@ -128,12 +128,12 @@
                 </StackPanel>
             </Border>
 
-            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+            <Border Classes="card">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="Hardware sensors" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                    <TextBlock Text="Hardware sensors" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" />
                     <TextBlock Text="Choose, rename, pin, and order the readings shown in the sidebar."
-                               FontSize="11"
-                               Foreground="#94A3B8"
+                               FontSize="{StaticResource FontSizeBody}"
+                               Foreground="{StaticResource TextMutedBrush}"
                                TextWrapping="Wrap" />
                     <TextBox Text="{Binding SensorSearchText}" PlaceholderText="Search sensors" />
                     <ItemsControl ItemsSource="{Binding Sensors}">
@@ -142,15 +142,15 @@
                                 <Border IsVisible="{Binding IsMatch}"
                                         Margin="0,0,0,8"
                                         Padding="10"
-                                        CornerRadius="10"
-                                        Background="#0B1220"
-                                        BorderBrush="#1F2937"
-                                        BorderThickness="1">
+                                        CornerRadius="{StaticResource RadiusMedium}"
+                                        Background="{StaticResource BackgroundInputBrush}"
+                                        BorderBrush="{StaticResource BorderCardBrush}"
+                                        BorderThickness="{StaticResource ThicknessBorder}">
                                     <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowSpacing="7">
                                         <CheckBox IsChecked="{Binding IsVisible}" VerticalAlignment="Center" />
                                         <StackPanel Grid.Column="1" Spacing="1">
-                                            <TextBlock Text="{Binding Sensor}" FontSize="12" Foreground="#E2E8F0" />
-                                            <TextBlock Text="{Binding Device}" FontSize="10" Foreground="#64748B" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Text="{Binding Sensor}" FontSize="{StaticResource FontSizeDescription}" Foreground="{StaticResource TextSecondaryBrush}" />
+                                            <TextBlock Text="{Binding Device}" FontSize="{StaticResource FontSizeCaption}" Foreground="{StaticResource TextDimBrush}" TextTrimming="CharacterEllipsis" />
                                         </StackPanel>
                                         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
                                             <Button Content="↑" Command="{Binding MoveUpCommand}" Padding="7,3" />
@@ -162,8 +162,8 @@
                                         <CheckBox Grid.Row="2" Grid.Column="1" Content="Pin to top" IsChecked="{Binding IsPinned}" />
                                         <TextBlock Grid.Row="2" Grid.Column="2"
                                                    Text="{Binding Availability}"
-                                                   FontSize="10"
-                                                   Foreground="#64748B"
+                                                   FontSize="{StaticResource FontSizeCaption}"
+                                                   Foreground="{StaticResource TextDimBrush}"
                                                    VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
@@ -173,14 +173,14 @@
                 </StackPanel>
             </Border>
 
-            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+            <Border Classes="card">
                 <StackPanel Spacing="12">
                     <Grid ColumnDefinitions="*,Auto">
                         <StackPanel>
-                            <TextBlock Text="External JSON metrics" FontWeight="SemiBold" Foreground="#E2E8F0" />
+                            <TextBlock Text="External JSON metrics" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" />
                             <TextBlock Text="Read numeric values from local files or explicit HTTP endpoints."
-                                       FontSize="11"
-                                       Foreground="#94A3B8"
+                                       FontSize="{StaticResource FontSizeBody}"
+                                       Foreground="{StaticResource TextMutedBrush}"
                                        TextWrapping="Wrap" />
                         </StackPanel>
                         <Button Grid.Column="1" Content="Add source" Command="{Binding AddExternalMetricCommand}" />
@@ -188,7 +188,7 @@
                     <ItemsControl ItemsSource="{Binding ExternalMetrics}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="vm:ExternalMetricOptionViewModel">
-                                <Border Margin="0,0,0,10" Padding="12" CornerRadius="10" Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1">
+                                <Border Margin="0,0,0,10" Padding="12" CornerRadius="{StaticResource RadiusMedium}" Background="{StaticResource BackgroundInputBrush}" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="{StaticResource ThicknessBorder}">
                                     <StackPanel Spacing="8">
                                         <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
                                             <TextBox Text="{Binding Title}" PlaceholderText="Card title" />
@@ -214,8 +214,8 @@
                                             <Button Content="Test source" Command="{Binding TestCommand}" />
                                             <TextBlock Grid.Column="1"
                                                        Text="{Binding PreviewStatus}"
-                                                       FontSize="10"
-                                                       Foreground="#94A3B8"
+                                                       FontSize="{StaticResource FontSizeCaption}"
+                                                       Foreground="{StaticResource TextMutedBrush}"
                                                        TextWrapping="Wrap"
                                                        VerticalAlignment="Center" />
                                         </Grid>
@@ -227,7 +227,7 @@
                 </StackPanel>
             </Border>
 
-            <Border Padding="18" CornerRadius="14" Background="#111827" BorderBrush="#1F2937" BorderThickness="1">
+            <Border Classes="card">
                 <StackPanel Spacing="12">
                     <CheckBox Content="Keep the sidebar above other windows" IsChecked="{Binding AlwaysOnTop}" />
                     <CheckBox Content="Launch at login" IsChecked="{Binding LaunchAtLogin}" />

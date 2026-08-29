@@ -7,7 +7,7 @@
     Width="540"
     Height="570"
     x:DataType="models:AboutInfo"
-    Background="#0B0F17"
+    Background="{StaticResource BackgroundWindowBrush}"
     CanResize="False"
     ExtendClientAreaToDecorationsHint="True"
     ShowInTaskbar="False"
@@ -21,14 +21,14 @@
             <Border
                 Width="48"
                 Height="48"
-                Background="#12314A"
-                CornerRadius="14">
+                Background="{StaticResource BackgroundAccentSubtleBrush}"
+                CornerRadius="{StaticResource RadiusCard}">
                 <Path
                     Width="24"
                     Height="21"
                     Data="M 1,18 L 7,11 L 12,14 L 22,3"
                     Stretch="Fill"
-                    Stroke="#7DD3FC"
+                    Stroke="{StaticResource TextAccentBrush}"
                     StrokeThickness="2" />
             </Border>
             <StackPanel
@@ -36,14 +36,14 @@
                 VerticalAlignment="Center"
                 Spacing="2">
                 <TextBlock
-                    FontSize="22"
+                    FontSize="{StaticResource FontSizeTitle}"
                     FontWeight="SemiBold"
-                    Foreground="#F8FAFC"
+                    Foreground="{StaticResource TextPrimaryBrush}"
                     Text="Sidebar Diagnostics" />
                 <TextBlock
-                    FontSize="11"
+                    FontSize="{StaticResource FontSizeBody}"
                     FontWeight="SemiBold"
-                    Foreground="#7DD3FC"
+                    Foreground="{StaticResource TextAccentBrush}"
                     LetterSpacing="1.2"
                     Text="CROSS-PLATFORM SYSTEM MONITOR" />
             </StackPanel>
@@ -51,63 +51,63 @@
 
         <TextBlock
             Grid.Row="1"
-            FontSize="12"
-            Foreground="#94A3B8"
+            FontSize="{StaticResource FontSizeDescription}"
+            Foreground="{StaticResource TextMutedBrush}"
             Text="A modern Avalonia port of Sidebar Diagnostics for Windows, macOS, and Linux."
             TextWrapping="Wrap" />
 
         <Border
             Grid.Row="2"
             Padding="16"
-            Background="#111827"
-            BorderBrush="#223149"
-            BorderThickness="1"
-            CornerRadius="14">
+            Background="{StaticResource BackgroundCardBrush}"
+            BorderBrush="{StaticResource BorderPanelBrush}"
+            BorderThickness="{StaticResource ThicknessBorder}"
+            CornerRadius="{StaticResource RadiusCard}">
             <Grid
                 ColumnDefinitions="140,*"
                 RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                 RowSpacing="10">
-                <TextBlock Foreground="#71839B" Text="Application version" />
+                <TextBlock Foreground="{StaticResource TextSubtleBrush}" Text="Application version" />
                 <TextBlock
                     Grid.Column="1"
-                    Foreground="#E2E8F0"
+                    Foreground="{StaticResource TextSecondaryBrush}"
                     Text="{Binding ApplicationVersion}" />
                 <TextBlock
                     Grid.Row="1"
-                    Foreground="#71839B"
+                    Foreground="{StaticResource TextSubtleBrush}"
                     Text="Avalonia" />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="1"
-                    Foreground="#E2E8F0"
+                    Foreground="{StaticResource TextSecondaryBrush}"
                     Text="{Binding AvaloniaVersion}" />
                 <TextBlock
                     Grid.Row="2"
-                    Foreground="#71839B"
+                    Foreground="{StaticResource TextSubtleBrush}"
                     Text=".NET runtime" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="1"
-                    Foreground="#E2E8F0"
+                    Foreground="{StaticResource TextSecondaryBrush}"
                     Text="{Binding DotNetVersion}" />
                 <TextBlock
                     Grid.Row="3"
-                    Foreground="#71839B"
+                    Foreground="{StaticResource TextSubtleBrush}"
                     Text="Author" />
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="1"
-                    Foreground="#E2E8F0"
+                    Foreground="{StaticResource TextSecondaryBrush}"
                     Text="{Binding Author}"
                     TextWrapping="Wrap" />
                 <TextBlock
                     Grid.Row="4"
-                    Foreground="#71839B"
+                    Foreground="{StaticResource TextSubtleBrush}"
                     Text="License" />
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="1"
-                    Foreground="#E2E8F0"
+                    Foreground="{StaticResource TextSecondaryBrush}"
                     Text="{Binding License}" />
             </Grid>
         </Border>
@@ -115,10 +115,10 @@
         <StackPanel Grid.Row="3" Spacing="10">
             <TextBlock
                 FontWeight="SemiBold"
-                Foreground="#E2E8F0"
+                Foreground="{StaticResource TextSecondaryBrush}"
                 Text="Open source" />
             <TextBlock
-                Foreground="#94A3B8"
+                Foreground="{StaticResource TextMutedBrush}"
                 Text="Source code, releases, and project documentation are available on GitHub."
                 TextWrapping="Wrap" />
             <Button
@@ -128,10 +128,10 @@
             <TextBlock
                 Margin="0,6,0,0"
                 FontWeight="SemiBold"
-                Foreground="#E2E8F0"
+                Foreground="{StaticResource TextSecondaryBrush}"
                 Text="Need help or found a problem?" />
             <TextBlock
-                Foreground="#94A3B8"
+                Foreground="{StaticResource TextMutedBrush}"
                 Text="Please report bugs and feature requests through GitHub Issues."
                 TextWrapping="Wrap" />
             <Button
@@ -146,8 +146,8 @@
             Spacing="8">
             <TextBlock
                 HorizontalAlignment="Center"
-                FontSize="10"
-                Foreground="#526278"
+                FontSize="{StaticResource FontSizeCaption}"
+                Foreground="{StaticResource TextDimBrush}"
                 Text="{Binding LicenseNotice}" />
             <Button
                 MinWidth="88"
