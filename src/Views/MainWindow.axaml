@@ -124,7 +124,7 @@
                                     <ItemsControl ItemsSource="{Binding Metrics}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="models:DiagnosticMetric">
-                                                <Grid Margin="0,2" ColumnDefinitions="110,*">
+                                                <Grid Margin="0,2" ColumnDefinitions="110,*,Auto">
                                                     <TextBlock
                                                         FontSize="11"
                                                         Foreground="#94A3B8"
@@ -138,6 +138,25 @@
                                                         Foreground="#E2E8F0"
                                                         Text="{Binding Value}"
                                                         TextWrapping="Wrap" />
+                                                    <Button
+                                                        Grid.Column="2"
+                                                        Width="26"
+                                                        Height="26"
+                                                        Margin="6,0,0,0"
+                                                        Padding="0"
+                                                        Background="Transparent"
+                                                        Click="OpenMetricChart"
+                                                        Foreground="#7DD3FC"
+                                                        IsVisible="{Binding CanGraph}"
+                                                        ToolTip.Tip="Open live chart">
+                                                        <Path
+                                                            Width="14"
+                                                            Height="12"
+                                                            Data="M 1,10 L 5,6 L 8,8 L 13,2"
+                                                            Stretch="Fill"
+                                                            Stroke="{Binding $parent[Button].Foreground}"
+                                                            StrokeThickness="1.5" />
+                                                    </Button>
                                                 </Grid>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>

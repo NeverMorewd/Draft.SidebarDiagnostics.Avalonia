@@ -62,6 +62,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     public IReadOnlyList<HardwareSensorReading> LatestHardwareReadings { get; private set; } = [];
     public IReadOnlyList<GpuSnapshot> LatestGpuSnapshots { get; private set; } = [];
     public IReadOnlyList<DisplayDescriptor> AvailableDisplays { get; private set; } = [];
+    public MetricSeriesCatalog MetricSeries { get; } = new();
 
     [ObservableProperty]
     public partial IReadOnlyList<DiagnosticSection> DiagnosticSections { get; set; } = [];
@@ -175,6 +176,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
                 visibleReadings,
                 Settings.UseFahrenheit,
                 LatestGpuSnapshots);
+            MetricSeries.Update(DiagnosticSections, snapshot.Timestamp);
         }
         catch (OperationCanceledException) when (_lifetimeCancellation.IsCancellationRequested)
         {

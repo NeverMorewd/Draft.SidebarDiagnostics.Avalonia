@@ -18,6 +18,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _placementTimer;
     private readonly double _preferredHeight;
     private readonly IReservedScreenSpaceService _reservedScreenSpace = ReservedScreenSpaceService.Create();
+    private readonly Dictionary<string, MetricChartWindow> _metricCharts = new(StringComparer.Ordinal);
 
     public MainWindow()
     {
@@ -243,6 +244,29 @@ public partial class MainWindow : Window
     private void HideToTray(object? sender, RoutedEventArgs e)
     {
         HideSidebar();
+    }
+
+    private void OpenMetricChart(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: DiagnosticMetric metric }
+            || metric.SeriesId is null
+            || _viewModel?.MetricSeries.Get(metric.SeriesId) is not { } series)
+        {
+            return;
+        }
+
+        if (_metricCharts.TryGetValue(metric.SeriesId, out var existing))
+        {
+            existing.Show();
+            existing.Activate();
+            return;
+        }
+
+        var window = new MetricChartWindow(series);
+        _metricCharts.Add(metric.SeriesId, window);
+        window.Closed += (_, _) => _metricCharts.Remove(metric.SeriesId);
+        window.Show();
+        window.Activate();
     }
 
     private async void OpenSettings(object? sender, RoutedEventArgs e)
