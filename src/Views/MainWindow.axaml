@@ -1,45 +1,90 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
-        xmlns:models="using:SidebarDiagnostics.App.Models"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        d:DesignWidth="360"
-        d:DesignHeight="920"
-        x:Class="SidebarDiagnostics.App.Views.MainWindow"
-        x:DataType="vm:MainViewModel"
-        Icon="/Assets/sidebar.ico"
-        Title="Sidebar Diagnostics"
-        Width="360"
-        MinWidth="320"
-        Height="920"
-        MinHeight="620"
-        Topmost="True"
-        Background="#0B0F17">
+<Window
+    x:Class="SidebarDiagnostics.App.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:SidebarDiagnostics.App.Models"
+    xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
+    Title="Sidebar Diagnostics"
+    Width="360"
+    Height="920"
+    MinWidth="320"
+    MinHeight="620"
+    d:DesignHeight="920"
+    d:DesignWidth="360"
+    x:DataType="vm:MainViewModel"
+    Background="#0B0F17"
+    Icon="/Assets/sidebar.ico"
+    Topmost="True"
+    WindowDecorations="None"
+    mc:Ignorable="d">
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto,*,Auto">
-        <Border Grid.Row="0" Padding="24,24,24,18" BorderBrush="#1B2535" BorderThickness="0,0,0,1">
-            <Grid ColumnDefinitions="*,Auto">
-                <StackPanel Spacing="3">
-                    <TextBlock Text="SIDEBAR DIAGNOSTICS" FontSize="11" FontWeight="SemiBold" Foreground="#7DD3FC" LetterSpacing="1.8" />
-                    <TextBlock Text="{Binding MachineName}" IsVisible="{Binding IsMachineNameVisible}" FontSize="22" FontWeight="SemiBold" Foreground="#F8FAFC" />
-                    <TextBlock Text="{Binding PlatformName}" FontSize="12" Foreground="#94A3B8" />
-                    <TextBlock Margin="0,8,0,0" Text="{Binding ClockText}" IsVisible="{Binding IsClockVisible}" FontSize="13" Foreground="#CBD5E1" />
-                </StackPanel>
-                <Button Grid.Column="1"
-                        Width="42"
-                        Height="42"
-                        Padding="0"
-                        CornerRadius="14"
-                        Background="#122033"
+        <Border
+            Grid.Row="0"
+            Padding="24,24,24,18"
+            BorderBrush="#1B2535"
+            BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <StackPanel PointerPressed="BeginWindowDrag" Spacing="3">
+                    <TextBlock
+                        FontSize="11"
+                        FontWeight="SemiBold"
                         Foreground="#7DD3FC"
-                        ToolTip.Tip="Settings"
-                        Click="OpenSettings">
-                    <TextBlock Text="⚙" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        LetterSpacing="1.8"
+                        Text="SIDEBAR DIAGNOSTICS" />
+                    <TextBlock
+                        FontSize="22"
+                        FontWeight="SemiBold"
+                        Foreground="#F8FAFC"
+                        IsVisible="{Binding IsMachineNameVisible}"
+                        Text="{Binding MachineName}" />
+                    <TextBlock
+                        FontSize="12"
+                        Foreground="#94A3B8"
+                        Text="{Binding PlatformName}" />
+                    <TextBlock
+                        Margin="0,8,0,0"
+                        FontSize="13"
+                        Foreground="#CBD5E1"
+                        IsVisible="{Binding IsClockVisible}"
+                        Text="{Binding ClockText}" />
+                </StackPanel>
+                <Button
+                    Grid.Column="1"
+                    Width="42"
+                    Height="42"
+                    Padding="0"
+                    Background="#122033"
+                    Click="OpenSettings"
+                    CornerRadius="14"
+                    Foreground="#7DD3FC"
+                    ToolTip.Tip="Settings">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="17"
+                        Text="⚙" />
+                </Button>
+                <Button
+                    Grid.Column="2"
+                    Width="42"
+                    Height="42"
+                    Padding="0"
+                    Background="#2A1720"
+                    Click="HideToTray"
+                    CornerRadius="14"
+                    Foreground="#FDA4AF"
+                    ToolTip.Tip="Hide to tray">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="21"
+                        Text="×" />
                 </Button>
             </Grid>
         </Border>
@@ -49,32 +94,49 @@
                 <ItemsControl ItemsSource="{Binding DiagnosticSections}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:DiagnosticSection">
-                            <Border Margin="0,0,0,10"
-                                    Padding="14"
-                                    CornerRadius="14"
-                                    Background="#101722"
-                                    BorderBrush="#1F2937"
-                                    BorderThickness="1">
+                            <Border
+                                Margin="0,0,0,10"
+                                Padding="14"
+                                Background="#101722"
+                                BorderBrush="#1F2937"
+                                BorderThickness="1"
+                                CornerRadius="14">
                                 <StackPanel Spacing="9">
                                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="9">
-                                        <Border Width="4" CornerRadius="2" Background="{Binding AccentColor}" />
+                                        <Border
+                                            Width="4"
+                                            Background="{Binding AccentColor}"
+                                            CornerRadius="2" />
                                         <StackPanel Grid.Column="1" Spacing="1">
-                                            <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" />
-                                            <TextBlock Text="{Binding Subtitle}" FontSize="10" Foreground="#64748B" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock
+                                                FontSize="13"
+                                                FontWeight="SemiBold"
+                                                Foreground="#F8FAFC"
+                                                Text="{Binding Title}" />
+                                            <TextBlock
+                                                FontSize="10"
+                                                Foreground="#64748B"
+                                                Text="{Binding Subtitle}"
+                                                TextTrimming="CharacterEllipsis" />
                                         </StackPanel>
                                     </Grid>
                                     <ItemsControl ItemsSource="{Binding Metrics}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="models:DiagnosticMetric">
-                                                <Grid ColumnDefinitions="110,*" Margin="0,2">
-                                                    <TextBlock Text="{Binding Label}" FontSize="11" Foreground="#94A3B8" TextTrimming="CharacterEllipsis" />
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="10,0,0,0"
-                                                               Text="{Binding Value}"
-                                                               FontSize="11"
-                                                               FontWeight="Medium"
-                                                               Foreground="#E2E8F0"
-                                                               TextWrapping="Wrap" />
+                                                <Grid Margin="0,2" ColumnDefinitions="110,*">
+                                                    <TextBlock
+                                                        FontSize="11"
+                                                        Foreground="#94A3B8"
+                                                        Text="{Binding Label}"
+                                                        TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        Margin="10,0,0,0"
+                                                        FontSize="11"
+                                                        FontWeight="Medium"
+                                                        Foreground="#E2E8F0"
+                                                        Text="{Binding Value}"
+                                                        TextWrapping="Wrap" />
                                                 </Grid>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -87,11 +149,30 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Border Grid.Row="2" Padding="20,15" BorderBrush="#1B2535" BorderThickness="0,1,0,0">
+        <Border
+            Grid.Row="2"
+            Padding="20,15"
+            BorderBrush="#1B2535"
+            BorderThickness="0,1,0,0">
             <Grid ColumnDefinitions="Auto,*,Auto">
-                <Ellipse Width="7" Height="7" Fill="#34D399" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="1" Margin="9,0" Text="{Binding StatusText}" FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="2" Text="{Binding LastUpdated}" FontSize="11" Foreground="#64748B" VerticalAlignment="Center" />
+                <Ellipse
+                    Width="7"
+                    Height="7"
+                    VerticalAlignment="Center"
+                    Fill="#34D399" />
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="9,0"
+                    VerticalAlignment="Center"
+                    FontSize="11"
+                    Foreground="#94A3B8"
+                    Text="{Binding StatusText}" />
+                <TextBlock
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    FontSize="11"
+                    Foreground="#64748B"
+                    Text="{Binding LastUpdated}" />
             </Grid>
         </Border>
     </Grid>
