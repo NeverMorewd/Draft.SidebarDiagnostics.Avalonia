@@ -4,6 +4,14 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      version:
+        description: Release version used for package validation
+        required: true
+        default: 0.1.0
+
+env:
+  RELEASE_VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || inputs.version }}
 
 concurrency:
   group: release-${{ github.ref }}
@@ -60,7 +68,11 @@ jobs:
           cache: true
           cache-dependency-path: '**/packages.lock.json'
       - run: dotnet restore src/SidebarDiagnostics.App.csproj --locked-mode
-      - run: dotnet publish src/SidebarDiagnostics.App.csproj -c Release -r ${{ matrix.rid }} --self-contained true --no-restore -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o artifacts/publish
+      - name: Publish application
+        shell: pwsh
+        run: |
+          $version = $env:RELEASE_VERSION.TrimStart('v')
+          dotnet publish src/SidebarDiagnostics.App.csproj -c Release -r ${{ matrix.rid }} --self-contained true --no-restore -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true "-p:Version=$version" -o artifacts/publish
       - name: Add legal files
         shell: pwsh
         run: Copy-Item README.md,LICENSE.md,NOTICE.md,THIRD-PARTY-NOTICES.md artifacts/publish
@@ -80,6 +92,10 @@ jobs:
         run: |
           tar -C artifacts/publish -czf artifacts/SidebarDiagnostics-${{ matrix.rid }}.tar.gz .
           cd artifacts && sha256sum SidebarDiagnostics-${{ matrix.rid }}.tar.gz > SidebarDiagnostics-${{ matrix.rid }}.tar.gz.sha256
+      - name: Package Debian
+        if: matrix.archive == 'tar'
+        shell: bash
+        run: ./scripts/Build-DebPackage.sh artifacts/publish artifacts "${RELEASE_VERSION}" "${{ matrix.rid }}"
       - name: Package macOS application
         if: matrix.archive == 'app'
         shell: bash
@@ -88,7 +104,8 @@ jobs:
           mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
           cp -R artifacts/publish/. "$app/Contents/MacOS/"
           cp src/Assets/sidebar.ico "$app/Contents/Resources/sidebar.ico"
-          sed "s/__VERSION__/${GITHUB_REF_NAME#v}/g" packaging/macos/Info.plist > "$app/Contents/Info.plist"
+          version="${RELEASE_VERSION#v}"
+          sed "s/__VERSION__/${version}/g" packaging/macos/Info.plist > "$app/Contents/Info.plist"
           chmod +x "$app/Contents/MacOS/SidebarDiagnostics.App"
           ditto -c -k --sequesterRsrc --keepParent "$app" artifacts/SidebarDiagnostics-${{ matrix.rid }}.zip
           cd artifacts && shasum -a 256 SidebarDiagnostics-${{ matrix.rid }}.zip > SidebarDiagnostics-${{ matrix.rid }}.zip.sha256
@@ -98,12 +115,39 @@ jobs:
           path: |
             artifacts/*.zip
             artifacts/*.tar.gz
+            artifacts/*.deb
             artifacts/*.sha256
+          if-no-files-found: error
+
+  package-metadata:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: SidebarDiagnostics-*
+          path: artifacts/input
+          merge-multiple: true
+      - name: Generate WinGet and Homebrew metadata
+        shell: pwsh
+        run: ./scripts/Generate-PackageMetadata.ps1 -Version $env:RELEASE_VERSION -ArtifactDirectory artifacts/input -OutputDirectory artifacts/package-managers
+      - name: Archive package-manager metadata
+        shell: pwsh
+        run: |
+          Compress-Archive artifacts/package-managers/* artifacts/SidebarDiagnostics-package-managers.zip
+          (Get-FileHash artifacts/SidebarDiagnostics-package-managers.zip -Algorithm SHA256).Hash.ToLower() + '  SidebarDiagnostics-package-managers.zip' | Set-Content artifacts/SidebarDiagnostics-package-managers.zip.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SidebarDiagnostics-package-managers
+          path: |
+            artifacts/SidebarDiagnostics-package-managers.zip
+            artifacts/SidebarDiagnostics-package-managers.zip.sha256
           if-no-files-found: error
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: publish
+    needs: package-metadata
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -115,3 +159,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "${GITHUB_REF_NAME}" artifacts/* --verify-tag --generate-notes --title "Sidebar Diagnostics ${GITHUB_REF_NAME}"
+      - name: Verify published sources and checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          mkdir -p artifacts/verified artifacts/metadata
+          gh release download "${GITHUB_REF_NAME}" --dir artifacts/verified
+          cd artifacts/verified
+          for checksum in *.sha256; do sha256sum --check "$checksum"; done
+          unzip SidebarDiagnostics-package-managers.zip -d ../metadata
+          jq -r '.artifacts | to_entries[] | "\(.value)  \(.key)"' ../metadata/checksums.json | sha256sum --check -
