@@ -16,6 +16,7 @@
     x:DataType="vm:MainViewModel"
     Background="#0B0F17"
     Icon="/Assets/sidebar.ico"
+    ShowInTaskbar="False"
     Topmost="True"
     WindowDecorations="None"
     mc:Ignorable="d">
