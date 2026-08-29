@@ -25,4 +25,4 @@ Diagnostics contain only an area, outcome, exception type, and elapsed time. Exc
 
 ## Dependency policy
 
-Locked NuGet restores audit direct and transitive packages. Moderate, high, and critical advisories fail the build. Pull requests also run GitHub dependency review. Release artifacts retain the project license, modification notice, and third-party notices.
+Locked NuGet restores audit direct and transitive packages on every CI platform. Moderate, high, and critical advisories fail the build. Release artifacts retain the project license, modification notice, and third-party notices.
