@@ -25,7 +25,7 @@ This audit compares the Avalonia port with the public features and settings of t
 | Celsius and Fahrenheit | Complete | Applied to temperature values. |
 | Width, opacity, always-on-top, start minimized | Complete | Persisted cross-platform settings. |
 | UI scale, fonts, alignment, offsets, and arbitrary colors | Redesigned | The port uses a curated accessible design system. |
-| Per-monitor and per-sensor configuration | Not migrated | Current UI uses concise automatic selection. |
+| Per-monitor and per-sensor configuration | Complete | Display selection and searchable sensor visibility, pinning, naming, and ordering are persisted. |
 | Localization | Not migrated | Current release is English-only. |
 
 ## Desktop integration
@@ -34,10 +34,10 @@ This audit compares the Avalonia port with the public features and settings of t
 | --- | --- | --- |
 | Tray show, hide, and exit | Complete | Avalonia desktop integration. |
 | Launch at login | Complete | Native implementation on all three platforms. |
-| Windows AppBar reserved work area | Windows-only gap | No cross-platform shell equivalent. |
-| Edge docking and multi-monitor repositioning | Partial | The window remains freely positionable. |
+| Windows AppBar reserved work area | Complete on Windows | Native AppBar integration reserves the selected screen edge. |
+| Edge docking and multi-monitor repositioning | Complete | Placement follows the selected display and recovers from topology changes. |
 | Click-through and Alt-Tab/tool-window modes | Not migrated | Require platform window-manager adapters. |
-| Global hotkeys | Not migrated | Require separate Windows, macOS, X11, and Wayland implementations. |
+| Global hotkeys | Complete | Cross-platform native hooks; macOS and some Linux sessions require operating-system permissions. |
 | Automatic application updates | Replaced | GitHub Releases provide immutable checksummed packages. |
 
 ## Acceptance baseline

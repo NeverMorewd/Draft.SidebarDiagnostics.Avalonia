@@ -27,7 +27,7 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 
 | Capability | Windows | macOS | Linux |
 | --- | --- | --- | --- |
-| CPU | `GetSystemTimes` | `getloadavg` | `/proc/stat` |
+| CPU | `GetSystemTimes` | Mach CPU ticks, including per-core load | `/proc/stat`, including per-core load |
 | Memory | `GlobalMemoryStatusEx` | Mach + `sysctl` | `/proc/meminfo` |
 | Storage and network | .NET platform APIs | .NET platform APIs | .NET platform APIs |
 | Hardware sensors | LibreHardwareMonitor | No stable public system API | hwmon temperatures |
@@ -62,7 +62,7 @@ SidebarDiagnostics.slnx      Repository solution
 
 ## Releases
 
-Tags matching `v*` run tests on Windows, macOS, and Linux, publish self-contained binaries, create platform-native archives, generate SHA-256 checksums, and attach them to a GitHub Release. macOS artifacts contain a conventional `.app` bundle but are not code-signed or notarized.
+Tags matching `v*` run tests on Windows, macOS, and Linux, publish self-contained Windows x64, Linux x64/ARM64, and macOS x64/ARM64 binaries, create platform-native archives, generate SHA-256 checksums, and attach them to a GitHub Release. macOS artifacts contain a conventional `.app` bundle but are not code-signed or notarized.
 
 ## License and attribution
 
