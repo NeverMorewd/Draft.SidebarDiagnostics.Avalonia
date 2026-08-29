@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
 using Avalonia.Threading;
@@ -12,6 +13,7 @@ namespace SidebarDiagnostics.App.Views;
 public partial class MainWindow : Window
 {
     private bool _settingsInitialized;
+    private bool _screensSubscribed;
     private MainViewModel? _viewModel;
     private readonly DispatcherTimer _placementTimer;
     private readonly double _preferredHeight;
@@ -42,7 +44,7 @@ public partial class MainWindow : Window
         }
 
         e.Cancel = true;
-        HideSidebar();
+        Dispatcher.UIThread.Post(HideSidebar, DispatcherPriority.Background);
     }
 
     private void OnDataContextChanged(object? sender, EventArgs e)
@@ -61,14 +63,24 @@ public partial class MainWindow : Window
 
     private void OnOpened(object? sender, EventArgs e)
     {
-        Screens.Changed += OnScreensChanged;
+        if (!_screensSubscribed)
+        {
+            Screens.Changed += OnScreensChanged;
+            _screensSubscribed = true;
+        }
+
         RefreshDisplays();
         SchedulePlacement();
     }
 
     private void OnClosed(object? sender, EventArgs e)
     {
-        Screens.Changed -= OnScreensChanged;
+        if (_screensSubscribed)
+        {
+            Screens.Changed -= OnScreensChanged;
+            _screensSubscribed = false;
+        }
+
         _placementTimer.Stop();
         _reservedScreenSpace.Dispose();
         if (_viewModel is not null)
@@ -139,6 +151,11 @@ public partial class MainWindow : Window
     private void SchedulePlacement()
     {
         _placementTimer.Stop();
+        if (!IsVisible)
+        {
+            return;
+        }
+
         _placementTimer.Start();
     }
 
@@ -150,7 +167,7 @@ public partial class MainWindow : Window
 
     private void ApplyPlacement()
     {
-        if (_viewModel is null)
+        if (_viewModel is null || !IsVisible)
         {
             return;
         }
@@ -195,14 +212,37 @@ public partial class MainWindow : Window
 
     public void ShowSidebar()
     {
-        Show();
+        if (!IsVisible)
+        {
+            Show();
+        }
+
+        if (WindowState == WindowState.Minimized)
+        {
+            WindowState = WindowState.Normal;
+        }
+
         SchedulePlacement();
     }
 
     public void HideSidebar()
     {
+        _placementTimer.Stop();
         _reservedScreenSpace.Remove();
         Hide();
+    }
+
+    private void BeginWindowDrag(object? sender, PointerPressedEventArgs e)
+    {
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            BeginMoveDrag(e);
+        }
+    }
+
+    private void HideToTray(object? sender, RoutedEventArgs e)
+    {
+        HideSidebar();
     }
 
     private async void OpenSettings(object? sender, RoutedEventArgs e)
