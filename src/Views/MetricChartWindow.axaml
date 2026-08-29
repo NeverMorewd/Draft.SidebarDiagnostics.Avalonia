@@ -3,57 +3,176 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:SidebarDiagnostics.App.Controls"
-    Title="Live metric" Width="720" Height="460" MinWidth="520" MinHeight="340"
-    Background="#0A0F18" WindowStartupLocation="CenterScreen" WindowDecorations="None">
+    Title="Live metric"
+    Width="720"
+    Height="460"
+    MinWidth="520"
+    MinHeight="340"
+    Background="#0A0F18"
+    ExtendClientAreaToDecorationsHint="True"
+    WindowDecorations="BorderOnly"
+    WindowStartupLocation="CenterScreen">
     <Window.Styles>
         <Style Selector="Button.chrome">
-            <Setter Property="Width" Value="36"/><Setter Property="Height" Value="36"/><Setter Property="Padding" Value="0"/>
-            <Setter Property="Background" Value="#131D2B"/><Setter Property="BorderBrush" Value="#26354A"/>
-            <Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="10"/><Setter Property="Foreground" Value="#9FB0C7"/>
+            <Setter Property="Width" Value="36" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="#131D2B" />
+            <Setter Property="BorderBrush" Value="#26354A" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Foreground" Value="#9FB0C7" />
         </Style>
-        <Style Selector="Button.chrome:pointerover"><Setter Property="Background" Value="#1D2A3D"/><Setter Property="Foreground" Value="#F8FAFC"/></Style>
-        <Style Selector="Button.close:pointerover"><Setter Property="Background" Value="#7F1D2D"/><Setter Property="BorderBrush" Value="#BE3651"/><Setter Property="Foreground" Value="#FFFFFF"/></Style>
-        <Style Selector="Button.pinned"><Setter Property="Background" Value="#12314A"/><Setter Property="BorderBrush" Value="#38BDF8"/><Setter Property="Foreground" Value="#7DD3FC"/></Style>
+        <Style Selector="Button.chrome:pointerover">
+            <Setter Property="Background" Value="#1D2A3D" />
+            <Setter Property="Foreground" Value="#F8FAFC" />
+        </Style>
+        <Style Selector="Button.close:pointerover">
+            <Setter Property="Background" Value="#7F1D2D" />
+            <Setter Property="BorderBrush" Value="#BE3651" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+        <Style Selector="Button.pinned">
+            <Setter Property="Background" Value="#12314A" />
+            <Setter Property="BorderBrush" Value="#38BDF8" />
+            <Setter Property="Foreground" Value="#7DD3FC" />
+        </Style>
     </Window.Styles>
     <Grid RowDefinitions="56,Auto,*">
         <Border BorderBrush="#1B283A" BorderThickness="0,0,0,1">
-            <Grid Margin="16,0,12,0" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-                <Border x:Name="DragRegion" Grid.Column="0" Background="Transparent">
+            <Grid
+                Margin="16,0,12,0"
+                ColumnDefinitions="*,Auto,Auto"
+                ColumnSpacing="8">
+                <Border
+                    x:Name="DragRegion"
+                    Grid.Column="0"
+                    Background="Transparent">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="11">
-                        <Border Width="30" Height="30" VerticalAlignment="Center" Background="#12314A" CornerRadius="9">
-                            <Path Width="16" Height="14" Data="M 1,12 L 5,7 L 8,9 L 14,2" Stretch="Fill" Stroke="#7DD3FC" StrokeThickness="1.7"/>
+                        <Border
+                            Width="30"
+                            Height="30"
+                            VerticalAlignment="Center"
+                            Background="#12314A"
+                            CornerRadius="9">
+                            <Path
+                                Width="16"
+                                Height="14"
+                                Data="M 1,12 L 5,7 L 8,9 L 14,2"
+                                Stretch="Fill"
+                                Stroke="#7DD3FC"
+                                StrokeThickness="1.7" />
                         </Border>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
-                            <TextBlock x:Name="TitleText" FontSize="14" FontWeight="SemiBold" Foreground="#F8FAFC"/>
-                            <TextBlock x:Name="SubtitleText" MaxWidth="480" FontSize="10" Foreground="#71839B" TextTrimming="CharacterEllipsis"/>
+                        <StackPanel
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Spacing="1">
+                            <TextBlock
+                                x:Name="TitleText"
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                Foreground="#F8FAFC" />
+                            <TextBlock
+                                x:Name="SubtitleText"
+                                MaxWidth="480"
+                                FontSize="10"
+                                Foreground="#71839B"
+                                TextTrimming="CharacterEllipsis" />
                         </StackPanel>
                     </Grid>
                 </Border>
-                <Button x:Name="PinButton" Grid.Column="1" Classes="chrome" Click="TogglePin" ToolTip.Tip="Keep on top">
-                    <Path Width="15" Height="17" Data="M 4,1 L 12,1 L 10,5 L 10,9 L 13,12 L 3,12 L 6,9 L 6,5 Z M 8,12 L 8,17" Stretch="Fill" Stroke="{Binding $parent[Button].Foreground}" StrokeLineCap="Round" StrokeThickness="1.4"/>
+                <Button
+                    x:Name="PinButton"
+                    Grid.Column="1"
+                    Classes="chrome"
+                    Click="TogglePin"
+                    ToolTip.Tip="Keep on top">
+                    <Path
+                        Width="15"
+                        Height="17"
+                        Data="M 4,1 L 12,1 L 10,5 L 10,9 L 13,12 L 3,12 L 6,9 L 6,5 Z M 8,12 L 8,17"
+                        Stretch="Fill"
+                        Stroke="{Binding $parent[Button].Foreground}"
+                        StrokeLineCap="Round"
+                        StrokeThickness="1.4" />
                 </Button>
-                <Button Grid.Column="2" Classes="chrome close" Click="CloseWindow" ToolTip.Tip="Close chart">
-                    <Path Width="13" Height="13" Data="M 1,1 L 12,12 M 12,1 L 1,12" Stretch="Fill" Stroke="{Binding $parent[Button].Foreground}" StrokeLineCap="Round" StrokeThickness="1.6"/>
+                <Button
+                    Grid.Column="2"
+                    Classes="chrome close"
+                    Click="CloseWindow"
+                    ToolTip.Tip="Close chart">
+                    <Path
+                        Width="13"
+                        Height="13"
+                        Data="M 1,1 L 12,12 M 12,1 L 1,12"
+                        Stretch="Fill"
+                        Stroke="{Binding $parent[Button].Foreground}"
+                        StrokeLineCap="Round"
+                        StrokeThickness="1.6" />
                 </Button>
             </Grid>
         </Border>
-        <Grid Grid.Row="1" Margin="20,17,20,14" ColumnDefinitions="*,Auto" ColumnSpacing="20">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="12">
-                <TextBlock x:Name="CurrentValueText" FontSize="30" FontWeight="SemiBold" Foreground="#F8FAFC"/>
-                <Border Height="24" Padding="8,0" Background="#0D332D" CornerRadius="8">
+        <Grid
+            Grid.Row="1"
+            Margin="20,17,20,14"
+            ColumnDefinitions="*,Auto"
+            ColumnSpacing="20">
+            <StackPanel
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="12">
+                <TextBlock
+                    x:Name="CurrentValueText"
+                    FontSize="30"
+                    FontWeight="SemiBold"
+                    Foreground="#F8FAFC" />
+                <Border
+                    Height="24"
+                    Padding="8,0"
+                    Background="#0D332D"
+                    CornerRadius="8">
                     <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                        <Ellipse Width="6" Height="6" VerticalAlignment="Center" Fill="#34D399" />
-                        <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="9" FontWeight="Bold" Foreground="#6EE7B7" LetterSpacing="1.2" LineHeight="11" Text="LIVE" />
+                        <Ellipse
+                            Width="6"
+                            Height="6"
+                            VerticalAlignment="Center"
+                            Fill="#34D399" />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            FontSize="9"
+                            FontWeight="Bold"
+                            Foreground="#6EE7B7"
+                            LetterSpacing="1.2"
+                            LineHeight="11"
+                            Text="LIVE" />
                     </Grid>
                 </Border>
             </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Spacing="9">
-                <TextBlock VerticalAlignment="Center" FontSize="11" Foreground="#71839B" Text="TIME RANGE"/>
-                <ComboBox x:Name="DurationSelector" Width="126" SelectionChanged="ChangeDuration"/>
+            <StackPanel
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="9">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="11"
+                    Foreground="#71839B"
+                    Text="TIME RANGE" />
+                <ComboBox
+                    x:Name="DurationSelector"
+                    Width="126"
+                    SelectionChanged="ChangeDuration" />
             </StackPanel>
         </Grid>
-        <Border Grid.Row="2" Margin="20,0,20,20" Background="#0E1623" BorderBrush="#1D2A3D" BorderThickness="1" CornerRadius="16">
-            <controls:MetricChart x:Name="Chart" Margin="10"/>
+        <Border
+            Grid.Row="2"
+            Margin="20,0,20,20"
+            Background="#0E1623"
+            BorderBrush="#1D2A3D"
+            BorderThickness="1"
+            CornerRadius="16">
+            <controls:MetricChart x:Name="Chart" Margin="10" />
         </Border>
     </Grid>
 </Window>
