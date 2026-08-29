@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Sidebar Diagnostics
+Comment=Cross-platform system monitor
+Exec=sidebar-diagnostics
+Icon=net.sidebardiagnostics.app
+Terminal=false
+Categories=System;Monitor;
+StartupNotify=false
+StartupWMClass=Sidebar Diagnostics

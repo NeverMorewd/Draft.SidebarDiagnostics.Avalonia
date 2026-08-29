@@ -66,6 +66,21 @@ SidebarDiagnostics.slnx      Repository solution
 
 Tags matching `v*` run tests on Windows, macOS, and Linux, publish self-contained Windows x64, Linux x64/ARM64, and macOS x64/ARM64 binaries, create platform-native archives, generate SHA-256 checksums, and attach them to a GitHub Release. macOS artifacts contain a conventional `.app` bundle but are not code-signed or notarized.
 
+Each release also contains APT-installable Debian packages plus generated WinGet and Homebrew metadata tied to the immutable artifacts. Installation, upgrade, uninstall, rollback, community-index status, and Flatpak tradeoffs are documented in [docs/PACKAGE_MANAGERS.md](docs/PACKAGE_MANAGERS.md).
+
+Package-manager installation from a tagged GitHub Release:
+
+```powershell
+winget install --manifest .\winget\<version>
+```
+
+```shell
+brew install --cask ./homebrew/Casks/sidebar-diagnostics-avalonia.rb
+sudo apt install ./SidebarDiagnostics-linux-x64.deb
+```
+
+The WinGet manifest and Homebrew Cask are inside the release metadata bundle. Public-index commands become available after their external repository reviews; the Debian package works directly with APT.
+
 ## Security and stability
 
 The hardware access trust model and vulnerability reporting process are documented in [SECURITY.md](SECURITY.md). Repeatable timeout, artifact, dependency, and soak-test procedures are documented in [docs/STABILITY.md](docs/STABILITY.md).
