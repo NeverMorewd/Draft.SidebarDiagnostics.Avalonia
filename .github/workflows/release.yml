@@ -64,6 +64,10 @@ jobs:
       - name: Add legal files
         shell: pwsh
         run: Copy-Item README.md,LICENSE.md,NOTICE.md,THIRD-PARTY-NOTICES.md artifacts/publish
+      - name: Audit Windows artifact for legacy drivers
+        if: matrix.rid == 'win-x64'
+        shell: pwsh
+        run: ./scripts/Test-ReleaseSecurity.ps1 -PublishDirectory artifacts/publish
       - name: Package Windows
         if: matrix.archive == 'zip'
         shell: pwsh

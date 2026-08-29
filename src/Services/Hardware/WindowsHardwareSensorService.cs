@@ -1,5 +1,6 @@
 using LibreHardwareMonitor.Hardware;
 using SidebarDiagnostics.App.Models;
+using SidebarDiagnostics.App.Services.Diagnostics;
 
 namespace SidebarDiagnostics.App.Services.Hardware;
 
@@ -29,7 +30,18 @@ public sealed class WindowsHardwareSensorService : IHardwareSensorService
 
         foreach (var hardware in _computer.Hardware)
         {
-            ReadHardware(hardware, readings, cancellationToken);
+            try
+            {
+                ReadHardware(hardware, readings, cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                SafeDiagnosticLog.Write("HardwareDevice", "DeviceFailure", exception);
+            }
         }
 
         return ValueTask.FromResult<IReadOnlyList<HardwareSensorReading>>(readings);
@@ -47,25 +59,43 @@ public sealed class WindowsHardwareSensorService : IHardwareSensorService
 
         foreach (var sensor in hardware.Sensors)
         {
-            if (sensor.Value is { } value && TryMapType(sensor.SensorType, out var type, out var unit))
+            try
             {
-                var deviceId = $"windows:{hardware.Identifier}";
-                readings.Add(new HardwareSensorReading(
-                    $"{deviceId}:{sensor.Identifier}",
-                    deviceId,
-                    hardware.Name,
-                    deviceType,
-                    vendor,
-                    sensor.Name,
-                    type,
-                    value,
-                    unit));
+                if (sensor.Value is { } value && TryMapType(sensor.SensorType, out var type, out var unit))
+                {
+                    var deviceId = $"windows:{hardware.Identifier}";
+                    readings.Add(new HardwareSensorReading(
+                        $"{deviceId}:{sensor.Identifier}",
+                        deviceId,
+                        hardware.Name,
+                        deviceType,
+                        vendor,
+                        sensor.Name,
+                        type,
+                        value,
+                        unit));
+                }
+            }
+            catch (Exception exception)
+            {
+                SafeDiagnosticLog.Write("HardwareSensor", "SensorFailure", exception);
             }
         }
 
         foreach (var subHardware in hardware.SubHardware)
         {
-            ReadHardware(subHardware, readings, cancellationToken);
+            try
+            {
+                ReadHardware(subHardware, readings, cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                SafeDiagnosticLog.Write("HardwareDevice", "SubDeviceFailure", exception);
+            }
         }
     }
 
