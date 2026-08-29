@@ -1,0 +1,67 @@
+<Window
+    x:Class="SidebarDiagnostics.App.Views.AboutWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:SidebarDiagnostics.App.Models"
+    Title="About Sidebar Diagnostics"
+    Width="540"
+    Height="570"
+    CanResize="False"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner"
+    x:DataType="models:AboutInfo"
+    Background="#0B0F17">
+    <Grid Margin="28" RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="18">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+            <Border Width="48" Height="48" Background="#12314A" CornerRadius="14">
+                <Path
+                    Width="24"
+                    Height="21"
+                    Data="M 1,18 L 7,11 L 12,14 L 22,3"
+                    Stretch="Fill"
+                    Stroke="#7DD3FC"
+                    StrokeThickness="2" />
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                <TextBlock FontSize="22" FontWeight="SemiBold" Foreground="#F8FAFC" Text="Sidebar Diagnostics" />
+                <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="#7DD3FC" LetterSpacing="1.2" Text="CROSS-PLATFORM SYSTEM MONITOR" />
+            </StackPanel>
+        </Grid>
+
+        <TextBlock
+            Grid.Row="1"
+            FontSize="12"
+            Foreground="#94A3B8"
+            Text="A modern Avalonia port of Sidebar Diagnostics for Windows, macOS, and Linux."
+            TextWrapping="Wrap" />
+
+        <Border Grid.Row="2" Padding="16" Background="#111827" BorderBrush="#223149" BorderThickness="1" CornerRadius="14">
+            <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
+                <TextBlock Foreground="#71839B" Text="Application version" />
+                <TextBlock Grid.Column="1" Foreground="#E2E8F0" Text="{Binding ApplicationVersion}" />
+                <TextBlock Grid.Row="1" Foreground="#71839B" Text="Avalonia" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Foreground="#E2E8F0" Text="{Binding AvaloniaVersion}" />
+                <TextBlock Grid.Row="2" Foreground="#71839B" Text=".NET runtime" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Foreground="#E2E8F0" Text="{Binding DotNetVersion}" />
+                <TextBlock Grid.Row="3" Foreground="#71839B" Text="Author" />
+                <TextBlock Grid.Row="3" Grid.Column="1" Foreground="#E2E8F0" Text="{Binding Author}" TextWrapping="Wrap" />
+                <TextBlock Grid.Row="4" Foreground="#71839B" Text="License" />
+                <TextBlock Grid.Row="4" Grid.Column="1" Foreground="#E2E8F0" Text="{Binding License}" />
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="3" Spacing="10">
+            <TextBlock FontWeight="SemiBold" Foreground="#E2E8F0" Text="Open source" />
+            <TextBlock Foreground="#94A3B8" Text="Source code, releases, and project documentation are available on GitHub." TextWrapping="Wrap" />
+            <Button HorizontalAlignment="Left" Click="OpenRepository" Content="Open repository" />
+            <TextBlock Margin="0,6,0,0" FontWeight="SemiBold" Foreground="#E2E8F0" Text="Need help or found a problem?" />
+            <TextBlock Foreground="#94A3B8" Text="Please report bugs and feature requests through GitHub Issues." TextWrapping="Wrap" />
+            <Button HorizontalAlignment="Left" Click="OpenIssues" Content="Report an issue" />
+        </StackPanel>
+
+        <Grid Grid.Row="4" ColumnDefinitions="*,Auto">
+            <TextBlock VerticalAlignment="Center" FontSize="10" Foreground="#526278" Text="Licensed under GPL-3.0-only" />
+            <Button Grid.Column="1" MinWidth="88" Click="CloseWindow" Content="Close" />
+        </Grid>
+    </Grid>
+</Window>

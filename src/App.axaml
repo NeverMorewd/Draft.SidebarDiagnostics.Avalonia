@@ -68,7 +68,6 @@
             <Setter Property="BorderBrush" Value="#5B7898" />
         </Style>
         <Style Selector="CheckBox:checked">
-            <Setter Property="Background" Value="#0284C7" />
             <Setter Property="BorderBrush" Value="#38BDF8" />
         </Style>
         <Style Selector="ComboBoxItem:pointerover">
@@ -97,8 +96,11 @@
                       Command="{Binding ShowWindowCommand}">
                 <TrayIcon.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Header="Show sidebar" Command="{Binding ShowWindowCommand}" />
-                        <NativeMenuItem Header="Hide sidebar" Command="{Binding HideWindowCommand}" />
+                        <NativeMenuItem Header="Show Sidebar" Command="{Binding ShowWindowCommand}" />
+                        <NativeMenuItem Header="Hide Sidebar" Command="{Binding HideWindowCommand}" />
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Header="Settings…" Command="{Binding ShowSettingsCommand}" />
+                        <NativeMenuItem Header="About Sidebar Diagnostics" Command="{Binding ShowAboutCommand}" />
                         <NativeMenuItemSeparator />
                         <NativeMenuItem Header="Exit" Command="{Binding ExitCommand}" />
                     </NativeMenu>

@@ -12,6 +12,8 @@ public sealed partial class ApplicationViewModel(
     MainViewModel mainViewModel,
     GlobalShortcutService shortcuts) : ObservableObject, IDisposable
 {
+    private bool _isDisposed;
+
     public void Initialize()
     {
         mainViewModel.SettingsApplied += OnSettingsApplied;
@@ -30,6 +32,20 @@ public sealed partial class ApplicationViewModel(
 
     [RelayCommand]
     private void HideWindow() => mainWindow.HideSidebar();
+
+    [RelayCommand]
+    private async Task ShowSettingsAsync()
+    {
+        ShowWindow();
+        await mainWindow.ShowSettingsAsync();
+    }
+
+    [RelayCommand]
+    private async Task ShowAboutAsync()
+    {
+        ShowWindow();
+        await mainWindow.ShowAboutAsync();
+    }
 
     [RelayCommand]
     private void Exit()
@@ -57,8 +73,15 @@ public sealed partial class ApplicationViewModel(
     private void OnExit(object? sender, ControlledApplicationLifetimeExitEventArgs e) => Dispose();
     public void Dispose()
     {
+        if (_isDisposed)
+        {
+            return;
+        }
+
+        _isDisposed = true;
         mainViewModel.SettingsApplied -= OnSettingsApplied;
         shortcuts.StatusChanged -= OnShortcutStatusChanged;
+        lifetime.Exit -= OnExit;
         shortcuts.Dispose();
     }
 }

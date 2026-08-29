@@ -61,7 +61,7 @@
             Padding="16,11"
             BorderBrush="#1B2535"
             BorderThickness="0,0,0,1">
-            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="7">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="7">
                 <StackPanel PointerPressed="BeginWindowDrag" Spacing="1">
                     <TextBlock
                         FontSize="9"
@@ -92,6 +92,30 @@
                     Height="36"
                     Padding="0"
                     Background="#122033"
+                    Click="OpenAbout"
+                    CornerRadius="11"
+                    Foreground="#7DD3FC"
+                    ToolTip.Tip="About">
+                    <Border
+                        Width="17"
+                        Height="17"
+                        BorderBrush="{Binding $parent[Button].Foreground}"
+                        BorderThickness="1.4"
+                        CornerRadius="9">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="11"
+                            FontWeight="Bold"
+                            Text="i" />
+                    </Border>
+                </Button>
+                <Button
+                    Grid.Column="2"
+                    Width="36"
+                    Height="36"
+                    Padding="0"
+                    Background="#122033"
                     Click="OpenSettings"
                     CornerRadius="11"
                     Foreground="#7DD3FC"
@@ -103,7 +127,7 @@
                         Text="⚙" />
                 </Button>
                 <Button
-                    Grid.Column="2"
+                    Grid.Column="3"
                     Width="36"
                     Height="36"
                     Padding="0"
