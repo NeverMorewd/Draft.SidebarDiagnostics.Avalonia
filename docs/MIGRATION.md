@@ -22,11 +22,11 @@ This approach avoids carrying Windows assumptions into cross-platform code and g
 
 ## Honest limitations
 
-The macOS CPU value currently represents normalized one-minute system load, while Windows and Linux report interval utilization. Hardware sensor coverage differs between operating systems and is being introduced through capability-specific providers rather than hidden behind misleading placeholder values.
+All platforms report interval CPU utilization, with per-core load on macOS and Linux. Hardware temperature and device-sensor coverage still differs because macOS does not expose a stable public equivalent to LibreHardwareMonitor or Linux hwmon. Platform providers report only values supported by the operating system rather than presenting placeholders as measurements.
 
 ## Remaining migration work
 
-- Hardware clocks, fan speeds, and per-device utilization
-- Per-monitor placement and reserved work-area behavior
+- Additional hardware clocks, fan speeds, and per-device utilization where native APIs permit
+- macOS signing and notarization
 - Native installers and signed release artifacts
 - Before-and-after screenshots and measured resource comparisons
