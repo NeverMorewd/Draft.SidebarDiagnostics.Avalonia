@@ -31,6 +31,13 @@ jobs:
       - run: dotnet restore SidebarDiagnostics.slnx --locked-mode
       - run: dotnet build SidebarDiagnostics.slnx --configuration Release --no-restore
       - run: dotnet test SidebarDiagnostics.slnx --configuration Release --no-build --logger "trx;LogFileName=tests.trx" --collect "XPlat Code Coverage" --results-directory artifacts/test-results
+      - name: Publish Windows security-audit artifact
+        if: runner.os == 'Windows'
+        run: dotnet publish src/SidebarDiagnostics.App.csproj --configuration Release --runtime win-x64 --self-contained true --no-restore --output artifacts/security/win-x64
+      - name: Audit Windows artifact for legacy drivers
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/Test-ReleaseSecurity.ps1 -PublishDirectory artifacts/security/win-x64
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4

@@ -4,9 +4,13 @@ public static class HardwareSensorServiceFactory
 {
     public static IHardwareSensorService Create()
     {
-        if (OperatingSystem.IsWindows()) return new WindowsHardwareSensorService();
-        if (OperatingSystem.IsLinux()) return new LinuxHardwareSensorService();
-        if (OperatingSystem.IsMacOS()) return new MacOsHardwareSensorService();
-        return new UnsupportedHardwareSensorService("Hardware temperatures are not available through public macOS APIs.");
+        IHardwareSensorService provider = OperatingSystem.IsWindows()
+            ? new WindowsHardwareSensorService()
+            : OperatingSystem.IsLinux()
+                ? new LinuxHardwareSensorService()
+                : OperatingSystem.IsMacOS()
+                    ? new MacOsHardwareSensorService()
+                    : new UnsupportedHardwareSensorService("Hardware sensors are not supported on this operating system.");
+        return new ResilientHardwareSensorService(provider);
     }
 }

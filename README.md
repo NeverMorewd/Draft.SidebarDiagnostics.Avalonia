@@ -21,6 +21,8 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 - Tray controls and native launch-at-login integration on all three platforms
 - Atomic JSON settings persistence
 - Strict builds, unit tests, coverage artifacts, and locked restores
+- Bounded single-flight hardware polling with cross-platform failure isolation
+- Automated dependency, legacy-driver artifact, and long-running stability audits
 - Self-contained release archives, macOS app bundles, and SHA-256 checksums
 
 ## Platform support
@@ -63,6 +65,10 @@ SidebarDiagnostics.slnx      Repository solution
 ## Releases
 
 Tags matching `v*` run tests on Windows, macOS, and Linux, publish self-contained Windows x64, Linux x64/ARM64, and macOS x64/ARM64 binaries, create platform-native archives, generate SHA-256 checksums, and attach them to a GitHub Release. macOS artifacts contain a conventional `.app` bundle but are not code-signed or notarized.
+
+## Security and stability
+
+The hardware access trust model and vulnerability reporting process are documented in [SECURITY.md](SECURITY.md). Repeatable timeout, artifact, dependency, and soak-test procedures are documented in [docs/STABILITY.md](docs/STABILITY.md).
 
 ## License and attribution
 

@@ -169,9 +169,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             await UpdateExternalMetricsAsync();
 
             var visibleReadings = SensorCatalog.SelectVisible(hardwareReadings, Settings.SensorPreferences).ToArray();
-            HardwareStatus = visibleReadings.Length > 0
-                ? $"{visibleReadings.Length} hardware sensors"
-                : _hardwareSensorService.CapabilityMessage;
+            HardwareStatus = _hardwareSensorService.CapabilityMessage;
             DiagnosticSections = DetailedDiagnosticsBuilder.Build(
                 snapshot,
                 visibleReadings,
@@ -311,6 +309,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         if (_isDisposed) return;
         _isDisposed = true;
         _timer.Stop();
+        _timer.Tick -= OnTick;
         _lifetimeCancellation.Cancel();
         _metricsService.Dispose();
         _hardwareSensorService.Dispose();
