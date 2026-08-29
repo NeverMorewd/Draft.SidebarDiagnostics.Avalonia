@@ -23,11 +23,12 @@
     <Window.Styles>
         <Style Selector="Grid.metric-row Button.metric-chart">
             <Setter Property="Opacity" Value="0" />
-            <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
         <Style Selector="Grid.metric-row:pointerover Button.metric-chart">
             <Setter Property="Opacity" Value="1" />
-            <Setter Property="IsHitTestVisible" Value="True" />
+        </Style>
+        <Style Selector="Button.metric-chart:pointerover, Button.metric-chart:focus">
+            <Setter Property="Opacity" Value="1" />
         </Style>
     </Window.Styles>
     <Design.DataContext>
@@ -134,7 +135,7 @@
                                     <ItemsControl ItemsSource="{Binding Metrics}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="models:DiagnosticMetric">
-                                                <Grid Margin="0,2" Classes="metric-row" ColumnDefinitions="110,*,Auto">
+                                                <Grid Margin="0,2" Background="Transparent" Classes="metric-row" ColumnDefinitions="110,*,Auto">
                                                     <TextBlock
                                                         FontSize="11"
                                                         Foreground="#94A3B8"
