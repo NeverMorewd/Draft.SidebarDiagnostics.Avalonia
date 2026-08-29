@@ -19,6 +19,7 @@ public partial class MetricChartWindow : Window
     public MetricChartWindow()
     {
         InitializeComponent();
+        DragRegion.AddHandler(InputElement.PointerPressedEvent, BeginWindowDrag, RoutingStrategies.Tunnel);
     }
 
     public MetricChartWindow(MetricSeries series)
@@ -50,7 +51,8 @@ public partial class MetricChartWindow : Window
     private void TogglePin(object? sender, RoutedEventArgs e)
     {
         Topmost = !Topmost;
-        PinText.Text = Topmost ? "◆" : "◇";
+        if (Topmost) PinButton.Classes.Add("pinned");
+        else PinButton.Classes.Remove("pinned");
     }
 
     private void BeginWindowDrag(object? sender, PointerPressedEventArgs e)
