@@ -106,7 +106,14 @@ public static class DetailedDiagnosticsBuilder
 
     private static IEnumerable<DiagnosticSection> BuildDrives(IReadOnlyList<HardwareSensorReading> readings, bool fahrenheit)
     {
-        foreach (var drive in DriveInfo.GetDrives().Where(x => x.IsReady))
+        foreach (var drive in DriveInfo.GetDrives().Where(drive =>
+                     drive.IsReady
+                     && DiagnosticDeviceSelection.ShouldIncludeDrive(
+                         drive.Name,
+                         drive.DriveFormat,
+                         drive.DriveType,
+                         Directory.Exists(drive.Name),
+                         OperatingSystem.IsWindows())))
         {
             var used = drive.TotalSize - drive.AvailableFreeSpace;
             var load = drive.TotalSize > 0 ? used * 100d / drive.TotalSize : 0;
@@ -131,10 +138,8 @@ public static class DetailedDiagnosticsBuilder
 
     private static IEnumerable<DiagnosticSection> BuildNetworks(SystemMetricsSnapshot snapshot)
     {
-        var activeNetworks = NetworkInterface.GetAllNetworkInterfaces()
-            .Where(network => network.OperationalStatus == OperationalStatus.Up && network.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-            .ToArray();
-        for (var index = 0; index < activeNetworks.Length; index++)
+        var activeNetworks = DiagnosticDeviceSelection.SelectPrimaryNetworks(NetworkInterface.GetAllNetworkInterfaces());
+        for (var index = 0; index < activeNetworks.Count; index++)
         {
             var network = activeNetworks[index];
             var addresses = network.GetIPProperties().UnicastAddresses
