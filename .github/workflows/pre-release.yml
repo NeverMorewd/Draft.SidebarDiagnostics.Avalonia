@@ -1,0 +1,153 @@
+name: Pre-release Native AOT
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform to package
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - windows
+          - linux
+          - macos
+      version:
+        description: Package version
+        required: true
+        default: 0.1.0-preview.1
+        type: string
+
+concurrency:
+  group: pre-release-${{ github.ref }}-${{ inputs.platform }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: 10.0.302
+  PACKAGE_VERSION: ${{ inputs.version }}
+
+jobs:
+  windows:
+    if: inputs.platform == 'all' || inputs.platform == 'windows'
+    name: Windows · win-x64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore src/SidebarDiagnostics.App.csproj --locked-mode
+      - name: Publish Native AOT
+        shell: pwsh
+        run: dotnet publish src/SidebarDiagnostics.App.csproj -c Release -r win-x64 --self-contained true --no-restore -p:PublishAot=true -p:PublishTrimmed=true "-p:Version=$env:PACKAGE_VERSION" -o artifacts/publish
+      - name: Prepare package
+        shell: pwsh
+        run: |
+          Get-ChildItem artifacts/publish -Recurse -File |
+            Where-Object { $_.Extension -in '.pdb', '.dbg' } |
+            Remove-Item -Force
+          Copy-Item README.md,LICENSE.md,NOTICE.md,THIRD-PARTY-NOTICES.md artifacts/publish
+          ./scripts/Test-ReleaseSecurity.ps1 -PublishDirectory artifacts/publish
+          Compress-Archive artifacts/publish/* artifacts/SidebarDiagnostics-win-x64.zip
+          $hash = (Get-FileHash artifacts/SidebarDiagnostics-win-x64.zip -Algorithm SHA256).Hash.ToLower()
+          "$hash  SidebarDiagnostics-win-x64.zip" | Set-Content artifacts/SidebarDiagnostics-win-x64.zip.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SidebarDiagnostics-win-x64-${{ inputs.version }}
+          path: |
+            artifacts/SidebarDiagnostics-win-x64.zip
+            artifacts/SidebarDiagnostics-win-x64.zip.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+  linux:
+    if: inputs.platform == 'all' || inputs.platform == 'linux'
+    name: Linux · ${{ matrix.rid }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            rid: linux-x64
+          - runner: ubuntu-24.04-arm
+            rid: linux-arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore src/SidebarDiagnostics.App.csproj --locked-mode
+      - name: Publish Native AOT
+        run: dotnet publish src/SidebarDiagnostics.App.csproj -c Release -r ${{ matrix.rid }} --self-contained true --no-restore -p:PublishAot=true -p:PublishTrimmed=true "-p:Version=${PACKAGE_VERSION}" -o artifacts/publish
+      - name: Prepare packages
+        shell: bash
+        run: |
+          find artifacts/publish -type f \( -name '*.pdb' -o -name '*.dbg' \) -delete
+          cp README.md LICENSE.md NOTICE.md THIRD-PARTY-NOTICES.md artifacts/publish/
+          tar -C artifacts/publish -czf artifacts/SidebarDiagnostics-${{ matrix.rid }}.tar.gz .
+          (cd artifacts && sha256sum SidebarDiagnostics-${{ matrix.rid }}.tar.gz > SidebarDiagnostics-${{ matrix.rid }}.tar.gz.sha256)
+          ./scripts/Build-DebPackage.sh artifacts/publish artifacts "${PACKAGE_VERSION}" "${{ matrix.rid }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SidebarDiagnostics-${{ matrix.rid }}-${{ inputs.version }}
+          path: |
+            artifacts/SidebarDiagnostics-${{ matrix.rid }}.tar.gz
+            artifacts/SidebarDiagnostics-${{ matrix.rid }}.tar.gz.sha256
+            artifacts/SidebarDiagnostics-${{ matrix.rid }}.deb
+            artifacts/SidebarDiagnostics-${{ matrix.rid }}.deb.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+  macos:
+    if: inputs.platform == 'all' || inputs.platform == 'macos'
+    name: macOS · ${{ matrix.rid }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15-intel
+            rid: osx-x64
+          - runner: macos-15
+            rid: osx-arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore src/SidebarDiagnostics.App.csproj --locked-mode
+      - name: Publish Native AOT
+        run: dotnet publish src/SidebarDiagnostics.App.csproj -c Release -r ${{ matrix.rid }} --self-contained true --no-restore -p:PublishAot=true -p:PublishTrimmed=true "-p:Version=${PACKAGE_VERSION}" -o artifacts/publish
+      - name: Prepare application bundle
+        shell: bash
+        run: |
+          find artifacts/publish -type f \( -name '*.pdb' -o -name '*.dbg' \) -delete
+          find artifacts/publish -type d -name '*.dSYM' -prune -exec rm -rf {} +
+          cp README.md LICENSE.md NOTICE.md THIRD-PARTY-NOTICES.md artifacts/publish/
+          app='artifacts/Sidebar Diagnostics.app'
+          mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
+          cp -R artifacts/publish/. "$app/Contents/MacOS/"
+          cp src/Assets/sidebar.ico "$app/Contents/Resources/sidebar.ico"
+          sed "s/__VERSION__/${PACKAGE_VERSION#v}/g" packaging/macos/Info.plist > "$app/Contents/Info.plist"
+          chmod +x "$app/Contents/MacOS/SidebarDiagnostics.App"
+          ditto -c -k --sequesterRsrc --keepParent "$app" artifacts/SidebarDiagnostics-${{ matrix.rid }}.zip
+          (cd artifacts && shasum -a 256 SidebarDiagnostics-${{ matrix.rid }}.zip > SidebarDiagnostics-${{ matrix.rid }}.zip.sha256)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SidebarDiagnostics-${{ matrix.rid }}-${{ inputs.version }}
+          path: |
+            artifacts/SidebarDiagnostics-${{ matrix.rid }}.zip
+            artifacts/SidebarDiagnostics-${{ matrix.rid }}.zip.sha256
+          if-no-files-found: error
+          retention-days: 14
