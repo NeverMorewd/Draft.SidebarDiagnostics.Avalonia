@@ -46,6 +46,7 @@ Architecture: $architecture
 Installed-Size: $installed_size
 Maintainer: Sidebar Diagnostics contributors <noreply@github.com>
 Depends: libfontconfig1, libice6, libsm6, libx11-6
+Suggests: gnome-shell-extension-appindicator
 Homepage: https://github.com/NeverMorewd/SidebarDiagnostics.Avalonia
 Description: Cross-platform system monitor built with Avalonia
  Sidebar Diagnostics presents CPU, memory, storage, network, GPU, and

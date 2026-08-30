@@ -53,6 +53,8 @@ sudo apt remove sidebar-diagnostics
 
 Installing a newer `.deb` performs an upgrade. The ARM64 package uses the same commands with `linux-arm64` in the filename. The release also retains portable tarballs for distributions that do not use Debian packages.
 
+The tray uses the StatusNotifierItem/AppIndicator protocol. KDE Plasma supports it directly. GNOME users whose desktop does not show tray icons should install and enable the AppIndicator extension; the Debian package declares `gnome-shell-extension-appindicator` as an optional suggestion rather than forcing a GNOME-specific dependency onto other desktops.
+
 Flatpak was not selected because its process and mount namespaces prevent a system monitor from observing the complete host `/proc` and `/sys` data without broad sandbox exceptions. A native `.deb` preserves accurate host metrics and integrates with APT; tarballs remain the distribution-neutral fallback.
 
 ## Versioning, validation, and rollback

@@ -36,6 +36,8 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 | Hardware sensors | LibreHardwareMonitor | No stable public system API | hwmon temperature, fan, voltage, current, power, and clock readings |
 | Tray and launch at login | Supported | Supported | Supported |
 
+Linux tray availability depends on StatusNotifierItem/AppIndicator support in the desktop environment. KDE Plasma supports it natively; GNOME may require the AppIndicator extension.
+
 The detailed comparison with the WPF application is maintained in [docs/PARITY.md](docs/PARITY.md).
 
 ### Global shortcut support

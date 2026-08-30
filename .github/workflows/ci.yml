@@ -63,7 +63,9 @@ jobs:
         run: |
           sudo apt-get install -y ./artifacts/package-test/SidebarDiagnostics-linux-x64.deb
           test "$(dpkg-query -W -f='${Version}' sidebar-diagnostics)" = "0.0.0-ci"
+          test "$(dpkg-query -W -f='${Suggests}' sidebar-diagnostics)" = "gnome-shell-extension-appindicator"
           test -x /usr/bin/sidebar-diagnostics
+          grep -Fx 'StartupWMClass=SidebarDiagnostics.App' /usr/share/applications/net.sidebardiagnostics.app.desktop
           ./scripts/Build-DebPackage.sh artifacts/package-test/publish artifacts/package-test 0.0.1-ci linux-x64
           sudo apt-get install -y ./artifacts/package-test/SidebarDiagnostics-linux-x64.deb
           test "$(dpkg-query -W -f='${Version}' sidebar-diagnostics)" = "0.0.1-ci"
