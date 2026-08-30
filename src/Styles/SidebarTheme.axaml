@@ -108,11 +108,13 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}">
                         <ContentPresenter
+                            x:Name="PART_ContentPresenter"
                             Padding="{TemplateBinding Padding}"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             Content="{TemplateBinding Content}"
-                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True" />
                     </Border>
                 </ControlTemplate>
             </Setter>
@@ -256,15 +258,27 @@
     <Style Selector="Button.chrome">
         <Setter Property="Theme" Value="{StaticResource ChromeButtonTheme}" />
     </Style>
+    <Style Selector="Button.chrome Path.chrome-icon">
+        <Setter Property="Stroke" Value="{DynamicResource TextBodyBrush}" />
+    </Style>
+    <Style Selector="Button.chrome:pointerover Path.chrome-icon">
+        <Setter Property="Stroke" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
     <Style Selector="Button.chrome.close:pointerover">
         <Setter Property="Background" Value="{DynamicResource BackgroundDangerHoverBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderDangerBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
+    <Style Selector="Button.chrome.close:pointerover Path.chrome-icon">
+        <Setter Property="Stroke" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
     <Style Selector="Button.pinned">
         <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource AccentExternalBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextAccentBrush}" />
+    </Style>
+    <Style Selector="Button.pinned Path.chrome-icon">
+        <Setter Property="Stroke" Value="{DynamicResource TextAccentBrush}" />
     </Style>
 
     <Style Selector="Border.card">

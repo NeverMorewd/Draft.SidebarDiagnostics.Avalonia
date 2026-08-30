@@ -64,9 +64,9 @@
                     <Path
                         Width="15"
                         Height="17"
+                        Classes="chrome-icon"
                         Data="M 4,1 L 12,1 L 10,5 L 10,9 L 13,12 L 3,12 L 6,9 L 6,5 Z M 8,12 L 8,17"
                         Stretch="Fill"
-                        Stroke="{Binding $parent[Button].Foreground}"
                         StrokeLineCap="Round"
                         StrokeThickness="1.4" />
                 </Button>
@@ -78,9 +78,9 @@
                     <Path
                         Width="13"
                         Height="13"
+                        Classes="chrome-icon"
                         Data="M 1,1 L 12,12 M 12,1 L 1,12"
                         Stretch="Fill"
-                        Stroke="{Binding $parent[Button].Foreground}"
                         StrokeLineCap="Round"
                         StrokeThickness="1.6" />
                 </Button>
