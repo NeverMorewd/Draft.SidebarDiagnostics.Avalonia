@@ -109,12 +109,7 @@ jobs:
         shell: bash
         run: |
           app="artifacts/Sidebar Diagnostics.app"
-          mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
-          cp -R artifacts/publish/. "$app/Contents/MacOS/"
-          cp src/Assets/sidebar.ico "$app/Contents/Resources/sidebar.ico"
-          version="${RELEASE_VERSION#v}"
-          sed "s/__VERSION__/${version}/g" packaging/macos/Info.plist > "$app/Contents/Info.plist"
-          chmod +x "$app/Contents/MacOS/SidebarDiagnostics.App"
+          ./scripts/Build-MacAppBundle.sh artifacts/publish "$app" "$RELEASE_VERSION"
           ditto -c -k --sequesterRsrc --keepParent "$app" artifacts/SidebarDiagnostics-${{ matrix.rid }}.zip
           cd artifacts && shasum -a 256 SidebarDiagnostics-${{ matrix.rid }}.zip > SidebarDiagnostics-${{ matrix.rid }}.zip.sha256
       - uses: actions/upload-artifact@v4
