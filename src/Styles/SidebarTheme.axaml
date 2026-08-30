@@ -320,7 +320,4 @@
         <Setter Property="AxisBrush" Value="{DynamicResource ChartAxisBrush}" />
         <Setter Property="PointOutlineBrush" Value="{DynamicResource ChartPointOutlineBrush}" />
     </Style>
-    <Style Selector="controls|Sparkline">
-        <Setter Property="Stroke" Value="{DynamicResource AccentCpuBrush}" />
-    </Style>
 </Styles>
