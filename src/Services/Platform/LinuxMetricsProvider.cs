@@ -6,9 +6,7 @@ public sealed class LinuxMetricsProvider : IPlatformMetricsProvider
 {
     private const string CpuStatPath = "/proc/stat";
     private const string MemoryInfoPath = "/proc/meminfo";
-    private ulong _previousIdle;
-    private ulong _previousTotal;
-    private bool _hasPreviousSample;
+    private readonly LinuxCpuUsageTracker cpuUsageTracker = new();
 
     public async ValueTask<PlatformMetrics> SampleAsync(CancellationToken cancellationToken)
     {
@@ -16,21 +14,7 @@ public sealed class LinuxMetricsProvider : IPlatformMetricsProvider
         var memoryLines = await File.ReadAllLinesAsync(MemoryInfoPath, cancellationToken);
         var (idle, total) = ParseCpuLine(cpuLine);
         var (usedMemory, totalMemory) = ParseMemory(memoryLines);
-        var cpuUsage = 0d;
-
-        if (_hasPreviousSample)
-        {
-            var totalDelta = total - _previousTotal;
-            var idleDelta = idle - _previousIdle;
-            if (totalDelta > 0)
-            {
-                cpuUsage = (totalDelta - idleDelta) * 100d / totalDelta;
-            }
-        }
-
-        _previousIdle = idle;
-        _previousTotal = total;
-        _hasPreviousSample = true;
+        var cpuUsage = cpuUsageTracker.Update(idle, total);
         return new PlatformMetrics(Math.Clamp(cpuUsage, 0, 100), usedMemory, totalMemory);
     }
 
@@ -52,7 +36,7 @@ public sealed class LinuxMetricsProvider : IPlatformMetricsProvider
         return (idle, values.Aggregate(0UL, (total, value) => total + value));
     }
 
-    private static (long Used, long Total) ParseMemory(IEnumerable<string> lines)
+    internal static (long Used, long Total) ParseMemory(IEnumerable<string> lines)
     {
         var values = lines
             .Select(line => line.Split(':', 2))
@@ -60,8 +44,20 @@ public sealed class LinuxMetricsProvider : IPlatformMetricsProvider
             .ToDictionary(parts => parts[0], parts => ParseKilobytes(parts[1]), StringComparer.Ordinal);
 
         var total = values.GetValueOrDefault("MemTotal");
-        var available = values.GetValueOrDefault("MemAvailable");
-        return (Math.Max(0, total - available), total);
+        if (total <= 0)
+        {
+            throw new InvalidDataException("The Linux memory statistics do not include MemTotal.");
+        }
+
+        var available = values.TryGetValue("MemAvailable", out var reportedAvailable)
+            ? reportedAvailable
+            : values.GetValueOrDefault("MemFree")
+              + values.GetValueOrDefault("Buffers")
+              + values.GetValueOrDefault("Cached")
+              + values.GetValueOrDefault("SReclaimable")
+              - values.GetValueOrDefault("Shmem");
+        available = Math.Clamp(available, 0, total);
+        return (total - available, total);
     }
 
     private static long ParseKilobytes(string value)
