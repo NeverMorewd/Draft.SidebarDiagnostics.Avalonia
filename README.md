@@ -67,6 +67,8 @@ SidebarDiagnostics.slnx      Repository solution
 
 Tags matching `v*` run tests on Windows, macOS, and Linux, publish trimmed Native AOT binaries for Windows x64, Linux x64/ARM64, and macOS x64/ARM64 on matching-architecture runners, create platform-native archives, generate SHA-256 checksums, and attach them to a GitHub Release. macOS artifacts contain a conventional `.app` bundle but are not code-signed or notarized.
 
+For test builds, run the **Pre-release Native AOT** workflow from the GitHub Actions page. It can package Windows, Linux, macOS, or all platforms without creating a GitHub Release. The downloadable workflow artifacts are retained for 14 days and include SHA-256 checksums; Linux artifacts include both portable archives and Debian packages.
+
 Each release also contains APT-installable Debian packages plus generated WinGet and Homebrew metadata tied to the immutable artifacts. Installation, upgrade, uninstall, rollback, community-index status, and Flatpak tradeoffs are documented in [docs/PACKAGE_MANAGERS.md](docs/PACKAGE_MANAGERS.md).
 
 Package-manager installation from a tagged GitHub Release:
