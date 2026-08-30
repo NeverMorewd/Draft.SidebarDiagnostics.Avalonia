@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
           cache: true
           cache-dependency-path: '**/packages.lock.json'
       - run: dotnet restore SidebarDiagnostics.slnx --locked-mode
@@ -50,13 +50,13 @@ jobs:
           - os: ubuntu-latest
             rid: linux-x64
             archive: tar
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             rid: linux-arm64
             archive: tar
-          - os: macos-latest
+          - os: macos-15-intel
             rid: osx-x64
             archive: app
-          - os: macos-latest
+          - os: macos-15
             rid: osx-arm64
             archive: app
     runs-on: ${{ matrix.os }}
@@ -64,7 +64,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
           cache: true
           cache-dependency-path: '**/packages.lock.json'
       - run: dotnet restore src/SidebarDiagnostics.App.csproj --locked-mode
@@ -72,7 +72,15 @@ jobs:
         shell: pwsh
         run: |
           $version = $env:RELEASE_VERSION.TrimStart('v')
-          dotnet publish src/SidebarDiagnostics.App.csproj -c Release -r ${{ matrix.rid }} --self-contained true --no-restore -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true "-p:Version=$version" -o artifacts/publish
+          dotnet publish src/SidebarDiagnostics.App.csproj -c Release -r ${{ matrix.rid }} --self-contained true --no-restore -p:PublishAot=true -p:PublishTrimmed=true "-p:Version=$version" -o artifacts/publish
+      - name: Remove native debug symbols
+        shell: pwsh
+        run: |
+          Get-ChildItem artifacts/publish -Recurse -File |
+            Where-Object { $_.Extension -in '.pdb', '.dbg' } |
+            Remove-Item -Force
+          Get-ChildItem artifacts/publish -Recurse -Directory -Filter '*.dSYM' |
+            Remove-Item -Recurse -Force
       - name: Add legal files
         shell: pwsh
         run: Copy-Item README.md,LICENSE.md,NOTICE.md,THIRD-PARTY-NOTICES.md artifacts/publish

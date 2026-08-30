@@ -16,6 +16,14 @@
     <RepositoryUrl>https://github.com/NeverMorewd/SidebarDiagnostics.Avalonia</RepositoryUrl>
     <Version>0.1.0</Version>
     <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
+    <PublishAot>true</PublishAot>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
+    <IsAotCompatible>true</IsAotCompatible>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <DebugType Condition="'$(Configuration)' == 'Release'">None</DebugType>
+    <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
+    <StripSymbols Condition="'$(Configuration)' == 'Release'">true</StripSymbols>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,4 +48,12 @@
     <PackageReference Include="Pipboy.Avalonia" Version="1.1.2" />
     <PackageReference Include="SharpHook" Version="8.0.0" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+    <TrimmerRootAssembly Include="LibreHardwareMonitorLib" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);IL2104;IL3053</WarningsNotAsErrors>
+  </PropertyGroup>
 </Project>

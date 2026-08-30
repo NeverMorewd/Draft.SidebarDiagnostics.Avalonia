@@ -65,7 +65,7 @@ SidebarDiagnostics.slnx      Repository solution
 
 ## Releases
 
-Tags matching `v*` run tests on Windows, macOS, and Linux, publish self-contained Windows x64, Linux x64/ARM64, and macOS x64/ARM64 binaries, create platform-native archives, generate SHA-256 checksums, and attach them to a GitHub Release. macOS artifacts contain a conventional `.app` bundle but are not code-signed or notarized.
+Tags matching `v*` run tests on Windows, macOS, and Linux, publish trimmed Native AOT binaries for Windows x64, Linux x64/ARM64, and macOS x64/ARM64 on matching-architecture runners, create platform-native archives, generate SHA-256 checksums, and attach them to a GitHub Release. macOS artifacts contain a conventional `.app` bundle but are not code-signed or notarized.
 
 Each release also contains APT-installable Debian packages plus generated WinGet and Homebrew metadata tied to the immutable artifacts. Installation, upgrade, uninstall, rollback, community-index status, and Flatpak tradeoffs are documented in [docs/PACKAGE_MANAGERS.md](docs/PACKAGE_MANAGERS.md).
 
