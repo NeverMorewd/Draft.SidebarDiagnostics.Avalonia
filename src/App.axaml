@@ -2,7 +2,6 @@
     x:Class="SidebarDiagnostics.App.App"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SidebarDiagnostics.App"
     xmlns:styling="using:SidebarDiagnostics.App.Styling"
     xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
     x:DataType="vm:ApplicationViewModel"
@@ -11,10 +10,6 @@
     <Application.Resources>
         <styling:ResourceKeyToBrushConverter x:Key="ResourceKeyToBrushConverter" />
     </Application.Resources>
-
-    <Application.DataTemplates>
-        <local:ViewLocator />
-    </Application.DataTemplates>
 
     <Application.Styles>
         <StyleInclude Source="avares://SidebarDiagnostics.App/Styles/SidebarTheme.axaml" />

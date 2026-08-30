@@ -76,3 +76,47 @@ jobs:
           name: test-results-${{ matrix.os }}
           path: artifacts/test-results
           if-no-files-found: error
+
+  native-aot:
+    name: Native AOT · ${{ matrix.rid }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+            executable: SidebarDiagnostics.App.exe
+          - os: ubuntu-latest
+            rid: linux-x64
+            executable: SidebarDiagnostics.App
+          - os: ubuntu-24.04-arm
+            rid: linux-arm64
+            executable: SidebarDiagnostics.App
+          - os: macos-15-intel
+            rid: osx-x64
+            executable: SidebarDiagnostics.App
+          - os: macos-15
+            rid: osx-arm64
+            executable: SidebarDiagnostics.App
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore src/SidebarDiagnostics.App.csproj --runtime ${{ matrix.rid }} --locked-mode
+      - name: Publish Native AOT
+        run: dotnet publish src/SidebarDiagnostics.App.csproj --configuration Release --runtime ${{ matrix.rid }} --self-contained true --no-restore --output artifacts/aot/${{ matrix.rid }}
+      - name: Verify native executable
+        shell: pwsh
+        run: |
+          $executable = Join-Path 'artifacts/aot/${{ matrix.rid }}' '${{ matrix.executable }}'
+          if (-not (Test-Path -LiteralPath $executable -PathType Leaf)) {
+            throw "Native executable was not produced: $executable"
+          }
+          $managedEntryPoint = Join-Path 'artifacts/aot/${{ matrix.rid }}' 'SidebarDiagnostics.App.dll'
+          if (Test-Path -LiteralPath $managedEntryPoint) {
+            throw "Managed entry point was unexpectedly published: $managedEntryPoint"
+          }

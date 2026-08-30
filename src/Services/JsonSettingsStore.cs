@@ -5,12 +5,6 @@ namespace SidebarDiagnostics.App.Services;
 
 public sealed class JsonSettingsStore : ISettingsStore
 {
-    private static readonly JsonSerializerOptions SerializerOptions = new()
-    {
-        WriteIndented = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-    };
-
     private readonly string _filePath;
 
     public JsonSettingsStore()
@@ -33,7 +27,10 @@ public sealed class JsonSettingsStore : ISettingsStore
         try
         {
             await using var stream = File.OpenRead(_filePath);
-            var settings = await JsonSerializer.DeserializeAsync<AppSettings>(stream, SerializerOptions, cancellationToken);
+            var settings = await JsonSerializer.DeserializeAsync(
+                stream,
+                AppJsonSerializerContext.Default.AppSettings,
+                cancellationToken);
             return (settings ?? AppSettings.Default).Normalize();
         }
         catch (JsonException)
@@ -58,7 +55,11 @@ public sealed class JsonSettingsStore : ISettingsStore
         var temporaryPath = $"{_filePath}.tmp";
         await using (var stream = File.Create(temporaryPath))
         {
-            await JsonSerializer.SerializeAsync(stream, settings.Normalize(), SerializerOptions, cancellationToken);
+            await JsonSerializer.SerializeAsync(
+                stream,
+                settings.Normalize(),
+                AppJsonSerializerContext.Default.AppSettings,
+                cancellationToken);
         }
 
         File.Move(temporaryPath, _filePath, true);
