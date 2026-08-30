@@ -1,15 +1,18 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
-        x:Class="SidebarDiagnostics.App.Views.SettingsWindow"
-        x:DataType="vm:SettingsViewModel"
-        Title="Sidebar Diagnostics Settings"
-        Width="440"
-        Height="780"
-        MinWidth="400"
-        MinHeight="600"
-        WindowStartupLocation="CenterOwner"
-        Background="{DynamicResource BackgroundWindowBrush}">
+<Window
+    x:Class="SidebarDiagnostics.App.Views.SettingsWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
+    Title="Sidebar Diagnostics Settings"
+    Width="440"
+    Height="780"
+    MinWidth="400"
+    MinHeight="600"
+    x:DataType="vm:SettingsViewModel"
+    Background="{DynamicResource BackgroundWindowBrush}"
+    ExtendClientAreaToDecorationsHint="True"
+    WindowDecorations="BorderOnly"
+    WindowStartupLocation="CenterOwner">
     <Grid RowDefinitions="Auto,*,Auto">
         <StackPanel
             Grid.Row="0"
@@ -17,239 +20,457 @@
             Margin="28,24,28,16"
             HorizontalAlignment="Stretch"
             Spacing="4">
-            <TextBlock Text="SETTINGS" FontSize="{DynamicResource FontSizeBody}" FontWeight="SemiBold" Foreground="{DynamicResource TextAccentBrush}" LetterSpacing="1.8" />
-            <TextBlock Text="Monitoring preferences" FontSize="{DynamicResource FontSizePageTitle}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
-            <TextBlock Text="Changes apply immediately and persist after saving." FontSize="{DynamicResource FontSizeDescription}" Foreground="{DynamicResource TextMutedBrush}" />
+            <TextBlock
+                FontSize="{DynamicResource FontSizeBody}"
+                FontWeight="SemiBold"
+                Foreground="{DynamicResource TextAccentBrush}"
+                LetterSpacing="1.8"
+                Text="SETTINGS" />
+            <TextBlock
+                FontSize="{DynamicResource FontSizePageTitle}"
+                FontWeight="SemiBold"
+                Foreground="{DynamicResource TextPrimaryBrush}"
+                Text="Monitoring preferences" />
+            <TextBlock
+                FontSize="{DynamicResource FontSizeDescription}"
+                Foreground="{DynamicResource TextMutedBrush}"
+                Text="Changes apply immediately and persist after saving." />
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel
-            MaxWidth="920"
-            Margin="28,0,28,24"
-            HorizontalAlignment="Stretch"
-            Spacing="22">
-            <Border Classes="card">
-                <StackPanel Spacing="10">
-                    <TextBlock Text="Global shortcuts" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
-                    <TextBlock Text="Use modifiers plus a letter, number, or function key. Clear a field to disable it." FontSize="{DynamicResource FontSizeBody}" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" />
-                    <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="8">
-                        <TextBlock Text="Show and focus" VerticalAlignment="Center" />
-                        <TextBox Grid.Column="1" Text="{Binding ShowShortcut}" />
-                        <TextBlock Grid.Row="1" Text="Hide" VerticalAlignment="Center" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding HideShortcut}" />
-                        <TextBlock Grid.Row="2" Text="Toggle" VerticalAlignment="Center" />
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ToggleShortcut}" />
-                    </Grid>
-                    <TextBlock Text="{Binding ShortcutStatus}" FontSize="{DynamicResource FontSizeBody}" Foreground="{DynamicResource TextAccentBrush}" TextWrapping="Wrap" />
-                </StackPanel>
-            </Border>
+            <StackPanel
+                MaxWidth="920"
+                Margin="28,0,28,24"
+                HorizontalAlignment="Stretch"
+                Spacing="22">
+                <Border Classes="card">
+                    <StackPanel Spacing="10">
+                        <TextBlock
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource TextSecondaryBrush}"
+                            Text="Global shortcuts" />
+                        <TextBlock
+                            FontSize="{DynamicResource FontSizeBody}"
+                            Foreground="{DynamicResource TextMutedBrush}"
+                            Text="Use modifiers plus a letter, number, or function key. Clear a field to disable it."
+                            TextWrapping="Wrap" />
+                        <Grid
+                            ColumnDefinitions="120,*"
+                            ColumnSpacing="10"
+                            RowDefinitions="Auto,Auto,Auto"
+                            RowSpacing="8">
+                            <TextBlock VerticalAlignment="Center" Text="Show and focus" />
+                            <TextBox Grid.Column="1" Text="{Binding ShowShortcut}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                VerticalAlignment="Center"
+                                Text="Hide" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="{Binding HideShortcut}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                VerticalAlignment="Center"
+                                Text="Toggle" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Text="{Binding ToggleShortcut}" />
+                        </Grid>
+                        <TextBlock
+                            FontSize="{DynamicResource FontSizeBody}"
+                            Foreground="{DynamicResource TextAccentBrush}"
+                            Text="{Binding ShortcutStatus}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
 
-            <Border Classes="card">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="Refresh interval" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
-                    <NumericUpDown Value="{Binding RefreshIntervalMilliseconds}" Minimum="250" Maximum="10000" Increment="250" FormatString="0 ms" />
-                </StackPanel>
-            </Border>
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource TextSecondaryBrush}"
+                            Text="Refresh interval" />
+                        <NumericUpDown
+                            FormatString="0 ms"
+                            Increment="250"
+                            Maximum="10000"
+                            Minimum="250"
+                            Value="{Binding RefreshIntervalMilliseconds}" />
+                    </StackPanel>
+                </Border>
 
-            <Border Classes="card">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="Appearance" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
-                    <Grid ColumnDefinitions="*,110" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
-                        <TextBlock Text="Theme" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <ComboBox Grid.Column="1" ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}">
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource TextSecondaryBrush}"
+                            Text="Appearance" />
+                        <Grid
+                            ColumnDefinitions="*,110"
+                            RowDefinitions="Auto,Auto,Auto"
+                            RowSpacing="10">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="Theme" />
+                            <ComboBox
+                                Grid.Column="1"
+                                ItemsSource="{Binding Themes}"
+                                SelectedItem="{Binding SelectedTheme}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ApplicationThemeOption">
+                                        <TextBlock Text="{Binding DisplayName}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock
+                                Grid.Row="1"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="Sidebar width" />
+                            <NumericUpDown
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                FormatString="0 px"
+                                Increment="10"
+                                Maximum="640"
+                                Minimum="320"
+                                Value="{Binding SidebarWidth}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="Opacity" />
+                            <NumericUpDown
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                FormatString="0%"
+                                Increment="0.05"
+                                Maximum="1"
+                                Minimum="0.35"
+                                Value="{Binding BackgroundOpacity}" />
+                        </Grid>
+                        <CheckBox Content="Show machine name" IsChecked="{Binding ShowMachineName}" />
+                        <CheckBox Content="Show clock and date" IsChecked="{Binding ShowClock}" />
+                        <CheckBox Content="Use 24-hour clock" IsChecked="{Binding Use24HourClock}" />
+                        <CheckBox Content="Show temperatures in Fahrenheit" IsChecked="{Binding UseFahrenheit}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource TextSecondaryBrush}"
+                            Text="Display placement" />
+                        <TextBlock
+                            FontSize="{DynamicResource FontSizeBody}"
+                            Foreground="{DynamicResource TextMutedBrush}"
+                            Text="Dock relative to a display working area. The primary display is used if the selected display is unavailable."
+                            TextWrapping="Wrap" />
+                        <ComboBox ItemsSource="{Binding Displays}" SelectedItem="{Binding SelectedDisplay}">
                             <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="vm:ApplicationThemeOption">
+                                <DataTemplate x:DataType="vm:DisplayOption">
                                     <TextBlock Text="{Binding DisplayName}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                        <TextBlock Grid.Row="1" Text="Sidebar width" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding SidebarWidth}" Minimum="320" Maximum="640" Increment="10" FormatString="0 px" />
-                        <TextBlock Grid.Row="2" Text="Opacity" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding BackgroundOpacity}" Minimum="0.35" Maximum="1" Increment="0.05" FormatString="0%" />
-                    </Grid>
-                    <CheckBox Content="Show machine name" IsChecked="{Binding ShowMachineName}" />
-                    <CheckBox Content="Show clock and date" IsChecked="{Binding ShowClock}" />
-                    <CheckBox Content="Use 24-hour clock" IsChecked="{Binding Use24HourClock}" />
-                    <CheckBox Content="Show temperatures in Fahrenheit" IsChecked="{Binding UseFahrenheit}" />
-                </StackPanel>
-            </Border>
+                        <Grid
+                            ColumnDefinitions="*,120"
+                            ColumnSpacing="10"
+                            RowDefinitions="Auto,Auto"
+                            RowSpacing="10">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="Dock edge" />
+                            <ComboBox
+                                Grid.Column="1"
+                                ItemsSource="{Binding DockEdges}"
+                                SelectedItem="{Binding DockEdge}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="Vertical position" />
+                            <NumericUpDown
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                FormatString="0%"
+                                Increment="5"
+                                Maximum="100"
+                                Minimum="0"
+                                Value="{Binding VerticalPositionPercent}" />
+                        </Grid>
+                        <CheckBox Content="Reserve the docked area on Windows" IsChecked="{Binding ReserveScreenSpace}" />
+                    </StackPanel>
+                </Border>
 
-            <Border Classes="card">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="Display placement" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
-                    <TextBlock Text="Dock relative to a display working area. The primary display is used if the selected display is unavailable."
-                               FontSize="{DynamicResource FontSizeBody}"
-                               Foreground="{DynamicResource TextMutedBrush}"
-                               TextWrapping="Wrap" />
-                    <ComboBox ItemsSource="{Binding Displays}" SelectedItem="{Binding SelectedDisplay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="vm:DisplayOption">
-                                <TextBlock Text="{Binding DisplayName}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                    <Grid ColumnDefinitions="*,120" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
-                        <TextBlock Text="Dock edge" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <ComboBox Grid.Column="1" ItemsSource="{Binding DockEdges}" SelectedItem="{Binding DockEdge}" />
-                        <TextBlock Grid.Row="1" Text="Vertical position" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="1"
-                                       Grid.Column="1"
-                                       Value="{Binding VerticalPositionPercent}"
-                                       Minimum="0"
-                                       Maximum="100"
-                                       Increment="5"
-                                       FormatString="0%" />
-                    </Grid>
-                    <CheckBox Content="Reserve the docked area on Windows"
-                              IsChecked="{Binding ReserveScreenSpace}" />
-                </StackPanel>
-            </Border>
+                <Border Classes="card">
+                    <StackPanel Spacing="14">
+                        <TextBlock
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource TextSecondaryBrush}"
+                            Text="Alert thresholds" />
+                        <Grid
+                            ColumnDefinitions="*,100"
+                            RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                            RowSpacing="10">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="CPU" />
+                            <NumericUpDown
+                                Grid.Column="1"
+                                FormatString="0%"
+                                Maximum="100"
+                                Minimum="1"
+                                Value="{Binding CpuAlertThreshold}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="Memory" />
+                            <NumericUpDown
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                FormatString="0%"
+                                Maximum="100"
+                                Minimum="1"
+                                Value="{Binding MemoryAlertThreshold}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="Storage" />
+                            <NumericUpDown
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                FormatString="0%"
+                                Maximum="100"
+                                Minimum="1"
+                                Value="{Binding StorageAlertThreshold}" />
+                            <TextBlock
+                                Grid.Row="3"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="Network" />
+                            <NumericUpDown
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                FormatString="0%"
+                                Maximum="100"
+                                Minimum="1"
+                                Value="{Binding NetworkAlertThreshold}" />
+                            <TextBlock
+                                Grid.Row="4"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="GPU" />
+                            <NumericUpDown
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                FormatString="0%"
+                                Maximum="100"
+                                Minimum="1"
+                                Value="{Binding GpuAlertThreshold}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
 
-            <Border Classes="card">
-                <StackPanel Spacing="14">
-                    <TextBlock Text="Alert thresholds" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
-                    <Grid ColumnDefinitions="*,100" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
-                        <TextBlock Text="CPU" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Column="1" Value="{Binding CpuAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
-                        <TextBlock Grid.Row="1" Text="Memory" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding MemoryAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
-                        <TextBlock Grid.Row="2" Text="Storage" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding StorageAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
-                        <TextBlock Grid.Row="3" Text="Network" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding NetworkAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
-                        <TextBlock Grid.Row="4" Text="GPU" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding GpuAlertThreshold}" Minimum="1" Maximum="100" FormatString="0%" />
-                    </Grid>
-                </StackPanel>
-            </Border>
+                <Border Classes="card">
+                    <StackPanel Spacing="10">
+                        <TextBlock
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource TextSecondaryBrush}"
+                            Text="Primary GPU" />
+                        <TextBlock
+                            FontSize="{DynamicResource FontSizeBody}"
+                            Foreground="{DynamicResource TextMutedBrush}"
+                            Text="Select the device represented by the GPU summary card."
+                            TextWrapping="Wrap" />
+                        <ComboBox ItemsSource="{Binding GpuDevices}" SelectedItem="{Binding SelectedGpu}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:GpuDeviceOption">
+                                    <TextBlock Text="{Binding DisplayName}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </Border>
 
-            <Border Classes="card">
-                <StackPanel Spacing="10">
-                    <TextBlock Text="Primary GPU" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
-                    <TextBlock Text="Select the device represented by the GPU summary card."
-                               FontSize="{DynamicResource FontSizeBody}"
-                               Foreground="{DynamicResource TextMutedBrush}"
-                               TextWrapping="Wrap" />
-                    <ComboBox ItemsSource="{Binding GpuDevices}"
-                              SelectedItem="{Binding SelectedGpu}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="vm:GpuDeviceOption">
-                                <TextBlock Text="{Binding DisplayName}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </StackPanel>
-            </Border>
-
-            <Border Classes="card">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="Hardware sensors" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
-                    <TextBlock Text="Choose, rename, pin, and order the readings shown in the sidebar."
-                               FontSize="{DynamicResource FontSizeBody}"
-                               Foreground="{DynamicResource TextMutedBrush}"
-                               TextWrapping="Wrap" />
-                    <TextBox Text="{Binding SensorSearchText}" PlaceholderText="Search sensors" />
-                    <ItemsControl ItemsSource="{Binding Sensors}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="vm:SensorOptionViewModel">
-                                <Border IsVisible="{Binding IsMatch}"
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource TextSecondaryBrush}"
+                            Text="Hardware sensors" />
+                        <TextBlock
+                            FontSize="{DynamicResource FontSizeBody}"
+                            Foreground="{DynamicResource TextMutedBrush}"
+                            Text="Choose, rename, pin, and order the readings shown in the sidebar."
+                            TextWrapping="Wrap" />
+                        <TextBox PlaceholderText="Search sensors" Text="{Binding SensorSearchText}" />
+                        <ItemsControl ItemsSource="{Binding Sensors}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:SensorOptionViewModel">
+                                    <Border
                                         Margin="0,0,0,8"
                                         Padding="10"
-                                        CornerRadius="{DynamicResource RadiusMedium}"
                                         Background="{DynamicResource BackgroundInputBrush}"
                                         BorderBrush="{DynamicResource BorderCardBrush}"
-                                        BorderThickness="{DynamicResource ThicknessBorder}">
-                                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowSpacing="7">
-                                        <CheckBox IsChecked="{Binding IsVisible}" VerticalAlignment="Center" />
-                                        <StackPanel Grid.Column="1" Spacing="1">
-                                            <TextBlock Text="{Binding Sensor}" FontSize="{DynamicResource FontSizeDescription}" Foreground="{DynamicResource TextSecondaryBrush}" />
-                                            <TextBlock Text="{Binding Device}" FontSize="{DynamicResource FontSizeCaption}" Foreground="{DynamicResource TextDimBrush}" TextTrimming="CharacterEllipsis" />
+                                        BorderThickness="{DynamicResource ThicknessBorder}"
+                                        CornerRadius="{DynamicResource RadiusMedium}"
+                                        IsVisible="{Binding IsMatch}">
+                                        <Grid
+                                            ColumnDefinitions="Auto,*,Auto"
+                                            ColumnSpacing="8"
+                                            RowDefinitions="Auto,Auto,Auto"
+                                            RowSpacing="7">
+                                            <CheckBox VerticalAlignment="Center" IsChecked="{Binding IsVisible}" />
+                                            <StackPanel Grid.Column="1" Spacing="1">
+                                                <TextBlock
+                                                    FontSize="{DynamicResource FontSizeDescription}"
+                                                    Foreground="{DynamicResource TextSecondaryBrush}"
+                                                    Text="{Binding Sensor}" />
+                                                <TextBlock
+                                                    FontSize="{DynamicResource FontSizeCaption}"
+                                                    Foreground="{DynamicResource TextDimBrush}"
+                                                    Text="{Binding Device}"
+                                                    TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Grid.Column="2"
+                                                Orientation="Horizontal"
+                                                Spacing="4">
+                                                <Button
+                                                    Padding="7,3"
+                                                    Command="{Binding MoveUpCommand}"
+                                                    Content="↑" />
+                                                <Button
+                                                    Padding="7,3"
+                                                    Command="{Binding MoveDownCommand}"
+                                                    Content="↓" />
+                                            </StackPanel>
+                                            <TextBox
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Grid.ColumnSpan="2"
+                                                PlaceholderText="Custom display name"
+                                                Text="{Binding CustomName}" />
+                                            <CheckBox
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Content="Pin to top"
+                                                IsChecked="{Binding IsPinned}" />
+                                            <TextBlock
+                                                Grid.Row="2"
+                                                Grid.Column="2"
+                                                VerticalAlignment="Center"
+                                                FontSize="{DynamicResource FontSizeCaption}"
+                                                Foreground="{DynamicResource TextDimBrush}"
+                                                Text="{Binding Availability}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel>
+                                <TextBlock
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextSecondaryBrush}"
+                                    Text="External JSON metrics" />
+                                <TextBlock
+                                    FontSize="{DynamicResource FontSizeBody}"
+                                    Foreground="{DynamicResource TextMutedBrush}"
+                                    Text="Read numeric values from local files or explicit HTTP endpoints."
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                            <Button
+                                Grid.Column="1"
+                                Command="{Binding AddExternalMetricCommand}"
+                                Content="Add source" />
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding ExternalMetrics}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ExternalMetricOptionViewModel">
+                                    <Border
+                                        Margin="0,0,0,10"
+                                        Padding="12"
+                                        Background="{DynamicResource BackgroundInputBrush}"
+                                        BorderBrush="{DynamicResource BorderCardBrush}"
+                                        BorderThickness="{DynamicResource ThicknessBorder}"
+                                        CornerRadius="{DynamicResource RadiusMedium}">
+                                        <StackPanel Spacing="8">
+                                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                                <TextBox PlaceholderText="Card title" Text="{Binding Title}" />
+                                                <CheckBox
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    Content="Enabled"
+                                                    IsChecked="{Binding IsEnabled}" />
+                                                <Button
+                                                    Grid.Column="2"
+                                                    Command="{Binding RemoveCommand}"
+                                                    Content="Remove" />
+                                            </Grid>
+                                            <ComboBox ItemsSource="{Binding SourceKinds}" SelectedItem="{Binding SourceKind}" />
+                                            <TextBox PlaceholderText="File path or https:// endpoint" Text="{Binding Source}" />
+                                            <Grid ColumnDefinitions="*,100" ColumnSpacing="8">
+                                                <TextBox PlaceholderText="JSON path, for example router.download" Text="{Binding JsonPath}" />
+                                                <TextBox
+                                                    Grid.Column="1"
+                                                    PlaceholderText="Unit"
+                                                    Text="{Binding Unit}" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                                                <NumericUpDown FormatString="0.##" Value="{Binding Minimum}" />
+                                                <NumericUpDown
+                                                    Grid.Column="1"
+                                                    FormatString="0.##"
+                                                    Value="{Binding Maximum}" />
+                                                <NumericUpDown
+                                                    Grid.Column="2"
+                                                    FormatString="0 sec"
+                                                    Maximum="3600"
+                                                    Minimum="5"
+                                                    Value="{Binding RefreshIntervalSeconds}" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                                <Button Command="{Binding TestCommand}" Content="Test source" />
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="{DynamicResource FontSizeCaption}"
+                                                    Foreground="{DynamicResource TextMutedBrush}"
+                                                    Text="{Binding PreviewStatus}"
+                                                    TextWrapping="Wrap" />
+                                            </Grid>
                                         </StackPanel>
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
-                                            <Button Content="↑" Command="{Binding MoveUpCommand}" Padding="7,3" />
-                                            <Button Content="↓" Command="{Binding MoveDownCommand}" Padding="7,3" />
-                                        </StackPanel>
-                                        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                                                 Text="{Binding CustomName}"
-                                                 PlaceholderText="Custom display name" />
-                                        <CheckBox Grid.Row="2" Grid.Column="1" Content="Pin to top" IsChecked="{Binding IsPinned}" />
-                                        <TextBlock Grid.Row="2" Grid.Column="2"
-                                                   Text="{Binding Availability}"
-                                                   FontSize="{DynamicResource FontSizeCaption}"
-                                                   Foreground="{DynamicResource TextDimBrush}"
-                                                   VerticalAlignment="Center" />
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
 
-            <Border Classes="card">
-                <StackPanel Spacing="12">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <StackPanel>
-                            <TextBlock Text="External JSON metrics" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
-                            <TextBlock Text="Read numeric values from local files or explicit HTTP endpoints."
-                                       FontSize="{DynamicResource FontSizeBody}"
-                                       Foreground="{DynamicResource TextMutedBrush}"
-                                       TextWrapping="Wrap" />
-                        </StackPanel>
-                        <Button Grid.Column="1" Content="Add source" Command="{Binding AddExternalMetricCommand}" />
-                    </Grid>
-                    <ItemsControl ItemsSource="{Binding ExternalMetrics}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="vm:ExternalMetricOptionViewModel">
-                                <Border Margin="0,0,0,10" Padding="12" CornerRadius="{DynamicResource RadiusMedium}" Background="{DynamicResource BackgroundInputBrush}" BorderBrush="{DynamicResource BorderCardBrush}" BorderThickness="{DynamicResource ThicknessBorder}">
-                                    <StackPanel Spacing="8">
-                                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-                                            <TextBox Text="{Binding Title}" PlaceholderText="Card title" />
-                                            <CheckBox Grid.Column="1" Content="Enabled" IsChecked="{Binding IsEnabled}" VerticalAlignment="Center" />
-                                            <Button Grid.Column="2" Content="Remove" Command="{Binding RemoveCommand}" />
-                                        </Grid>
-                                        <ComboBox ItemsSource="{Binding SourceKinds}" SelectedItem="{Binding SourceKind}" />
-                                        <TextBox Text="{Binding Source}" PlaceholderText="File path or https:// endpoint" />
-                                        <Grid ColumnDefinitions="*,100" ColumnSpacing="8">
-                                            <TextBox Text="{Binding JsonPath}" PlaceholderText="JSON path, for example router.download" />
-                                            <TextBox Grid.Column="1" Text="{Binding Unit}" PlaceholderText="Unit" />
-                                        </Grid>
-                                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
-                                            <NumericUpDown Value="{Binding Minimum}" FormatString="0.##" />
-                                            <NumericUpDown Grid.Column="1" Value="{Binding Maximum}" FormatString="0.##" />
-                                            <NumericUpDown Grid.Column="2"
-                                                           Value="{Binding RefreshIntervalSeconds}"
-                                                           Minimum="5"
-                                                           Maximum="3600"
-                                                           FormatString="0 sec" />
-                                        </Grid>
-                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
-                                            <Button Content="Test source" Command="{Binding TestCommand}" />
-                                            <TextBlock Grid.Column="1"
-                                                       Text="{Binding PreviewStatus}"
-                                                       FontSize="{DynamicResource FontSizeCaption}"
-                                                       Foreground="{DynamicResource TextMutedBrush}"
-                                                       TextWrapping="Wrap"
-                                                       VerticalAlignment="Center" />
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <CheckBox Content="Keep the sidebar above other windows" IsChecked="{Binding AlwaysOnTop}" />
+                        <CheckBox Content="Launch at login" IsChecked="{Binding LaunchAtLogin}" />
+                        <CheckBox Content="Start minimized" IsChecked="{Binding StartMinimized}" />
+                    </StackPanel>
+                </Border>
 
-            <Border Classes="card">
-                <StackPanel Spacing="12">
-                    <CheckBox Content="Keep the sidebar above other windows" IsChecked="{Binding AlwaysOnTop}" />
-                    <CheckBox Content="Launch at login" IsChecked="{Binding LaunchAtLogin}" />
-                    <CheckBox Content="Start minimized" IsChecked="{Binding StartMinimized}" />
-                </StackPanel>
-            </Border>
-
-        </StackPanel>
+            </StackPanel>
         </ScrollViewer>
 
         <Border
@@ -258,7 +479,10 @@
             Background="{DynamicResource BackgroundPanelBrush}"
             BorderBrush="{DynamicResource BorderChromeBrush}"
             BorderThickness="{DynamicResource ThicknessChromeTop}">
-            <Grid MaxWidth="920" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+            <Grid
+                MaxWidth="920"
+                ColumnDefinitions="*,Auto,Auto"
+                ColumnSpacing="10">
                 <TextBlock
                     VerticalAlignment="Center"
                     Foreground="{DynamicResource TextDangerBrush}"
@@ -266,8 +490,15 @@
                     Text="{Binding ThemePreviewError}"
                     TextTrimming="CharacterEllipsis"
                     ToolTip.Tip="{Binding ThemePreviewError}" />
-                <Button Grid.Column="1" Content="Cancel" Command="{Binding CancelCommand}" />
-                <Button Grid.Column="2" Content="Save changes" Command="{Binding SaveCommand}" Classes="primary" />
+                <Button
+                    Grid.Column="1"
+                    Command="{Binding CancelCommand}"
+                    Content="Cancel" />
+                <Button
+                    Grid.Column="2"
+                    Classes="primary"
+                    Command="{Binding SaveCommand}"
+                    Content="Save changes" />
             </Grid>
         </Border>
     </Grid>
