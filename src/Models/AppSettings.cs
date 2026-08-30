@@ -1,7 +1,11 @@
+using System.Globalization;
+
 namespace SidebarDiagnostics.App.Models;
 
 public sealed record AppSettings
 {
+    public const string DefaultPipboyPrimaryColor = "#15FF52";
+
     public static AppSettings Default { get; } = new();
 
     public int RefreshIntervalMilliseconds { get; init; } = 1000;
@@ -20,6 +24,7 @@ public sealed record AppSettings
     public int SidebarWidth { get; init; } = 360;
     public double BackgroundOpacity { get; init; } = 1;
     public ApplicationTheme Theme { get; init; } = ApplicationTheme.Sidebar;
+    public string PipboyPrimaryColor { get; init; } = DefaultPipboyPrimaryColor;
     public List<SensorPreference> SensorPreferences { get; init; } = [];
     public string? SelectedGpuId { get; init; }
     public List<ExternalMetricDefinition> ExternalMetrics { get; init; } = [];
@@ -42,6 +47,7 @@ public sealed record AppSettings
         SidebarWidth = Math.Clamp(SidebarWidth, 320, 640),
         BackgroundOpacity = Math.Clamp(BackgroundOpacity, 0.35, 1),
         Theme = Enum.IsDefined(Theme) ? Theme : ApplicationTheme.Sidebar,
+        PipboyPrimaryColor = NormalizePipboyPrimaryColor(PipboyPrimaryColor),
         VerticalPosition = Math.Clamp(VerticalPosition, 0, 1),
         SensorPreferences = SensorPreferences
             .Where(preference => !string.IsNullOrWhiteSpace(preference.SensorId))
@@ -69,4 +75,14 @@ public sealed record AppSettings
             })
             .ToList()
     };
+
+    private static string NormalizePipboyPrimaryColor(string? value)
+    {
+        var color = value?.Trim();
+        return color is { Length: 7 }
+            && color[0] == '#'
+            && uint.TryParse(color.AsSpan(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _)
+                ? color.ToUpperInvariant()
+                : DefaultPipboyPrimaryColor;
+    }
 }

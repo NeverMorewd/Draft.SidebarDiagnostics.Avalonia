@@ -48,7 +48,8 @@ public sealed class AppSettingsTests : IDisposable
             AlwaysOnTop = false,
             LaunchAtLogin = true,
             StartMinimized = true,
-            Theme = ApplicationTheme.Pipboy
+            Theme = ApplicationTheme.Pipboy,
+            PipboyPrimaryColor = "#FFA500"
         };
 
         await store.SaveAsync(expected, TestContext.Current.CancellationToken);
@@ -63,6 +64,17 @@ public sealed class AppSettingsTests : IDisposable
         var settings = new AppSettings { Theme = (ApplicationTheme)999 };
 
         Assert.Equal(ApplicationTheme.Sidebar, settings.Normalize().Theme);
+    }
+
+    [Theory]
+    [InlineData(" #ffa500 ", "#FFA500")]
+    [InlineData("invalid", AppSettings.DefaultPipboyPrimaryColor)]
+    [InlineData("#12345", AppSettings.DefaultPipboyPrimaryColor)]
+    public void NormalizeValidatesPipboyPrimaryColor(string input, string expected)
+    {
+        var settings = new AppSettings { PipboyPrimaryColor = input };
+
+        Assert.Equal(expected, settings.Normalize().PipboyPrimaryColor);
     }
 
     [Fact]

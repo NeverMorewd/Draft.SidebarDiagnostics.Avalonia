@@ -13,6 +13,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
     private readonly MainViewModel _mainViewModel;
     private readonly ApplicationThemeService _themeService;
     private readonly ApplicationTheme _originalTheme;
+    private readonly string _originalPipboyPrimaryColor;
     private int _themePreviewVersion;
 
     [ObservableProperty]
@@ -61,12 +62,18 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial double BackgroundOpacity { get; set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPipboyTheme))]
     public partial ApplicationThemeOption SelectedTheme { get; set; } = ApplicationThemeOption.Sidebar;
+
+    [ObservableProperty]
+    public partial PipboyColorOption SelectedPipboyColor { get; set; } = PipboyColorOption.All[0];
 
     [ObservableProperty]
     public partial string? ThemePreviewError { get; set; }
 
     public IReadOnlyList<ApplicationThemeOption> Themes { get; } = ApplicationThemeOption.All;
+    public IReadOnlyList<PipboyColorOption> PipboyColors { get; } = PipboyColorOption.All;
+    public bool IsPipboyTheme => SelectedTheme.Value == ApplicationTheme.Pipboy;
 
     [ObservableProperty]
     public partial string SensorSearchText { get; set; } = string.Empty;
@@ -112,6 +119,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         _themeService = themeService;
         var settings = mainViewModel.Settings;
         _originalTheme = settings.Theme;
+        _originalPipboyPrimaryColor = settings.PipboyPrimaryColor;
         RefreshIntervalMilliseconds = settings.RefreshIntervalMilliseconds;
         CpuAlertThreshold = settings.CpuAlertThreshold;
         MemoryAlertThreshold = settings.MemoryAlertThreshold;
@@ -127,6 +135,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
         UseFahrenheit = settings.UseFahrenheit;
         SidebarWidth = settings.SidebarWidth;
         BackgroundOpacity = settings.BackgroundOpacity;
+        SelectedPipboyColor = PipboyColors.FirstOrDefault(option =>
+                string.Equals(option.HexColor, settings.PipboyPrimaryColor, StringComparison.OrdinalIgnoreCase))
+            ?? PipboyColors[0];
         SelectedTheme = Themes.Single(option => option.Value == settings.Theme);
         DockEdge = settings.DockEdge;
         ReserveScreenSpace = settings.ReserveScreenSpace;
@@ -186,6 +197,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             SidebarWidth = SidebarWidth,
             BackgroundOpacity = BackgroundOpacity,
             Theme = SelectedTheme.Value,
+            PipboyPrimaryColor = SelectedPipboyColor.HexColor,
             SensorPreferences = Sensors
                 .Select((sensor, index) => sensor.ToPreference(index))
                 .ToList(),
@@ -214,7 +226,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public void RevertThemePreview()
     {
         _themePreviewVersion++;
-        _themeService.Apply(_originalTheme);
+        _themeService.Apply(_originalTheme, _originalPipboyPrimaryColor);
         _mainViewModel.RefreshThemeResources();
     }
 
@@ -222,11 +234,24 @@ public sealed partial class SettingsViewModel : ViewModelBase
     {
         var version = ++_themePreviewVersion;
         Dispatcher.UIThread.Post(
-            () => ApplyThemePreview(value.Value, version),
+            () => ApplyThemePreview(value.Value, SelectedPipboyColor.HexColor, version),
             DispatcherPriority.Background);
     }
 
-    private void ApplyThemePreview(ApplicationTheme theme, int version)
+    partial void OnSelectedPipboyColorChanged(PipboyColorOption value)
+    {
+        if (!IsPipboyTheme)
+        {
+            return;
+        }
+
+        var version = ++_themePreviewVersion;
+        Dispatcher.UIThread.Post(
+            () => ApplyThemePreview(ApplicationTheme.Pipboy, value.HexColor, version),
+            DispatcherPriority.Background);
+    }
+
+    private void ApplyThemePreview(ApplicationTheme theme, string pipboyPrimaryColor, int version)
     {
         if (version != _themePreviewVersion)
         {
@@ -235,7 +260,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
 
         try
         {
-            _themeService.Apply(theme);
+            _themeService.Apply(theme, pipboyPrimaryColor);
             _mainViewModel.RefreshThemeResources();
             ThemePreviewError = null;
         }

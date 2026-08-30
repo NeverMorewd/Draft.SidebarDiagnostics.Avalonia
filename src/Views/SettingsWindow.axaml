@@ -109,7 +109,7 @@
                             Text="Appearance" />
                         <Grid
                             ColumnDefinitions="*,110"
-                            RowDefinitions="Auto,Auto,Auto"
+                            RowDefinitions="Auto,Auto,Auto,Auto"
                             RowSpacing="10">
                             <TextBlock
                                 VerticalAlignment="Center"
@@ -129,9 +129,35 @@
                                 Grid.Row="1"
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
+                                IsVisible="{Binding IsPipboyTheme}"
+                                Text="Primary color" />
+                            <ComboBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                IsVisible="{Binding IsPipboyTheme}"
+                                ItemsSource="{Binding PipboyColors}"
+                                SelectedItem="{Binding SelectedPipboyColor}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:PipboyColorOption">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Border
+                                                Width="12"
+                                                Height="12"
+                                                VerticalAlignment="Center"
+                                                Background="{Binding PreviewBrush}"
+                                                CornerRadius="6" />
+                                            <TextBlock Text="{Binding DisplayName}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock
+                                Grid.Row="2"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
                                 Text="Sidebar width" />
                             <NumericUpDown
-                                Grid.Row="1"
+                                Grid.Row="2"
                                 Grid.Column="1"
                                 FormatString="0 px"
                                 Increment="10"
@@ -139,12 +165,12 @@
                                 Minimum="320"
                                 Value="{Binding SidebarWidth}" />
                             <TextBlock
-                                Grid.Row="2"
+                                Grid.Row="3"
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
                                 Text="Opacity" />
                             <NumericUpDown
-                                Grid.Row="2"
+                                Grid.Row="3"
                                 Grid.Column="1"
                                 FormatString="0%"
                                 Increment="0.05"
