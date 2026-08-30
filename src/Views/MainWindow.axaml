@@ -19,28 +19,18 @@
     ShowInTaskbar="False"
     Topmost="True"
     WindowDecorations="None"
+    PointerEntered="OnWindowPointerEntered"
+    PointerExited="OnWindowPointerExited"
     mc:Ignorable="d">
-    <Window.Styles>
-        <Style Selector="Border.window-chrome">
-            <Setter Property="IsVisible" Value="False" />
-        </Style>
-        <Style Selector="Window:pointerover Border.window-chrome">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
-        <Style Selector="ScrollViewer.main-scroll">
-            <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
-        </Style>
-        <Style Selector="Window:pointerover ScrollViewer.main-scroll">
-            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-        </Style>
-    </Window.Styles>
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto,*,Auto">
         <Border
+            x:Name="HeaderChrome"
             Grid.Row="0"
+            IsVisible="False"
             Padding="{DynamicResource PaddingSidebarChrome}"
             BorderBrush="{DynamicResource BorderChromeBrush}"
             BorderThickness="{DynamicResource ThicknessChromeBottom}"
@@ -94,7 +84,10 @@
             </Grid>
         </Border>
 
-        <ScrollViewer Grid.Row="1" Classes="main-scroll">
+        <ScrollViewer
+            x:Name="MainScroll"
+            Grid.Row="1"
+            VerticalScrollBarVisibility="Hidden">
             <StackPanel Margin="16,10">
                 <ItemsControl ItemsSource="{Binding DiagnosticSections}">
                     <ItemsControl.ItemTemplate>
@@ -178,7 +171,9 @@
         </ScrollViewer>
 
         <Border
+            x:Name="FooterChrome"
             Grid.Row="2"
+            IsVisible="False"
             Padding="{DynamicResource PaddingSidebarStatus}"
             BorderBrush="{DynamicResource BorderChromeBrush}"
             BorderThickness="{DynamicResource ThicknessChromeTop}"

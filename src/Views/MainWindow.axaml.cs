@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
@@ -57,6 +58,25 @@ public partial class MainWindow : Window
 
         e.Cancel = true;
         Dispatcher.UIThread.Post(HideSidebar, DispatcherPriority.Background);
+    }
+
+    private void OnWindowPointerEntered(object? sender, PointerEventArgs e)
+    {
+        SetChromeVisibility(true);
+    }
+
+    private void OnWindowPointerExited(object? sender, PointerEventArgs e)
+    {
+        SetChromeVisibility(false);
+    }
+
+    private void SetChromeVisibility(bool isVisible)
+    {
+        HeaderChrome.IsVisible = isVisible;
+        FooterChrome.IsVisible = isVisible;
+        MainScroll.VerticalScrollBarVisibility = isVisible
+            ? ScrollBarVisibility.Auto
+            : ScrollBarVisibility.Hidden;
     }
 
     private void OnDataContextChanged(object? sender, EventArgs e)
