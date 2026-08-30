@@ -6,6 +6,7 @@ public enum HardwareSensorType
     Temperature,
     Clock,
     Voltage,
+    Current,
     Load,
     Fan,
     Power,

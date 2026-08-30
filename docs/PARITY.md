@@ -10,7 +10,7 @@ This audit compares the Avalonia port with the public features and settings of t
 | Memory utilization and used memory | Complete | Native provider on every platform. |
 | Logical drive utilization | Redesigned | The compact view presents the primary volume. |
 | Network download and upload | Complete | Aggregate interface throughput. |
-| Hardware sensors | Platform-limited | Broad LibreHardwareMonitor support on Windows; hwmon temperatures on Linux; no stable public macOS equivalent. |
+| Hardware sensors | Platform-limited | Broad LibreHardwareMonitor support on Windows; standard hwmon sensors on Linux; no stable public macOS equivalent. |
 | Live graphs | Complete | Every primary metric has bounded history. |
 | Dedicated configurable graph window | Redesigned | Integrated charts replace the secondary window. |
 | External and local IP display | Not migrated | Omitted to avoid external calls and accidental address disclosure. |

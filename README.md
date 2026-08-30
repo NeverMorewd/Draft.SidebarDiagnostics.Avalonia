@@ -9,7 +9,7 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 - One native Avalonia application for Windows, macOS, and Linux
 - CPU, memory, primary-volume, and aggregate network monitoring
 - Live bounded charts and configurable alert thresholds
-- Broad hardware sensor support on Windows and hwmon temperatures on Linux
+- Broad hardware sensor support on Windows and standard hwmon sensors on Linux
 - Searchable hardware sensor catalog with visibility, pinning, ordering, and custom names
 - Vendor-neutral multi-GPU summaries for Intel, AMD, and NVIDIA devices
 - Safe external JSON metric cards from local files or explicit HTTP endpoints
@@ -33,7 +33,7 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 | CPU | `GetSystemTimes` | Mach CPU ticks, including per-core load | `/proc/stat`, including per-core load |
 | Memory | `GlobalMemoryStatusEx` | Mach + `sysctl` | `/proc/meminfo` |
 | Storage and network | .NET platform APIs | .NET platform APIs | .NET platform APIs |
-| Hardware sensors | LibreHardwareMonitor | No stable public system API | hwmon temperatures |
+| Hardware sensors | LibreHardwareMonitor | No stable public system API | hwmon temperature, fan, voltage, current, power, and clock readings |
 | Tray and launch at login | Supported | Supported | Supported |
 
 The detailed comparison with the WPF application is maintained in [docs/PARITY.md](docs/PARITY.md).
