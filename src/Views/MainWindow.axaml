@@ -41,10 +41,10 @@
     <Grid RowDefinitions="Auto,*,Auto">
         <Border
             Grid.Row="0"
-            Classes="window-chrome"
             Padding="{DynamicResource PaddingSidebarChrome}"
             BorderBrush="{DynamicResource BorderChromeBrush}"
-            BorderThickness="{DynamicResource ThicknessChromeBottom}">
+            BorderThickness="{DynamicResource ThicknessChromeBottom}"
+            Classes="window-chrome">
             <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="7">
                 <StackPanel PointerPressed="BeginWindowDrag" Spacing="1">
                     <TextBlock
@@ -72,25 +72,25 @@
                 </StackPanel>
                 <Button
                     Grid.Column="1"
-                    Classes="sidebar-action"
+                    AutomationProperties.Name="About"
+                    Classes="chrome"
                     Click="OpenAbout"
                     Content="ⓘ"
-                    FontSize="{DynamicResource FontSizeIcon}"
-                    ToolTip.Tip="About" />
+                    FontSize="{DynamicResource FontSizeIcon}" />
                 <Button
                     Grid.Column="2"
-                    Classes="sidebar-action"
+                    AutomationProperties.Name="Settings"
+                    Classes="chrome"
                     Click="OpenSettings"
                     Content="⚙"
-                    FontSize="{DynamicResource FontSizeIcon}"
-                    ToolTip.Tip="Settings" />
+                    FontSize="{DynamicResource FontSizeIcon}" />
                 <Button
                     Grid.Column="3"
-                    Classes="sidebar-action danger-action"
+                    AutomationProperties.Name="Hide to tray"
+                    Classes="chrome close"
                     Click="HideToTray"
                     Content="×"
-                    FontSize="{DynamicResource FontSizeCloseIcon}"
-                    ToolTip.Tip="Hide to tray" />
+                    FontSize="{DynamicResource FontSizeCloseIcon}" />
             </Grid>
         </Border>
 
@@ -128,7 +128,11 @@
                                     <ItemsControl ItemsSource="{Binding Metrics}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="models:DiagnosticMetric">
-                                                <Grid Margin="0,2" Background="{DynamicResource TransparentBrush}" Classes="metric-row" ColumnDefinitions="110,*,Auto">
+                                                <Grid
+                                                    Margin="0,2"
+                                                    Background="{DynamicResource TransparentBrush}"
+                                                    Classes="metric-row"
+                                                    ColumnDefinitions="110,*,Auto">
                                                     <TextBlock
                                                         FontSize="{DynamicResource FontSizeBody}"
                                                         Foreground="{DynamicResource TextMutedBrush}"
@@ -144,11 +148,11 @@
                                                         TextWrapping="Wrap" />
                                                     <Button
                                                         Grid.Column="2"
-                                                        Classes="metric-chart"
                                                         Width="27"
                                                         Height="25"
                                                         Margin="6,0,0,0"
                                                         Padding="0"
+                                                        Classes="metric-chart"
                                                         Click="OpenMetricChart"
                                                         Foreground="{DynamicResource TextAccentBrush}"
                                                         IsVisible="{Binding CanGraph}"
@@ -175,10 +179,10 @@
 
         <Border
             Grid.Row="2"
-            Classes="window-chrome"
             Padding="{DynamicResource PaddingSidebarStatus}"
             BorderBrush="{DynamicResource BorderChromeBrush}"
-            BorderThickness="{DynamicResource ThicknessChromeTop}">
+            BorderThickness="{DynamicResource ThicknessChromeTop}"
+            Classes="window-chrome">
             <Grid ColumnDefinitions="Auto,*,Auto">
                 <Ellipse
                     Width="7"
