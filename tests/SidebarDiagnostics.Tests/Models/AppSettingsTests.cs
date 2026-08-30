@@ -47,13 +47,22 @@ public sealed class AppSettingsTests : IDisposable
             NetworkAlertThreshold = 83,
             AlwaysOnTop = false,
             LaunchAtLogin = true,
-            StartMinimized = true
+            StartMinimized = true,
+            Theme = ApplicationTheme.Pipboy
         };
 
         await store.SaveAsync(expected, TestContext.Current.CancellationToken);
         var actual = await store.LoadAsync(TestContext.Current.CancellationToken);
 
         Assert.Equivalent(expected, actual);
+    }
+
+    [Fact]
+    public void NormalizeReplacesUnknownTheme()
+    {
+        var settings = new AppSettings { Theme = (ApplicationTheme)999 };
+
+        Assert.Equal(ApplicationTheme.Sidebar, settings.Normalize().Theme);
     }
 
     [Fact]

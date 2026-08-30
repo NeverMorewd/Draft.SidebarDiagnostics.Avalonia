@@ -74,6 +74,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     public string ShortcutStatus { get; private set; } = "Global shortcuts are initializing.";
 
     public void UpdateShortcutStatus(string status) => ShortcutStatus = status;
+    public void RefreshThemeResources() => DiagnosticSections = [.. DiagnosticSections];
     public event EventHandler? DisplaysChanged;
 
     public MainViewModel()

@@ -329,6 +329,14 @@
         "resolved": "13.0.3",
         "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
       },
+      "Pipboy.Avalonia": {
+        "type": "Transitive",
+        "resolved": "1.0.0",
+        "contentHash": "ZxANDp3ZXYVTsNrwwhfGOFVuJBUoAi3XhQPnaNUb+nw5yPQA3LhCitfotByvalA81PwE1xdzt3aB52z45y9X6A==",
+        "dependencies": {
+          "Avalonia": "12.0.1"
+        }
+      },
       "RAMSPDToolkit-NDD": {
         "type": "Transitive",
         "resolved": "1.4.2",
@@ -583,6 +591,7 @@
           "AvaloniaUI.DiagnosticsSupport": "[2.2.3, )",
           "CommunityToolkit.Mvvm": "[8.4.2, )",
           "LibreHardwareMonitorLib": "[0.9.6, )",
+          "Pipboy.Avalonia": "[1.0.0, )",
           "SharpHook": "[8.0.0, )"
         }
       }

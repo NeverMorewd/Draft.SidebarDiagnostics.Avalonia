@@ -19,6 +19,7 @@ public sealed record AppSettings
     public bool UseFahrenheit { get; init; }
     public int SidebarWidth { get; init; } = 360;
     public double BackgroundOpacity { get; init; } = 1;
+    public ApplicationTheme Theme { get; init; } = ApplicationTheme.Sidebar;
     public List<SensorPreference> SensorPreferences { get; init; } = [];
     public string? SelectedGpuId { get; init; }
     public List<ExternalMetricDefinition> ExternalMetrics { get; init; } = [];
@@ -40,6 +41,7 @@ public sealed record AppSettings
         GpuAlertThreshold = Math.Clamp(GpuAlertThreshold, 1, 100),
         SidebarWidth = Math.Clamp(SidebarWidth, 320, 640),
         BackgroundOpacity = Math.Clamp(BackgroundOpacity, 0.35, 1),
+        Theme = Enum.IsDefined(Theme) ? Theme : ApplicationTheme.Sidebar,
         VerticalPosition = Math.Clamp(VerticalPosition, 0, 1),
         SensorPreferences = SensorPreferences
             .Where(preference => !string.IsNullOrWhiteSpace(preference.SensorId))

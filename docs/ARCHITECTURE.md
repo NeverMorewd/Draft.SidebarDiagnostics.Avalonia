@@ -21,6 +21,10 @@ All operating-system calls live under `Services/Platform`. Code outside that dir
 
 Sampling is performed on a fixed interval controlled by user settings. Every metric keeps a bounded 60-sample history. Settings are normalized before use and written through a temporary file followed by an atomic replacement.
 
+## Theme boundary
+
+Views and custom drawing controls depend only on Sidebar Diagnostics semantic resources. `ApplicationThemeService` activates exactly one base control theme and adds an adapter palette when necessary. The default appearance combines Fluent control templates with the Sidebar palette; the Pip-Boy appearance combines Pipboy.Avalonia templates with a monochromatic mapping of the same semantic resources. Dynamic resource references update existing windows in place, while unsaved previews are reverted when the settings dialog closes.
+
 ## Error handling
 
 Individual transient sampling failures preserve the running application and surface a degraded status. Unsupported operating systems fail immediately with an explicit message. Invalid settings fall back to safe defaults.

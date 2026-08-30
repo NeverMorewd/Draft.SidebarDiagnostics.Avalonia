@@ -9,6 +9,7 @@ using SidebarDiagnostics.App.Services.Startup;
 using SidebarDiagnostics.App.ViewModels;
 using SidebarDiagnostics.App.Views;
 using SidebarDiagnostics.App.Services.Shortcuts;
+using SidebarDiagnostics.App.Styling;
 
 namespace SidebarDiagnostics.App;
 
@@ -24,6 +25,8 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            var themeService = new ApplicationThemeService(this);
+            themeService.Apply(Models.ApplicationTheme.Sidebar);
             var metricsService = new SystemMetricsService();
             var settingsStore = new JsonSettingsStore();
             var hardwareSensorService = HardwareSensorServiceFactory.Create();
@@ -34,12 +37,12 @@ public partial class App : Application
                 hardwareSensorService,
                 autoStartService,
                 new ExternalMetricService());
-            var mainWindow = new MainWindow
+            var mainWindow = new MainWindow(themeService)
             {
                 DataContext = mainViewModel,
             };
             desktop.MainWindow = mainWindow;
-            var applicationViewModel = new ApplicationViewModel(desktop, mainWindow, mainViewModel, new GlobalShortcutService());
+            var applicationViewModel = new ApplicationViewModel(desktop, mainWindow, mainViewModel, new GlobalShortcutService(), themeService);
             applicationViewModel.Initialize();
             DataContext = applicationViewModel;
         }
