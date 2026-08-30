@@ -20,14 +20,7 @@ public sealed class LinuxAutoStartService : IAutoStartService
         var executablePath = Environment.ProcessPath
             ?? throw new InvalidOperationException("The application executable path is unavailable.");
         Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
-        var content = $"""
-            [Desktop Entry]
-            Type=Application
-            Name=Sidebar Diagnostics
-            Exec="{executablePath.Replace("\"", "\\\"", StringComparison.Ordinal)}"
-            Terminal=false
-            X-GNOME-Autostart-enabled=true
-            """;
+        var content = AutoStartFileContent.CreateLinuxDesktopEntry(executablePath);
         await File.WriteAllTextAsync(filePath, content, cancellationToken);
     }
 }
