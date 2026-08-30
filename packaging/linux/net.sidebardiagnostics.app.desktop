@@ -7,4 +7,4 @@ Icon=net.sidebardiagnostics.app
 Terminal=false
 Categories=System;Monitor;
 StartupNotify=false
-StartupWMClass=Sidebar Diagnostics
+StartupWMClass=SidebarDiagnostics.App
