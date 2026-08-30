@@ -64,23 +64,43 @@
                     Grid.Column="1"
                     AutomationProperties.Name="About"
                     Classes="chrome"
-                    Click="OpenAbout"
-                    Content="ⓘ"
-                    FontSize="{DynamicResource FontSizeIcon}" />
+                    Click="OpenAbout">
+                    <Path
+                        Width="16"
+                        Height="16"
+                        Data="M 8,1 A 7,7 0 1 0 8,15 A 7,7 0 1 0 8,1 M 8,7 L 8,12 M 8,4 L 8,5"
+                        Stretch="Fill"
+                        Stroke="{Binding $parent[Button].Foreground}"
+                        StrokeLineCap="Round"
+                        StrokeThickness="1.4" />
+                </Button>
                 <Button
                     Grid.Column="2"
                     AutomationProperties.Name="Settings"
                     Classes="chrome"
-                    Click="OpenSettings"
-                    Content="⚙"
-                    FontSize="{DynamicResource FontSizeIcon}" />
+                    Click="OpenSettings">
+                    <Path
+                        Width="17"
+                        Height="17"
+                        Data="M 19.14,12.94 A 7.43,7.43 0 0 0 19.19,12 A 7.43,7.43 0 0 0 19.14,11.06 L 21.17,9.48 L 19.17,6.02 L 16.78,6.98 A 7.26,7.26 0 0 0 15.15,6.04 L 14.79,3.5 L 10.79,3.5 L 10.43,6.04 A 7.26,7.26 0 0 0 8.8,6.98 L 6.41,6.02 L 4.41,9.48 L 6.44,11.06 A 7.43,7.43 0 0 0 6.39,12 A 7.43,7.43 0 0 0 6.44,12.94 L 4.41,14.52 L 6.41,17.98 L 8.8,17.02 A 7.26,7.26 0 0 0 10.43,17.96 L 10.79,20.5 L 14.79,20.5 L 15.15,17.96 A 7.26,7.26 0 0 0 16.78,17.02 L 19.17,17.98 L 21.17,14.52 Z M 12.79,15.5 A 3.5,3.5 0 1 1 12.79,8.5 A 3.5,3.5 0 1 1 12.79,15.5"
+                        Stretch="Uniform"
+                        Stroke="{Binding $parent[Button].Foreground}"
+                        StrokeThickness="1.35" />
+                </Button>
                 <Button
                     Grid.Column="3"
                     AutomationProperties.Name="Hide to tray"
                     Classes="chrome close"
-                    Click="HideToTray"
-                    Content="×"
-                    FontSize="{DynamicResource FontSizeCloseIcon}" />
+                    Click="HideToTray">
+                    <Path
+                        Width="13"
+                        Height="13"
+                        Data="M 1,1 L 12,12 M 12,1 L 1,12"
+                        Stretch="Fill"
+                        Stroke="{Binding $parent[Button].Foreground}"
+                        StrokeLineCap="Round"
+                        StrokeThickness="1.6" />
+                </Button>
             </Grid>
         </Border>
 

@@ -87,6 +87,49 @@
         <Thickness x:Key="PaddingWindow">28</Thickness>
         <Thickness x:Key="PaddingSidebarChrome">16,11</Thickness>
         <Thickness x:Key="PaddingSidebarStatus">16,10</Thickness>
+
+        <ControlTheme x:Key="ChromeButtonTheme" TargetType="Button">
+            <Setter Property="Width" Value="36" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="{DynamicResource BackgroundControlBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="{DynamicResource ThicknessBorder}" />
+            <Setter Property="CornerRadius" Value="{DynamicResource RadiusMedium}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBodyBrush}" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Button">
+                    <Border
+                        x:Name="PART_ChromeBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{DynamicResource BackgroundControlHoverBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderHoverBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextAccentStrongBrush}" />
+            </Style>
+            <Style Selector="^:disabled">
+                <Setter Property="Opacity" Value="0.45" />
+            </Style>
+        </ControlTheme>
     </Styles.Resources>
 
     <Style Selector="Window">
@@ -110,22 +153,22 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BorderDisabledBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextDimBrush}" />
     </Style>
-    <Style Selector="Button">
+    <Style Selector="Button:not(.chrome)">
         <Setter Property="Background" Value="{DynamicResource BackgroundControlBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
         <Setter Property="BorderThickness" Value="{DynamicResource ThicknessBorder}" />
         <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}" />
         <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
     </Style>
-    <Style Selector="Button:pointerover">
+    <Style Selector="Button:not(.chrome):pointerover">
         <Setter Property="Background" Value="{DynamicResource BackgroundControlHoverBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderHoverBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
-    <Style Selector="Button:focus">
+    <Style Selector="Button:not(.chrome):focus">
         <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
     </Style>
-    <Style Selector="Button:disabled">
+    <Style Selector="Button:not(.chrome):disabled">
         <Setter Property="Background" Value="{DynamicResource BackgroundControlDisabledBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderDisabledBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextDimBrush}" />
@@ -211,22 +254,9 @@
         <Setter Property="Foreground" Value="{DynamicResource TextAccentStrongBrush}" />
     </Style>
     <Style Selector="Button.chrome">
-        <Setter Property="Width" Value="36" />
-        <Setter Property="Height" Value="36" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="Background" Value="{DynamicResource BackgroundControlBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
-        <Setter Property="BorderThickness" Value="{DynamicResource ThicknessBorder}" />
-        <Setter Property="CornerRadius" Value="{DynamicResource RadiusMedium}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextBodyBrush}" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Theme" Value="{StaticResource ChromeButtonTheme}" />
     </Style>
-    <Style Selector="Button.chrome:pointerover">
-        <Setter Property="Background" Value="{DynamicResource BackgroundControlHoverBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
-    </Style>
-    <Style Selector="Button.close:pointerover">
+    <Style Selector="Button.chrome.close:pointerover">
         <Setter Property="Background" Value="{DynamicResource BackgroundDangerHoverBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderDangerBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
