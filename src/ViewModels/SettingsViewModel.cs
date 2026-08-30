@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Avalonia.Threading;
 using SidebarDiagnostics.App.Models;
 using SidebarDiagnostics.App.Services.Hardware;
 using SidebarDiagnostics.App.Styling;
@@ -12,6 +13,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
     private readonly MainViewModel _mainViewModel;
     private readonly ApplicationThemeService _themeService;
     private readonly ApplicationTheme _originalTheme;
+    private int _themePreviewVersion;
 
     [ObservableProperty]
     public partial int RefreshIntervalMilliseconds { get; set; }
@@ -60,6 +62,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial ApplicationThemeOption SelectedTheme { get; set; } = ApplicationThemeOption.Sidebar;
+
+    [ObservableProperty]
+    public partial string? ThemePreviewError { get; set; }
 
     public IReadOnlyList<ApplicationThemeOption> Themes { get; } = ApplicationThemeOption.All;
 
@@ -206,12 +211,38 @@ public sealed partial class SettingsViewModel : ViewModelBase
         Cancelled?.Invoke(this, EventArgs.Empty);
     }
 
-    public void RevertThemePreview() => _themeService.Apply(_originalTheme);
+    public void RevertThemePreview()
+    {
+        _themePreviewVersion++;
+        _themeService.Apply(_originalTheme);
+        _mainViewModel.RefreshThemeResources();
+    }
 
     partial void OnSelectedThemeChanged(ApplicationThemeOption value)
     {
-        _themeService.Apply(value.Value);
-        _mainViewModel.RefreshThemeResources();
+        var version = ++_themePreviewVersion;
+        Dispatcher.UIThread.Post(
+            () => ApplyThemePreview(value.Value, version),
+            DispatcherPriority.Background);
+    }
+
+    private void ApplyThemePreview(ApplicationTheme theme, int version)
+    {
+        if (version != _themePreviewVersion)
+        {
+            return;
+        }
+
+        try
+        {
+            _themeService.Apply(theme);
+            _mainViewModel.RefreshThemeResources();
+            ThemePreviewError = null;
+        }
+        catch (Exception exception)
+        {
+            ThemePreviewError = $"Theme preview failed: {exception.Message}";
+        }
     }
 
     partial void OnSensorSearchTextChanged(string value)

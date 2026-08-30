@@ -59,15 +59,19 @@ public sealed class ApplicationThemeService(Application application)
             ["AccentSuccessBrush"] = "PipboySuccessBrush",
             ["ChartGridBrush"] = "PipboyBorderBrush",
             ["ChartAxisBrush"] = "PipboyPrimaryDarkBrush",
-            ["ChartPointOutlineBrush"] = "PipboyTextBrush",
-            ["RadiusAccentBar"] = "PipboyCornerRadiusNone",
-            ["RadiusControl"] = "PipboyCornerRadiusControl",
-            ["RadiusSmall"] = "PipboyCornerRadiusControl",
-            ["RadiusMedium"] = "PipboyCornerRadiusPanel",
-            ["RadiusAction"] = "PipboyCornerRadiusControl",
-            ["RadiusCard"] = "PipboyCornerRadiusPanel",
-            ["RadiusPanel"] = "PipboyCornerRadiusPanel"
+            ["ChartPointOutlineBrush"] = "PipboyTextBrush"
         };
+
+    private static readonly string[] PipboySquareRadiusKeys =
+    [
+        "RadiusAccentBar",
+        "RadiusControl",
+        "RadiusSmall",
+        "RadiusMedium",
+        "RadiusAction",
+        "RadiusCard",
+        "RadiusPanel"
+    ];
 
     private ApplicationTheme? _activeTheme;
     private IStyle? _baseTheme;
@@ -79,31 +83,48 @@ public sealed class ApplicationThemeService(Application application)
             return;
         }
 
-        RemoveResourceOverrides();
-
-        if (_baseTheme is not null)
-        {
-            application.Styles.Remove(_baseTheme);
-        }
-
-        _baseTheme = theme switch
+        IStyle nextBaseTheme = theme switch
         {
             ApplicationTheme.Pipboy => new PipboyTheme(),
             _ => new FluentTheme { DensityStyle = DensityStyle.Compact }
         };
+        var previousBaseTheme = _baseTheme;
 
-        application.Styles.Insert(0, _baseTheme);
+        application.Styles.Insert(0, nextBaseTheme);
 
-        if (theme == ApplicationTheme.Pipboy)
+        try
         {
-            ApplyPipboyResourceOverrides();
-        }
+            var nextOverrides = theme == ApplicationTheme.Pipboy
+                ? ResolvePipboyResourceOverrides()
+                : null;
 
-        _activeTheme = theme;
+            if (previousBaseTheme is not null)
+            {
+                application.Styles.Remove(previousBaseTheme);
+            }
+
+            RemoveResourceOverrides();
+            if (nextOverrides is not null)
+            {
+                foreach (var (key, value) in nextOverrides)
+                {
+                    application.Resources[key] = value;
+                }
+            }
+
+            _baseTheme = nextBaseTheme;
+            _activeTheme = theme;
+        }
+        catch
+        {
+            application.Styles.Remove(nextBaseTheme);
+            throw;
+        }
     }
 
-    private void ApplyPipboyResourceOverrides()
+    private Dictionary<string, object> ResolvePipboyResourceOverrides()
     {
+        var overrides = new Dictionary<string, object>(StringComparer.Ordinal);
         foreach (var (semanticKey, pipboyKey) in PipboyResourceMap)
         {
             if (!application.TryFindResource(pipboyKey, out var resource) || resource is null)
@@ -111,13 +132,25 @@ public sealed class ApplicationThemeService(Application application)
                 throw new InvalidOperationException($"Pip-Boy theme resource '{pipboyKey}' is unavailable.");
             }
 
-            application.Resources[semanticKey] = resource;
+            overrides.Add(semanticKey, resource);
         }
+
+        foreach (var semanticKey in PipboySquareRadiusKeys)
+        {
+            overrides.Add(semanticKey, new CornerRadius(0));
+        }
+
+        return overrides;
     }
 
     private void RemoveResourceOverrides()
     {
         foreach (var semanticKey in PipboyResourceMap.Keys)
+        {
+            application.Resources.Remove(semanticKey);
+        }
+
+        foreach (var semanticKey in PipboySquareRadiusKeys)
         {
             application.Resources.Remove(semanticKey);
         }

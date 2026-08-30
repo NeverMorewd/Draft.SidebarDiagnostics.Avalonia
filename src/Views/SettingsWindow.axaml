@@ -48,7 +48,7 @@
             <Border Classes="card">
                 <StackPanel Spacing="12">
                     <TextBlock Text="Appearance" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
-                    <Grid ColumnDefinitions="*,110" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+                    <Grid ColumnDefinitions="*,110" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
                         <TextBlock Text="Theme" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
                         <ComboBox Grid.Column="1" ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}">
                             <ComboBox.ItemTemplate>
@@ -57,10 +57,17 @@
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                        <TextBlock Grid.Row="1" Text="Sidebar width" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding SidebarWidth}" Minimum="320" Maximum="640" Increment="10" FormatString="0 px" />
-                        <TextBlock Grid.Row="2" Text="Opacity" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding BackgroundOpacity}" Minimum="0.35" Maximum="1" Increment="0.05" FormatString="0%" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            Foreground="{DynamicResource TextDangerBrush}"
+                            IsVisible="{Binding !!ThemePreviewError}"
+                            Text="{Binding ThemePreviewError}"
+                            TextWrapping="Wrap" />
+                        <TextBlock Grid.Row="2" Text="Sidebar width" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
+                        <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SidebarWidth}" Minimum="320" Maximum="640" Increment="10" FormatString="0 px" />
+                        <TextBlock Grid.Row="3" Text="Opacity" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
+                        <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding BackgroundOpacity}" Minimum="0.35" Maximum="1" Increment="0.05" FormatString="0%" />
                     </Grid>
                     <CheckBox Content="Show machine name" IsChecked="{Binding ShowMachineName}" />
                     <CheckBox Content="Show clock and date" IsChecked="{Binding ShowClock}" />
