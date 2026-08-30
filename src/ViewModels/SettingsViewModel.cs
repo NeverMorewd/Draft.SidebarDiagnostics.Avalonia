@@ -38,6 +38,11 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial bool AlwaysOnTop { get; set; }
 
     [ObservableProperty]
+    public partial bool ClickThrough { get; set; }
+
+    public bool IsClickThroughSupported { get; } = OperatingSystem.IsWindows();
+
+    [ObservableProperty]
     public partial bool LaunchAtLogin { get; set; }
 
     [ObservableProperty]
@@ -135,6 +140,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         NetworkAlertThreshold = settings.NetworkAlertThreshold;
         GpuAlertThreshold = settings.GpuAlertThreshold;
         AlwaysOnTop = settings.AlwaysOnTop;
+        ClickThrough = settings.ClickThrough;
         LaunchAtLogin = settings.LaunchAtLogin;
         StartMinimized = settings.StartMinimized;
         ShowMachineName = settings.ShowMachineName;
@@ -198,6 +204,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             NetworkAlertThreshold = NetworkAlertThreshold,
             GpuAlertThreshold = GpuAlertThreshold,
             AlwaysOnTop = AlwaysOnTop,
+            ClickThrough = ClickThrough,
             LaunchAtLogin = LaunchAtLogin,
             StartMinimized = StartMinimized,
             ShowMachineName = ShowMachineName,

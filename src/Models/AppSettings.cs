@@ -15,6 +15,7 @@ public sealed record AppSettings
     public double NetworkAlertThreshold { get; init; } = 90;
     public double GpuAlertThreshold { get; init; } = 90;
     public bool AlwaysOnTop { get; init; } = true;
+    public bool ClickThrough { get; init; }
     public bool LaunchAtLogin { get; init; }
     public bool StartMinimized { get; init; }
     public bool ShowMachineName { get; init; } = true;

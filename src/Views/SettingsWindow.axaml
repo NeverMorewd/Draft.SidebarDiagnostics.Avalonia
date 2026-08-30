@@ -504,6 +504,11 @@
                 <Border Classes="card">
                     <StackPanel Spacing="12">
                         <CheckBox Content="Keep the sidebar above other windows" IsChecked="{Binding AlwaysOnTop}" />
+                        <CheckBox
+                            Content="Let pointer input pass through the sidebar"
+                            IsChecked="{Binding ClickThrough}"
+                            IsEnabled="{Binding IsClickThroughSupported}"
+                            ToolTip.Tip="Windows only. Use the tray menu or a global shortcut to open settings again." />
                         <CheckBox Content="Launch at login" IsChecked="{Binding LaunchAtLogin}" />
                         <CheckBox Content="Start minimized" IsChecked="{Binding StartMinimized}" />
                     </StackPanel>

@@ -36,7 +36,7 @@ This audit compares the Avalonia port with the public features and settings of t
 | Launch at login | Complete | Native implementation on all three platforms. |
 | Windows AppBar reserved work area | Complete on Windows | Native AppBar integration reserves the selected screen edge. |
 | Edge docking and multi-monitor repositioning | Complete | Placement follows the selected display and recovers from topology changes. |
-| Click-through and Alt-Tab/tool-window modes | Not migrated | Require platform window-manager adapters. |
+| Click-through and Alt-Tab/tool-window modes | Complete on Windows | The sidebar stays out of the taskbar on every platform; native pointer pass-through is available on Windows. |
 | Global hotkeys | Complete | Cross-platform native hooks; macOS and some Linux sessions require operating-system permissions. |
 | Automatic application updates | Replaced | GitHub Releases provide immutable checksummed packages. |
 

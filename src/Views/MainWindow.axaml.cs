@@ -20,6 +20,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _placementTimer;
     private readonly double _preferredHeight;
     private readonly IReservedScreenSpaceService _reservedScreenSpace = ReservedScreenSpaceService.Create();
+    private readonly IClickThroughService _clickThroughService = ClickThroughService.Create();
     private readonly Dictionary<string, MetricChartWindow> _metricCharts = new(StringComparer.Ordinal);
     private SettingsWindow? _settingsWindow;
     private AboutWindow? _aboutWindow;
@@ -102,6 +103,7 @@ public partial class MainWindow : Window
         }
 
         RefreshDisplays();
+        ApplyClickThrough();
         SchedulePlacement();
     }
 
@@ -132,6 +134,7 @@ public partial class MainWindow : Window
         Topmost = viewModel.Settings.AlwaysOnTop;
         Width = viewModel.Settings.SidebarWidth;
         Opacity = viewModel.Settings.BackgroundOpacity;
+        ApplyClickThrough();
         SchedulePlacement();
         if (!_settingsInitialized && viewModel.Settings.StartMinimized && IsVisible)
         {
@@ -139,6 +142,16 @@ public partial class MainWindow : Window
         }
 
         _settingsInitialized = true;
+    }
+
+    private void ApplyClickThrough()
+    {
+        if (_viewModel is null || !_clickThroughService.IsSupported)
+        {
+            return;
+        }
+
+        _clickThroughService.Apply(TryGetPlatformHandle()?.Handle ?? 0, _viewModel.Settings.ClickThrough);
     }
 
     private void OnScreensChanged(object? sender, EventArgs e)
