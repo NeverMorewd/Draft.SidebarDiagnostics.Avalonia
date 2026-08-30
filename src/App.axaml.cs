@@ -42,7 +42,13 @@ public partial class App : Application
                 DataContext = mainViewModel,
             };
             desktop.MainWindow = mainWindow;
-            var applicationViewModel = new ApplicationViewModel(desktop, mainWindow, mainViewModel, new GlobalShortcutService(), themeService);
+            var applicationViewModel = new ApplicationViewModel(
+                desktop,
+                desktop as IActivatableLifetime,
+                mainWindow,
+                mainViewModel,
+                new GlobalShortcutService(),
+                themeService);
             applicationViewModel.Initialize();
             DataContext = applicationViewModel;
         }

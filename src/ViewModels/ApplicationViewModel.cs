@@ -1,4 +1,5 @@
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SidebarDiagnostics.App.Views;
@@ -9,6 +10,7 @@ namespace SidebarDiagnostics.App.ViewModels;
 
 public sealed partial class ApplicationViewModel(
     IClassicDesktopStyleApplicationLifetime lifetime,
+    IActivatableLifetime? activatableLifetime,
     MainWindow mainWindow,
     MainViewModel mainViewModel,
     GlobalShortcutService shortcuts,
@@ -21,6 +23,10 @@ public sealed partial class ApplicationViewModel(
         mainViewModel.SettingsApplied += OnSettingsApplied;
         shortcuts.StatusChanged += OnShortcutStatusChanged;
         lifetime.Exit += OnExit;
+        if (activatableLifetime is not null)
+        {
+            activatableLifetime.Activated += OnApplicationActivated;
+        }
         themeService.Apply(mainViewModel.Settings.Theme, mainViewModel.Settings.PipboyPrimaryColor);
         mainViewModel.RefreshThemeResources();
         ApplyShortcuts();
@@ -70,6 +76,16 @@ public sealed partial class ApplicationViewModel(
         ApplyShortcuts();
     }
     private void OnShortcutStatusChanged(object? sender, EventArgs e) => mainViewModel.UpdateShortcutStatus(shortcuts.Status);
+    private void OnApplicationActivated(object? sender, ActivatedEventArgs e)
+    {
+        if (ShouldRestoreWindow(e.Kind))
+        {
+            Dispatcher.UIThread.Post(ShowWindow);
+        }
+    }
+
+    internal static bool ShouldRestoreWindow(ActivationKind kind) => kind == ActivationKind.Reopen;
+
     private void ApplyShortcuts()
     {
         var settings = mainViewModel.Settings;
@@ -91,6 +107,10 @@ public sealed partial class ApplicationViewModel(
         mainViewModel.SettingsApplied -= OnSettingsApplied;
         shortcuts.StatusChanged -= OnShortcutStatusChanged;
         lifetime.Exit -= OnExit;
+        if (activatableLifetime is not null)
+        {
+            activatableLifetime.Activated -= OnApplicationActivated;
+        }
         shortcuts.Dispose();
     }
 }
