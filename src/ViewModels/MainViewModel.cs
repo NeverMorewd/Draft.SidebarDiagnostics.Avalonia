@@ -25,6 +25,8 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     private readonly SemaphoreSlim _refreshGate = new(1, 1);
     private readonly CancellationTokenSource _lifetimeCancellation = new();
     private bool _isDisposed;
+    private Task? _externalIpRefreshTask;
+    private string? _externalIpAddress;
     private readonly Dictionary<string, MetricCardViewModel> _externalMetricCards = new(StringComparer.Ordinal);
 
     [ObservableProperty]
@@ -152,11 +154,12 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
 
         try
         {
-            var snapshot = await _metricsService.GetSnapshotAsync(_lifetimeCancellation.Token);
-            var hardwareReadings = await ReadHardwareSafelyAsync(_lifetimeCancellation.Token);
-            var externalIpAddress = Settings.ShowExternalIpAddress
-                ? await _externalIpAddressService.GetAddressAsync(_lifetimeCancellation.Token)
-                : null;
+            var snapshotTask = _metricsService.GetSnapshotAsync(_lifetimeCancellation.Token).AsTask();
+            var hardwareReadingsTask = ReadHardwareSafelyAsync(_lifetimeCancellation.Token).AsTask();
+            await Task.WhenAll(snapshotTask, hardwareReadingsTask);
+            var snapshot = await snapshotTask;
+            var hardwareReadings = await hardwareReadingsTask;
+            ScheduleExternalIpRefresh();
             LatestHardwareReadings = hardwareReadings;
             LatestGpuSnapshots = GpuMetricsMapper.Map(hardwareReadings);
             PlatformName = snapshot.Platform;
@@ -184,7 +187,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
                 visibleReadings,
                 Settings.UseFahrenheit,
                 LatestGpuSnapshots,
-                externalIpAddress);
+                _externalIpAddress);
             DiagnosticSections = DiagnosticAlertPolicy.Apply(sections, Settings, snapshot.NetworkActivityPercent);
             MetricSeries.Update(DiagnosticSections, snapshot.Timestamp);
         }
@@ -198,6 +201,35 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         finally
         {
             _refreshGate.Release();
+        }
+    }
+
+    private void ScheduleExternalIpRefresh()
+    {
+        if (!Settings.ShowExternalIpAddress)
+        {
+            _externalIpAddress = null;
+            return;
+        }
+
+        if (_externalIpRefreshTask is null || _externalIpRefreshTask.IsCompleted)
+        {
+            _externalIpRefreshTask = RefreshExternalIpAddressAsync();
+        }
+    }
+
+    private async Task RefreshExternalIpAddressAsync()
+    {
+        try
+        {
+            _externalIpAddress = await _externalIpAddressService.GetAddressAsync(_lifetimeCancellation.Token);
+        }
+        catch (OperationCanceledException) when (_lifetimeCancellation.IsCancellationRequested)
+        {
+        }
+        catch (Exception exception)
+        {
+            SafeDiagnosticLog.Write("ExternalIp", "RefreshFailure", exception);
         }
     }
 

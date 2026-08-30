@@ -73,6 +73,5 @@ public sealed class ExternalIpAddressService : IExternalIpAddressService
     public void Dispose()
     {
         _httpClient.Dispose();
-        _refreshGate.Dispose();
     }
 }
