@@ -72,60 +72,25 @@
                 </StackPanel>
                 <Button
                     Grid.Column="1"
-                    Width="36"
-                    Height="36"
-                    Padding="0"
-                    Background="{DynamicResource BackgroundAccentSubtleBrush}"
+                    Classes="sidebar-action"
                     Click="OpenAbout"
-                    CornerRadius="{DynamicResource RadiusAction}"
-                    Foreground="{DynamicResource TextAccentBrush}"
-                    ToolTip.Tip="About">
-                    <Border
-                        Width="17"
-                        Height="17"
-                        BorderBrush="{Binding $parent[Button].Foreground}"
-                        BorderThickness="1.4"
-                        CornerRadius="{DynamicResource RadiusSmall}">
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="{DynamicResource FontSizeBody}"
-                            FontWeight="Bold"
-                            Text="i" />
-                    </Border>
-                </Button>
+                    Content="ⓘ"
+                    FontSize="{DynamicResource FontSizeIcon}"
+                    ToolTip.Tip="About" />
                 <Button
                     Grid.Column="2"
-                    Width="36"
-                    Height="36"
-                    Padding="0"
-                    Background="{DynamicResource BackgroundAccentSubtleBrush}"
+                    Classes="sidebar-action"
                     Click="OpenSettings"
-                    CornerRadius="{DynamicResource RadiusAction}"
-                    Foreground="{DynamicResource TextAccentBrush}"
-                    ToolTip.Tip="Settings">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="{DynamicResource FontSizeIcon}"
-                        Text="⚙" />
-                </Button>
+                    Content="⚙"
+                    FontSize="{DynamicResource FontSizeIcon}"
+                    ToolTip.Tip="Settings" />
                 <Button
                     Grid.Column="3"
-                    Width="36"
-                    Height="36"
-                    Padding="0"
-                    Background="{DynamicResource BackgroundDangerSubtleBrush}"
+                    Classes="sidebar-action danger-action"
                     Click="HideToTray"
-                    CornerRadius="{DynamicResource RadiusAction}"
-                    Foreground="{DynamicResource TextDangerBrush}"
-                    ToolTip.Tip="Hide to tray">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="{DynamicResource FontSizeCloseIcon}"
-                        Text="×" />
-                </Button>
+                    Content="×"
+                    FontSize="{DynamicResource FontSizeCloseIcon}"
+                    ToolTip.Tip="Hide to tray" />
             </Grid>
         </Border>
 

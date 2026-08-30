@@ -138,6 +138,42 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
+    <Style Selector="Button.sidebar-action">
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccentBrush}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusAction}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextAccentBrush}" />
+    </Style>
+    <Style Selector="Button.sidebar-action:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentHoverBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextAccentStrongBrush}" />
+    </Style>
+    <Style Selector="Button.sidebar-action:pressed">
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccentBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextAccentBrush}" />
+    </Style>
+    <Style Selector="Button.sidebar-action.danger-action">
+        <Setter Property="Background" Value="{DynamicResource BackgroundDangerSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDangerBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextDangerBrush}" />
+    </Style>
+    <Style Selector="Button.sidebar-action.danger-action:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BackgroundDangerHoverBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDangerBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+    <Style Selector="Button.sidebar-action.danger-action:pressed">
+        <Setter Property="Background" Value="{DynamicResource BackgroundDangerSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDangerBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextDangerBrush}" />
+    </Style>
     <Style Selector="CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource TextBodyBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
