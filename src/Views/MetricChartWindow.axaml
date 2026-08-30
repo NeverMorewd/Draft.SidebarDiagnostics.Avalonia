@@ -8,12 +8,12 @@
     Height="460"
     MinWidth="520"
     MinHeight="340"
-    Background="{StaticResource BackgroundWindowBrush}"
+    Background="{DynamicResource BackgroundWindowBrush}"
     ExtendClientAreaToDecorationsHint="True"
     WindowDecorations="BorderOnly"
     WindowStartupLocation="CenterScreen">
     <Grid RowDefinitions="56,Auto,*">
-        <Border BorderBrush="{StaticResource BorderChromeBrush}" BorderThickness="{StaticResource ThicknessChromeBottom}">
+        <Border BorderBrush="{DynamicResource BorderChromeBrush}" BorderThickness="{DynamicResource ThicknessChromeBottom}">
             <Grid
                 Margin="16,0,12,0"
                 ColumnDefinitions="*,Auto,Auto"
@@ -21,20 +21,20 @@
                 <Border
                     x:Name="DragRegion"
                     Grid.Column="0"
-                    Background="{StaticResource TransparentBrush}">
+                    Background="{DynamicResource TransparentBrush}">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="11">
                         <Border
                             Width="30"
                             Height="30"
                             VerticalAlignment="Center"
-                            Background="{StaticResource BackgroundAccentSubtleBrush}"
-                            CornerRadius="{StaticResource RadiusSmall}">
+                            Background="{DynamicResource BackgroundAccentSubtleBrush}"
+                            CornerRadius="{DynamicResource RadiusSmall}">
                             <Path
                                 Width="16"
                                 Height="14"
                                 Data="M 1,12 L 5,7 L 8,9 L 14,2"
                                 Stretch="Fill"
-                                Stroke="{StaticResource TextAccentBrush}"
+                                Stroke="{DynamicResource TextAccentBrush}"
                                 StrokeThickness="1.7" />
                         </Border>
                         <StackPanel
@@ -43,14 +43,14 @@
                             Spacing="1">
                             <TextBlock
                                 x:Name="TitleText"
-                                FontSize="{StaticResource FontSizeSubheading}"
+                                FontSize="{DynamicResource FontSizeSubheading}"
                                 FontWeight="SemiBold"
-                                Foreground="{StaticResource TextPrimaryBrush}" />
+                                Foreground="{DynamicResource TextPrimaryBrush}" />
                             <TextBlock
                                 x:Name="SubtitleText"
                                 MaxWidth="480"
-                                FontSize="{StaticResource FontSizeCaption}"
-                                Foreground="{StaticResource TextSubtleBrush}"
+                                FontSize="{DynamicResource FontSizeCaption}"
+                                Foreground="{DynamicResource TextSubtleBrush}"
                                 TextTrimming="CharacterEllipsis" />
                         </StackPanel>
                     </Grid>
@@ -64,9 +64,9 @@
                     <Path
                         Width="15"
                         Height="17"
+                        Classes="chrome-icon"
                         Data="M 4,1 L 12,1 L 10,5 L 10,9 L 13,12 L 3,12 L 6,9 L 6,5 Z M 8,12 L 8,17"
                         Stretch="Fill"
-                        Stroke="{Binding $parent[Button].Foreground}"
                         StrokeLineCap="Round"
                         StrokeThickness="1.4" />
                 </Button>
@@ -78,9 +78,9 @@
                     <Path
                         Width="13"
                         Height="13"
+                        Classes="chrome-icon"
                         Data="M 1,1 L 12,12 M 12,1 L 1,12"
                         Stretch="Fill"
-                        Stroke="{Binding $parent[Button].Foreground}"
                         StrokeLineCap="Round"
                         StrokeThickness="1.6" />
                 </Button>
@@ -97,26 +97,26 @@
                 Spacing="12">
                 <TextBlock
                     x:Name="CurrentValueText"
-                    FontSize="{StaticResource FontSizeDisplay}"
+                    FontSize="{DynamicResource FontSizeDisplay}"
                     FontWeight="SemiBold"
-                    Foreground="{StaticResource TextPrimaryBrush}" />
+                    Foreground="{DynamicResource TextPrimaryBrush}" />
                 <Border
                     Height="24"
                     Padding="8,0"
-                    Background="{StaticResource BackgroundSuccessBrush}"
-                    CornerRadius="{StaticResource RadiusSmall}">
+                    Background="{DynamicResource BackgroundSuccessBrush}"
+                    CornerRadius="{DynamicResource RadiusSmall}">
                     <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                         <Ellipse
                             Width="6"
                             Height="6"
                             VerticalAlignment="Center"
-                            Fill="{StaticResource AccentSuccessBrush}" />
+                            Fill="{DynamicResource AccentSuccessBrush}" />
                         <TextBlock
                             Grid.Column="1"
                             VerticalAlignment="Center"
-                            FontSize="{StaticResource FontSizeMicro}"
+                            FontSize="{DynamicResource FontSizeMicro}"
                             FontWeight="Bold"
-                            Foreground="{StaticResource TextSuccessBrush}"
+                            Foreground="{DynamicResource TextSuccessBrush}"
                             LetterSpacing="1.2"
                             LineHeight="11"
                             Text="LIVE" />
@@ -130,8 +130,8 @@
                 Spacing="9">
                 <TextBlock
                     VerticalAlignment="Center"
-                    FontSize="{StaticResource FontSizeBody}"
-                    Foreground="{StaticResource TextSubtleBrush}"
+                    FontSize="{DynamicResource FontSizeBody}"
+                    Foreground="{DynamicResource TextSubtleBrush}"
                     Text="TIME RANGE" />
                 <ComboBox
                     x:Name="DurationSelector"
@@ -142,10 +142,10 @@
         <Border
             Grid.Row="2"
             Margin="20,0,20,20"
-            Background="{StaticResource BackgroundPanelBrush}"
-            BorderBrush="{StaticResource BackgroundControlHoverBrush}"
-            BorderThickness="{StaticResource ThicknessBorder}"
-            CornerRadius="{StaticResource RadiusPanel}">
+            Background="{DynamicResource BackgroundPanelBrush}"
+            BorderBrush="{DynamicResource BackgroundControlHoverBrush}"
+            BorderThickness="{DynamicResource ThicknessBorder}"
+            CornerRadius="{DynamicResource RadiusPanel}">
             <controls:MetricChart x:Name="Chart" Margin="10" />
         </Border>
     </Grid>

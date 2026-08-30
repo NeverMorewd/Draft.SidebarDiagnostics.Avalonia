@@ -6,6 +6,7 @@ This application uses open-source software, including:
 - .NET Community Toolkit, MIT License: https://github.com/CommunityToolkit/dotnet
 - LibreHardwareMonitor, Mozilla Public License 2.0: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 - PawnIO, installed separately when the user opts into privileged Windows hardware access: https://pawnio.eu/
+- Pipboy.Avalonia, MIT License: https://github.com/NeverMorewd/Pipboy.Avalonia
 - SharpHook, MIT License: https://github.com/TolikPylypchuk/SharpHook
 - xUnit.net, Apache License 2.0: https://github.com/xunit/xunit
 - coverlet, MIT License: https://github.com/coverlet-coverage/coverlet

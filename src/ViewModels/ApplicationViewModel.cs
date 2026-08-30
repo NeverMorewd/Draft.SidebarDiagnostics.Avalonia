@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SidebarDiagnostics.App.Views;
 using SidebarDiagnostics.App.Services.Shortcuts;
+using SidebarDiagnostics.App.Styling;
 
 namespace SidebarDiagnostics.App.ViewModels;
 
@@ -10,7 +11,8 @@ public sealed partial class ApplicationViewModel(
     IClassicDesktopStyleApplicationLifetime lifetime,
     MainWindow mainWindow,
     MainViewModel mainViewModel,
-    GlobalShortcutService shortcuts) : ObservableObject, IDisposable
+    GlobalShortcutService shortcuts,
+    ApplicationThemeService themeService) : ObservableObject, IDisposable
 {
     private bool _isDisposed;
 
@@ -19,6 +21,8 @@ public sealed partial class ApplicationViewModel(
         mainViewModel.SettingsApplied += OnSettingsApplied;
         shortcuts.StatusChanged += OnShortcutStatusChanged;
         lifetime.Exit += OnExit;
+        themeService.Apply(mainViewModel.Settings.Theme);
+        mainViewModel.RefreshThemeResources();
         ApplyShortcuts();
     }
 
@@ -59,7 +63,12 @@ public sealed partial class ApplicationViewModel(
         if (mainWindow.IsVisible) HideWindow(); else ShowWindow();
     }
 
-    private void OnSettingsApplied(object? sender, EventArgs e) => ApplyShortcuts();
+    private void OnSettingsApplied(object? sender, EventArgs e)
+    {
+        themeService.Apply(mainViewModel.Settings.Theme);
+        mainViewModel.RefreshThemeResources();
+        ApplyShortcuts();
+    }
     private void OnShortcutStatusChanged(object? sender, EventArgs e) => mainViewModel.UpdateShortcutStatus(shortcuts.Status);
     private void ApplyShortcuts()
     {

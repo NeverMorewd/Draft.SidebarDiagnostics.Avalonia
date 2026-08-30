@@ -18,6 +18,7 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 - Configurable global shortcuts for show/focus, hide, and visibility toggle
 - High-density CPU, memory, GPU, drive, network, and hardware detail sections
 - Configurable clock, machine name, units, sidebar width, and opacity
+- Live switching between the default Fluent-based appearance and the monochromatic Pip-Boy theme
 - Tray controls and native launch-at-login integration on all three platforms
 - Atomic JSON settings persistence
 - Strict builds, unit tests, coverage artifacts, and locked restores
@@ -84,6 +85,10 @@ The WinGet manifest and Homebrew Cask are inside the release metadata bundle. Pu
 ## Security and stability
 
 The hardware access trust model and vulnerability reporting process are documented in [SECURITY.md](SECURITY.md). Repeatable timeout, artifact, dependency, and soak-test procedures are documented in [docs/STABILITY.md](docs/STABILITY.md).
+
+## Themes
+
+The default Sidebar theme uses Fluent control templates with a dedicated semantic palette. The optional Pip-Boy appearance uses [Pipboy.Avalonia](https://github.com/NeverMorewd/Pipboy.Avalonia) and maps the same application-level design tokens onto its generated monochromatic palette. Theme changes preview immediately in Settings, persist only when saved, and revert when the dialog is cancelled or closed.
 
 ## License and attribution
 

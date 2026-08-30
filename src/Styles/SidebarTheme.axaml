@@ -87,180 +87,240 @@
         <Thickness x:Key="PaddingWindow">28</Thickness>
         <Thickness x:Key="PaddingSidebarChrome">16,11</Thickness>
         <Thickness x:Key="PaddingSidebarStatus">16,10</Thickness>
+
+        <ControlTheme x:Key="ChromeButtonTheme" TargetType="Button">
+            <Setter Property="Width" Value="36" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="{DynamicResource BackgroundControlBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="{DynamicResource ThicknessBorder}" />
+            <Setter Property="CornerRadius" Value="{DynamicResource RadiusMedium}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBodyBrush}" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Button">
+                    <Border
+                        x:Name="PART_ChromeBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter
+                            x:Name="PART_ContentPresenter"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{DynamicResource BackgroundControlHoverBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderHoverBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextAccentStrongBrush}" />
+            </Style>
+            <Style Selector="^:disabled">
+                <Setter Property="Opacity" Value="0.45" />
+            </Style>
+        </ControlTheme>
     </Styles.Resources>
 
     <Style Selector="Window">
-        <Setter Property="Background" Value="{StaticResource BackgroundWindowBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundWindowBrush}" />
     </Style>
     <Style Selector="TextBox, ComboBox, NumericUpDown">
-        <Setter Property="Background" Value="{StaticResource BackgroundInputBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
-        <Setter Property="BorderThickness" Value="{StaticResource ThicknessBorder}" />
-        <Setter Property="CornerRadius" Value="{StaticResource RadiusControl}" />
-        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundInputBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ThicknessBorder}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
     </Style>
     <Style Selector="TextBox:pointerover, ComboBox:pointerover, NumericUpDown:pointerover">
-        <Setter Property="BorderBrush" Value="{StaticResource BorderHoverBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderHoverBrush}" />
     </Style>
     <Style Selector="TextBox:focus, TextBox:focus-within, ComboBox:focus, ComboBox:focus-within, NumericUpDown:focus, NumericUpDown:focus-within">
-        <Setter Property="BorderBrush" Value="{StaticResource BorderFocusBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
     </Style>
     <Style Selector="TextBox:disabled, ComboBox:disabled, NumericUpDown:disabled">
-        <Setter Property="Background" Value="{StaticResource BackgroundInputDisabledBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderDisabledBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextDimBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundInputDisabledBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDisabledBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextDimBrush}" />
     </Style>
-    <Style Selector="NumericUpDown RepeatButton, ComboBox ToggleButton">
-        <Setter Property="Background" Value="{StaticResource BackgroundControlSecondaryBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+    <Style Selector="Button:not(.chrome)">
+        <Setter Property="Background" Value="{DynamicResource BackgroundControlBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ThicknessBorder}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
     </Style>
-    <Style Selector="NumericUpDown RepeatButton:pointerover, ComboBox ToggleButton:pointerover">
-        <Setter Property="Background" Value="{StaticResource BackgroundControlSecondaryHoverBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderHoverBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextAccentStrongBrush}" />
+    <Style Selector="Button:not(.chrome):pointerover">
+        <Setter Property="Background" Value="{DynamicResource BackgroundControlHoverBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderHoverBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
-    <Style Selector="Button">
-        <Setter Property="Background" Value="{StaticResource BackgroundControlBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
-        <Setter Property="BorderThickness" Value="{StaticResource ThicknessBorder}" />
-        <Setter Property="CornerRadius" Value="{StaticResource RadiusControl}" />
-        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+    <Style Selector="Button:not(.chrome):focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
     </Style>
-    <Style Selector="Button:pointerover">
-        <Setter Property="Background" Value="{StaticResource BackgroundControlHoverBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderHoverBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+    <Style Selector="Button:not(.chrome):disabled">
+        <Setter Property="Background" Value="{DynamicResource BackgroundControlDisabledBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDisabledBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextDimBrush}" />
     </Style>
-    <Style Selector="Button:focus"><Setter Property="BorderBrush" Value="{StaticResource BorderFocusBrush}" /></Style>
-    <Style Selector="Button:disabled">
-        <Setter Property="Background" Value="{StaticResource BackgroundControlDisabledBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderDisabledBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextDimBrush}" />
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccentBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextAccentStrongBrush}" />
+    </Style>
+    <Style Selector="Button.primary:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentHoverBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
     <Style Selector="CheckBox">
-        <Setter Property="Foreground" Value="{StaticResource TextBodyBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBodyBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
     </Style>
-    <Style Selector="CheckBox:pointerover"><Setter Property="BorderBrush" Value="{StaticResource BorderHoverBrush}" /></Style>
-    <Style Selector="CheckBox:checked"><Setter Property="BorderBrush" Value="{StaticResource BorderFocusBrush}" /></Style>
+    <Style Selector="CheckBox:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderHoverBrush}" />
+    </Style>
+    <Style Selector="CheckBox:checked">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
+    </Style>
     <Style Selector="ComboBoxItem:pointerover">
-        <Setter Property="Background" Value="{StaticResource BackgroundControlSecondaryHoverBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundControlSecondaryHoverBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
     <Style Selector="ComboBoxItem:selected">
-        <Setter Property="Background" Value="{StaticResource BackgroundAccentSubtleBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextAccentStrongBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextAccentStrongBrush}" />
     </Style>
-    <Style Selector="ScrollBar"><Setter Property="Background" Value="{StaticResource TransparentBrush}" /></Style>
-    <Style Selector="ScrollBar /template/ Thumb"><Setter Property="Background" Value="{StaticResource BorderHoverBrush}" /></Style>
-    <Style Selector="ScrollBar /template/ Thumb:pointerover"><Setter Property="Background" Value="{StaticResource TextSubtleBrush}" /></Style>
+    <Style Selector="ScrollBar">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="ScrollBar /template/ Thumb">
+        <Setter Property="Background" Value="{DynamicResource BorderHoverBrush}" />
+    </Style>
+    <Style Selector="ScrollBar /template/ Thumb:pointerover">
+        <Setter Property="Background" Value="{DynamicResource TextSubtleBrush}" />
+    </Style>
     <Style Selector="MenuFlyoutPresenter">
         <Setter Property="MinWidth" Value="220" />
         <Setter Property="Padding" Value="5" />
-        <Setter Property="Background" Value="{StaticResource BackgroundMenuBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
-        <Setter Property="BorderThickness" Value="{StaticResource ThicknessBorder}" />
-        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundMenuBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ThicknessBorder}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusMedium}" />
     </Style>
     <Style Selector="MenuItem">
         <Setter Property="MinHeight" Value="34" />
-        <Setter Property="Padding" Value="{StaticResource PaddingControl}" />
-        <Setter Property="Background" Value="{StaticResource TransparentBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="Padding" Value="{DynamicResource PaddingControl}" />
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
     </Style>
     <Style Selector="MenuItem:pointerover, MenuItem:selected">
-        <Setter Property="Background" Value="{StaticResource BackgroundAccentHoverBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentHoverBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
-    <Style Selector="MenuItem:disabled"><Setter Property="Foreground" Value="{StaticResource TextDimBrush}" /></Style>
+    <Style Selector="MenuItem:disabled">
+        <Setter Property="Foreground" Value="{DynamicResource TextDimBrush}" />
+    </Style>
     <Style Selector="Separator">
         <Setter Property="Height" Value="1" />
         <Setter Property="Margin" Value="9,5" />
-        <Setter Property="Background" Value="{StaticResource BorderDefaultBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BorderDefaultBrush}" />
     </Style>
 
     <Style Selector="Grid.metric-row Button.metric-chart">
         <Setter Property="Opacity" Value="0" />
-        <Setter Property="Background" Value="{StaticResource BackgroundControlSecondaryBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
-        <Setter Property="BorderThickness" Value="{StaticResource ThicknessBorder}" />
-        <Setter Property="CornerRadius" Value="{StaticResource RadiusControl}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundControlSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ThicknessBorder}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}" />
     </Style>
     <Style Selector="Grid.metric-row:pointerover Button.metric-chart">
         <Setter Property="Opacity" Value="1" />
     </Style>
     <Style Selector="Button.metric-chart:pointerover, Button.metric-chart:focus">
         <Setter Property="Opacity" Value="1" />
-        <Setter Property="Background" Value="{StaticResource BackgroundAccentHoverBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderAccentBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextAccentStrongBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentHoverBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccentBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextAccentStrongBrush}" />
     </Style>
     <Style Selector="Button.chrome">
-        <Setter Property="Width" Value="36" />
-        <Setter Property="Height" Value="36" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="Background" Value="{StaticResource BackgroundControlBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
-        <Setter Property="BorderThickness" Value="{StaticResource ThicknessBorder}" />
-        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
-        <Setter Property="Foreground" Value="{StaticResource TextBodyBrush}" />
+        <Setter Property="Theme" Value="{StaticResource ChromeButtonTheme}" />
     </Style>
-    <Style Selector="Button.chrome:pointerover">
-        <Setter Property="Background" Value="{StaticResource BackgroundControlHoverBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+    <Style Selector="Button.chrome Path.chrome-icon">
+        <Setter Property="Stroke" Value="{DynamicResource TextBodyBrush}" />
     </Style>
-    <Style Selector="Button.close:pointerover">
-        <Setter Property="Background" Value="{StaticResource BackgroundDangerHoverBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderDangerBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+    <Style Selector="Button.chrome:pointerover Path.chrome-icon">
+        <Setter Property="Stroke" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+    <Style Selector="Button.chrome.close:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BackgroundDangerHoverBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDangerBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+    <Style Selector="Button.chrome.close:pointerover Path.chrome-icon">
+        <Setter Property="Stroke" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
     <Style Selector="Button.pinned">
-        <Setter Property="Background" Value="{StaticResource BackgroundAccentSubtleBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource AccentExternalBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextAccentBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentExternalBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextAccentBrush}" />
+    </Style>
+    <Style Selector="Button.pinned Path.chrome-icon">
+        <Setter Property="Stroke" Value="{DynamicResource TextAccentBrush}" />
     </Style>
 
     <Style Selector="Border.card">
-        <Setter Property="Padding" Value="{StaticResource PaddingCard}" />
-        <Setter Property="Background" Value="{StaticResource BackgroundCardBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderCardBrush}" />
-        <Setter Property="BorderThickness" Value="{StaticResource ThicknessBorder}" />
-        <Setter Property="CornerRadius" Value="{StaticResource RadiusCard}" />
+        <Setter Property="Padding" Value="{DynamicResource PaddingCard}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundCardBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderCardBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ThicknessBorder}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusCard}" />
     </Style>
     <Style Selector="Border.compact-card">
-        <Setter Property="Background" Value="{StaticResource BackgroundInputBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderCardBrush}" />
-        <Setter Property="BorderThickness" Value="{StaticResource ThicknessBorder}" />
-        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundInputBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderCardBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ThicknessBorder}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusMedium}" />
     </Style>
     <Style Selector="TextBlock.eyebrow">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
         <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Foreground" Value="{StaticResource TextAccentBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextAccentBrush}" />
         <Setter Property="LetterSpacing" Value="1.8" />
     </Style>
     <Style Selector="TextBlock.page-title">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle}" />
         <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
     <Style Selector="TextBlock.section-title">
         <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
     </Style>
     <Style Selector="TextBlock.description">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
-        <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
     <Style Selector="controls|MetricChart">
-        <Setter Property="LabelBrush" Value="{StaticResource TextSubtleBrush}" />
-        <Setter Property="GridBrush" Value="{StaticResource ChartGridBrush}" />
-        <Setter Property="AxisBrush" Value="{StaticResource ChartAxisBrush}" />
-        <Setter Property="PointOutlineBrush" Value="{StaticResource ChartPointOutlineBrush}" />
+        <Setter Property="LabelBrush" Value="{DynamicResource TextSubtleBrush}" />
+        <Setter Property="GridBrush" Value="{DynamicResource ChartGridBrush}" />
+        <Setter Property="AxisBrush" Value="{DynamicResource ChartAxisBrush}" />
+        <Setter Property="PointOutlineBrush" Value="{DynamicResource ChartPointOutlineBrush}" />
     </Style>
     <Style Selector="controls|Sparkline">
-        <Setter Property="Stroke" Value="{StaticResource AccentCpuBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource AccentCpuBrush}" />
     </Style>
 </Styles>

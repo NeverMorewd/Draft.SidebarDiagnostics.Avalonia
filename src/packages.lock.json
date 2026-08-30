@@ -76,6 +76,15 @@
           "System.Management": "10.0.2"
         }
       },
+      "Pipboy.Avalonia": {
+        "type": "Direct",
+        "requested": "[1.1.2, )",
+        "resolved": "1.1.2",
+        "contentHash": "cF7f148BxgRpuP4236xh0F3UQsYG1fLXyh2r6WSp29dgQMNMT/U/a7LfZaO6SAr+6Ae6CdpakxoD61lVVJ4AeA==",
+        "dependencies": {
+          "Avalonia": "12.0.1"
+        }
+      },
       "SharpHook": {
         "type": "Direct",
         "requested": "[8.0.0, )",

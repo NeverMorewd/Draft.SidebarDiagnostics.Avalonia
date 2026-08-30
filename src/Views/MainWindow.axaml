@@ -14,148 +14,126 @@
     d:DesignHeight="920"
     d:DesignWidth="360"
     x:DataType="vm:MainViewModel"
-    Background="{StaticResource BackgroundWindowBrush}"
+    Background="{DynamicResource BackgroundWindowBrush}"
     Icon="/Assets/sidebar.ico"
     ShowInTaskbar="False"
     Topmost="True"
     WindowDecorations="None"
+    PointerEntered="OnWindowPointerEntered"
+    PointerExited="OnWindowPointerExited"
     mc:Ignorable="d">
-    <Window.Styles>
-        <Style Selector="Border.window-chrome">
-            <Setter Property="IsVisible" Value="False" />
-        </Style>
-        <Style Selector="Window:pointerover Border.window-chrome">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
-        <Style Selector="ScrollViewer.main-scroll">
-            <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
-        </Style>
-        <Style Selector="Window:pointerover ScrollViewer.main-scroll">
-            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-        </Style>
-    </Window.Styles>
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto,*,Auto">
         <Border
+            x:Name="HeaderChrome"
             Grid.Row="0"
-            Classes="window-chrome"
-            Padding="{StaticResource PaddingSidebarChrome}"
-            BorderBrush="{StaticResource BorderChromeBrush}"
-            BorderThickness="{StaticResource ThicknessChromeBottom}">
+            IsVisible="False"
+            Padding="{DynamicResource PaddingSidebarChrome}"
+            BorderBrush="{DynamicResource BorderChromeBrush}"
+            BorderThickness="{DynamicResource ThicknessChromeBottom}"
+            Classes="window-chrome">
             <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="7">
                 <StackPanel PointerPressed="BeginWindowDrag" Spacing="1">
                     <TextBlock
-                        FontSize="{StaticResource FontSizeMicro}"
+                        FontSize="{DynamicResource FontSizeMicro}"
                         FontWeight="SemiBold"
-                        Foreground="{StaticResource TextAccentBrush}"
+                        Foreground="{DynamicResource TextAccentBrush}"
                         LetterSpacing="1.4"
                         Text="SIDEBAR DIAGNOSTICS" />
                     <TextBlock
-                        FontSize="{StaticResource FontSizeHeading}"
+                        FontSize="{DynamicResource FontSizeHeading}"
                         FontWeight="SemiBold"
-                        Foreground="{StaticResource TextPrimaryBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
                         IsVisible="{Binding IsMachineNameVisible}"
                         Text="{Binding MachineName}" />
                     <TextBlock
-                        FontSize="{StaticResource FontSizeCaption}"
-                        Foreground="{StaticResource TextMutedBrush}"
+                        FontSize="{DynamicResource FontSizeCaption}"
+                        Foreground="{DynamicResource TextMutedBrush}"
                         Text="{Binding PlatformName}" />
                     <TextBlock
                         Margin="0,2,0,0"
-                        FontSize="{StaticResource FontSizeCaption}"
-                        Foreground="{StaticResource TextBodyBrush}"
+                        FontSize="{DynamicResource FontSizeCaption}"
+                        Foreground="{DynamicResource TextBodyBrush}"
                         IsVisible="{Binding IsClockVisible}"
                         Text="{Binding ClockText}" />
                 </StackPanel>
                 <Button
                     Grid.Column="1"
-                    Width="36"
-                    Height="36"
-                    Padding="0"
-                    Background="{StaticResource BackgroundAccentSubtleBrush}"
-                    Click="OpenAbout"
-                    CornerRadius="{StaticResource RadiusAction}"
-                    Foreground="{StaticResource TextAccentBrush}"
-                    ToolTip.Tip="About">
-                    <Border
-                        Width="17"
-                        Height="17"
-                        BorderBrush="{Binding $parent[Button].Foreground}"
-                        BorderThickness="1.4"
-                        CornerRadius="{StaticResource RadiusSmall}">
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="{StaticResource FontSizeBody}"
-                            FontWeight="Bold"
-                            Text="i" />
-                    </Border>
+                    AutomationProperties.Name="About"
+                    Classes="chrome"
+                    Click="OpenAbout">
+                    <Path
+                        Width="16"
+                        Height="16"
+                        Classes="chrome-icon"
+                        Data="M 8,1 A 7,7 0 1 0 8,15 A 7,7 0 1 0 8,1 M 8,7 L 8,12 M 8,4 L 8,5"
+                        Stretch="Fill"
+                        StrokeLineCap="Round"
+                        StrokeThickness="1.4" />
                 </Button>
                 <Button
                     Grid.Column="2"
-                    Width="36"
-                    Height="36"
-                    Padding="0"
-                    Background="{StaticResource BackgroundAccentSubtleBrush}"
-                    Click="OpenSettings"
-                    CornerRadius="{StaticResource RadiusAction}"
-                    Foreground="{StaticResource TextAccentBrush}"
-                    ToolTip.Tip="Settings">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="{StaticResource FontSizeIcon}"
-                        Text="⚙" />
+                    AutomationProperties.Name="Settings"
+                    Classes="chrome"
+                    Click="OpenSettings">
+                    <Path
+                        Width="17"
+                        Height="17"
+                        Classes="chrome-icon"
+                        Data="M 19.14,12.94 A 7.43,7.43 0 0 0 19.19,12 A 7.43,7.43 0 0 0 19.14,11.06 L 21.17,9.48 L 19.17,6.02 L 16.78,6.98 A 7.26,7.26 0 0 0 15.15,6.04 L 14.79,3.5 L 10.79,3.5 L 10.43,6.04 A 7.26,7.26 0 0 0 8.8,6.98 L 6.41,6.02 L 4.41,9.48 L 6.44,11.06 A 7.43,7.43 0 0 0 6.39,12 A 7.43,7.43 0 0 0 6.44,12.94 L 4.41,14.52 L 6.41,17.98 L 8.8,17.02 A 7.26,7.26 0 0 0 10.43,17.96 L 10.79,20.5 L 14.79,20.5 L 15.15,17.96 A 7.26,7.26 0 0 0 16.78,17.02 L 19.17,17.98 L 21.17,14.52 Z M 12.79,15.5 A 3.5,3.5 0 1 1 12.79,8.5 A 3.5,3.5 0 1 1 12.79,15.5"
+                        Stretch="Uniform"
+                        StrokeThickness="1.35" />
                 </Button>
                 <Button
                     Grid.Column="3"
-                    Width="36"
-                    Height="36"
-                    Padding="0"
-                    Background="{StaticResource BackgroundDangerSubtleBrush}"
-                    Click="HideToTray"
-                    CornerRadius="{StaticResource RadiusAction}"
-                    Foreground="{StaticResource TextDangerBrush}"
-                    ToolTip.Tip="Hide to tray">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="{StaticResource FontSizeCloseIcon}"
-                        Text="×" />
+                    AutomationProperties.Name="Hide to tray"
+                    Classes="chrome close"
+                    Click="HideToTray">
+                    <Path
+                        Width="13"
+                        Height="13"
+                        Classes="chrome-icon"
+                        Data="M 1,1 L 12,12 M 12,1 L 1,12"
+                        Stretch="Fill"
+                        StrokeLineCap="Round"
+                        StrokeThickness="1.6" />
                 </Button>
             </Grid>
         </Border>
 
-        <ScrollViewer Grid.Row="1" Classes="main-scroll">
+        <ScrollViewer
+            x:Name="MainScroll"
+            Grid.Row="1"
+            VerticalScrollBarVisibility="Hidden">
             <StackPanel Margin="16,10">
                 <ItemsControl ItemsSource="{Binding DiagnosticSections}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:DiagnosticSection">
                             <Border
                                 Margin="0,0,0,10"
-                                Padding="{StaticResource PaddingCompactCard}"
-                                Background="{StaticResource BackgroundCardAlternateBrush}"
-                                BorderBrush="{StaticResource BorderCardBrush}"
-                                BorderThickness="{StaticResource ThicknessBorder}"
-                                CornerRadius="{StaticResource RadiusCard}">
+                                Padding="{DynamicResource PaddingCompactCard}"
+                                Background="{DynamicResource BackgroundCardAlternateBrush}"
+                                BorderBrush="{DynamicResource BorderCardBrush}"
+                                BorderThickness="{DynamicResource ThicknessBorder}"
+                                CornerRadius="{DynamicResource RadiusCard}">
                                 <StackPanel Spacing="9">
                                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="9">
                                         <Border
                                             Width="4"
                                             Background="{Binding AccentResourceKey, Converter={StaticResource ResourceKeyToBrushConverter}}"
-                                            CornerRadius="{StaticResource RadiusAccentBar}" />
+                                            CornerRadius="{DynamicResource RadiusAccentBar}" />
                                         <StackPanel Grid.Column="1" Spacing="1">
                                             <TextBlock
-                                                FontSize="{StaticResource FontSizeSection}"
+                                                FontSize="{DynamicResource FontSizeSection}"
                                                 FontWeight="SemiBold"
-                                                Foreground="{StaticResource TextPrimaryBrush}"
+                                                Foreground="{DynamicResource TextPrimaryBrush}"
                                                 Text="{Binding Title}" />
                                             <TextBlock
-                                                FontSize="{StaticResource FontSizeCaption}"
-                                                Foreground="{StaticResource TextDimBrush}"
+                                                FontSize="{DynamicResource FontSizeCaption}"
+                                                Foreground="{DynamicResource TextDimBrush}"
                                                 Text="{Binding Subtitle}"
                                                 TextTrimming="CharacterEllipsis" />
                                         </StackPanel>
@@ -163,29 +141,33 @@
                                     <ItemsControl ItemsSource="{Binding Metrics}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="models:DiagnosticMetric">
-                                                <Grid Margin="0,2" Background="{StaticResource TransparentBrush}" Classes="metric-row" ColumnDefinitions="110,*,Auto">
+                                                <Grid
+                                                    Margin="0,2"
+                                                    Background="{DynamicResource TransparentBrush}"
+                                                    Classes="metric-row"
+                                                    ColumnDefinitions="110,*,Auto">
                                                     <TextBlock
-                                                        FontSize="{StaticResource FontSizeBody}"
-                                                        Foreground="{StaticResource TextMutedBrush}"
+                                                        FontSize="{DynamicResource FontSizeBody}"
+                                                        Foreground="{DynamicResource TextMutedBrush}"
                                                         Text="{Binding Label}"
                                                         TextTrimming="CharacterEllipsis" />
                                                     <TextBlock
                                                         Grid.Column="1"
                                                         Margin="10,0,0,0"
-                                                        FontSize="{StaticResource FontSizeBody}"
+                                                        FontSize="{DynamicResource FontSizeBody}"
                                                         FontWeight="Medium"
-                                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                                        Foreground="{DynamicResource TextSecondaryBrush}"
                                                         Text="{Binding Value}"
                                                         TextWrapping="Wrap" />
                                                     <Button
                                                         Grid.Column="2"
-                                                        Classes="metric-chart"
                                                         Width="27"
                                                         Height="25"
                                                         Margin="6,0,0,0"
                                                         Padding="0"
+                                                        Classes="metric-chart"
                                                         Click="OpenMetricChart"
-                                                        Foreground="{StaticResource TextAccentBrush}"
+                                                        Foreground="{DynamicResource TextAccentBrush}"
                                                         IsVisible="{Binding CanGraph}"
                                                         ToolTip.Tip="Open live chart">
                                                         <Path
@@ -209,29 +191,31 @@
         </ScrollViewer>
 
         <Border
+            x:Name="FooterChrome"
             Grid.Row="2"
-            Classes="window-chrome"
-            Padding="{StaticResource PaddingSidebarStatus}"
-            BorderBrush="{StaticResource BorderChromeBrush}"
-            BorderThickness="{StaticResource ThicknessChromeTop}">
+            IsVisible="False"
+            Padding="{DynamicResource PaddingSidebarStatus}"
+            BorderBrush="{DynamicResource BorderChromeBrush}"
+            BorderThickness="{DynamicResource ThicknessChromeTop}"
+            Classes="window-chrome">
             <Grid ColumnDefinitions="Auto,*,Auto">
                 <Ellipse
                     Width="7"
                     Height="7"
                     VerticalAlignment="Center"
-                    Fill="{StaticResource AccentSuccessBrush}" />
+                    Fill="{DynamicResource AccentSuccessBrush}" />
                 <TextBlock
                     Grid.Column="1"
                     Margin="9,0"
                     VerticalAlignment="Center"
-                    FontSize="{StaticResource FontSizeBody}"
-                    Foreground="{StaticResource TextMutedBrush}"
+                    FontSize="{DynamicResource FontSizeBody}"
+                    Foreground="{DynamicResource TextMutedBrush}"
                     Text="{Binding StatusText}" />
                 <TextBlock
                     Grid.Column="2"
                     VerticalAlignment="Center"
-                    FontSize="{StaticResource FontSizeBody}"
-                    Foreground="{StaticResource TextDimBrush}"
+                    FontSize="{DynamicResource FontSizeBody}"
+                    Foreground="{DynamicResource TextDimBrush}"
                     Text="{Binding LastUpdated}" />
             </Grid>
         </Border>

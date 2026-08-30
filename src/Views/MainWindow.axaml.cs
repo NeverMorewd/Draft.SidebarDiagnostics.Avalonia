@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
@@ -7,6 +8,7 @@ using Avalonia.Threading;
 using SidebarDiagnostics.App.Models;
 using SidebarDiagnostics.App.Services.Windowing;
 using SidebarDiagnostics.App.ViewModels;
+using SidebarDiagnostics.App.Styling;
 
 namespace SidebarDiagnostics.App.Views;
 
@@ -21,9 +23,17 @@ public partial class MainWindow : Window
     private readonly Dictionary<string, MetricChartWindow> _metricCharts = new(StringComparer.Ordinal);
     private SettingsWindow? _settingsWindow;
     private AboutWindow? _aboutWindow;
+    private readonly ApplicationThemeService _themeService;
 
     public MainWindow()
+        : this(new ApplicationThemeService(Application.Current
+            ?? throw new InvalidOperationException("The application is not initialized.")))
     {
+    }
+
+    public MainWindow(ApplicationThemeService themeService)
+    {
+        _themeService = themeService;
         InitializeComponent();
         _preferredHeight = Height;
         _placementTimer = new DispatcherTimer
@@ -48,6 +58,25 @@ public partial class MainWindow : Window
 
         e.Cancel = true;
         Dispatcher.UIThread.Post(HideSidebar, DispatcherPriority.Background);
+    }
+
+    private void OnWindowPointerEntered(object? sender, PointerEventArgs e)
+    {
+        SetChromeVisibility(true);
+    }
+
+    private void OnWindowPointerExited(object? sender, PointerEventArgs e)
+    {
+        SetChromeVisibility(false);
+    }
+
+    private void SetChromeVisibility(bool isVisible)
+    {
+        HeaderChrome.IsVisible = isVisible;
+        FooterChrome.IsVisible = isVisible;
+        MainScroll.VerticalScrollBarVisibility = isVisible
+            ? ScrollBarVisibility.Auto
+            : ScrollBarVisibility.Hidden;
     }
 
     private void OnDataContextChanged(object? sender, EventArgs e)
@@ -286,7 +315,7 @@ public partial class MainWindow : Window
 
         _settingsWindow = new SettingsWindow
         {
-            DataContext = new SettingsViewModel(mainViewModel)
+            DataContext = new SettingsViewModel(mainViewModel, _themeService)
         };
 
         try

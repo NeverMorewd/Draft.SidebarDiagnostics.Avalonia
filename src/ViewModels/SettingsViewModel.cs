@@ -1,14 +1,19 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Avalonia.Threading;
 using SidebarDiagnostics.App.Models;
 using SidebarDiagnostics.App.Services.Hardware;
+using SidebarDiagnostics.App.Styling;
 
 namespace SidebarDiagnostics.App.ViewModels;
 
 public sealed partial class SettingsViewModel : ViewModelBase
 {
     private readonly MainViewModel _mainViewModel;
+    private readonly ApplicationThemeService _themeService;
+    private readonly ApplicationTheme _originalTheme;
+    private int _themePreviewVersion;
 
     [ObservableProperty]
     public partial int RefreshIntervalMilliseconds { get; set; }
@@ -56,6 +61,14 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial double BackgroundOpacity { get; set; }
 
     [ObservableProperty]
+    public partial ApplicationThemeOption SelectedTheme { get; set; } = ApplicationThemeOption.Sidebar;
+
+    [ObservableProperty]
+    public partial string? ThemePreviewError { get; set; }
+
+    public IReadOnlyList<ApplicationThemeOption> Themes { get; } = ApplicationThemeOption.All;
+
+    [ObservableProperty]
     public partial string SensorSearchText { get; set; } = string.Empty;
 
     public ObservableCollection<SensorOptionViewModel> Sensors { get; } = [];
@@ -93,10 +106,12 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public event EventHandler? Saved;
     public event EventHandler? Cancelled;
 
-    public SettingsViewModel(MainViewModel mainViewModel)
+    public SettingsViewModel(MainViewModel mainViewModel, ApplicationThemeService themeService)
     {
         _mainViewModel = mainViewModel;
+        _themeService = themeService;
         var settings = mainViewModel.Settings;
+        _originalTheme = settings.Theme;
         RefreshIntervalMilliseconds = settings.RefreshIntervalMilliseconds;
         CpuAlertThreshold = settings.CpuAlertThreshold;
         MemoryAlertThreshold = settings.MemoryAlertThreshold;
@@ -112,6 +127,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         UseFahrenheit = settings.UseFahrenheit;
         SidebarWidth = settings.SidebarWidth;
         BackgroundOpacity = settings.BackgroundOpacity;
+        SelectedTheme = Themes.Single(option => option.Value == settings.Theme);
         DockEdge = settings.DockEdge;
         ReserveScreenSpace = settings.ReserveScreenSpace;
         VerticalPositionPercent = settings.VerticalPosition * 100;
@@ -169,6 +185,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             UseFahrenheit = UseFahrenheit,
             SidebarWidth = SidebarWidth,
             BackgroundOpacity = BackgroundOpacity,
+            Theme = SelectedTheme.Value,
             SensorPreferences = Sensors
                 .Select((sensor, index) => sensor.ToPreference(index))
                 .ToList(),
@@ -188,7 +205,45 @@ public sealed partial class SettingsViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void Cancel() => Cancelled?.Invoke(this, EventArgs.Empty);
+    private void Cancel()
+    {
+        RevertThemePreview();
+        Cancelled?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void RevertThemePreview()
+    {
+        _themePreviewVersion++;
+        _themeService.Apply(_originalTheme);
+        _mainViewModel.RefreshThemeResources();
+    }
+
+    partial void OnSelectedThemeChanged(ApplicationThemeOption value)
+    {
+        var version = ++_themePreviewVersion;
+        Dispatcher.UIThread.Post(
+            () => ApplyThemePreview(value.Value, version),
+            DispatcherPriority.Background);
+    }
+
+    private void ApplyThemePreview(ApplicationTheme theme, int version)
+    {
+        if (version != _themePreviewVersion)
+        {
+            return;
+        }
+
+        try
+        {
+            _themeService.Apply(theme);
+            _mainViewModel.RefreshThemeResources();
+            ThemePreviewError = null;
+        }
+        catch (Exception exception)
+        {
+            ThemePreviewError = $"Theme preview failed: {exception.Message}";
+        }
+    }
 
     partial void OnSensorSearchTextChanged(string value)
     {
