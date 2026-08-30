@@ -179,12 +179,13 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
 
             var visibleReadings = SensorCatalog.SelectVisible(hardwareReadings, Settings.SensorPreferences).ToArray();
             HardwareStatus = _hardwareSensorService.CapabilityMessage;
-            DiagnosticSections = DetailedDiagnosticsBuilder.Build(
+            var sections = DetailedDiagnosticsBuilder.Build(
                 snapshot,
                 visibleReadings,
                 Settings.UseFahrenheit,
                 LatestGpuSnapshots,
                 externalIpAddress);
+            DiagnosticSections = DiagnosticAlertPolicy.Apply(sections, Settings, snapshot.NetworkActivityPercent);
             MetricSeries.Update(DiagnosticSections, snapshot.Timestamp);
         }
         catch (OperationCanceledException) when (_lifetimeCancellation.IsCancellationRequested)
