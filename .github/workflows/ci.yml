@@ -120,3 +120,7 @@ jobs:
           if (Test-Path -LiteralPath $managedEntryPoint) {
             throw "Managed entry point was unexpectedly published: $managedEntryPoint"
           }
+      - name: Verify macOS application bundle
+        if: startsWith(matrix.rid, 'osx-')
+        shell: bash
+        run: ./scripts/Build-MacAppBundle.sh artifacts/aot/${{ matrix.rid }} "artifacts/Sidebar Diagnostics.app" 0.0.1-ci.1

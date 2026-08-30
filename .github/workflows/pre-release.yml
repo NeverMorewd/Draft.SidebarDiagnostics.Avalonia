@@ -136,11 +136,7 @@ jobs:
           find artifacts/publish -type d -name '*.dSYM' -prune -exec rm -rf {} +
           cp README.md LICENSE.md NOTICE.md THIRD-PARTY-NOTICES.md artifacts/publish/
           app='artifacts/Sidebar Diagnostics.app'
-          mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
-          cp -R artifacts/publish/. "$app/Contents/MacOS/"
-          cp src/Assets/sidebar.ico "$app/Contents/Resources/sidebar.ico"
-          sed "s/__VERSION__/${PACKAGE_VERSION#v}/g" packaging/macos/Info.plist > "$app/Contents/Info.plist"
-          chmod +x "$app/Contents/MacOS/SidebarDiagnostics.App"
+          ./scripts/Build-MacAppBundle.sh artifacts/publish "$app" "$PACKAGE_VERSION"
           ditto -c -k --sequesterRsrc --keepParent "$app" artifacts/SidebarDiagnostics-${{ matrix.rid }}.zip
           (cd artifacts && shasum -a 256 SidebarDiagnostics-${{ matrix.rid }}.zip > SidebarDiagnostics-${{ matrix.rid }}.zip.sha256)
       - uses: actions/upload-artifact@v4
