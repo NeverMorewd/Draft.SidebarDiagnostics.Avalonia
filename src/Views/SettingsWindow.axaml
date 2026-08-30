@@ -181,6 +181,13 @@
                         <CheckBox Content="Show machine name" IsChecked="{Binding ShowMachineName}" />
                         <CheckBox Content="Show clock and date" IsChecked="{Binding ShowClock}" />
                         <CheckBox Content="Use 24-hour clock" IsChecked="{Binding Use24HourClock}" />
+                        <ComboBox ItemsSource="{Binding ClockDateFormats}" SelectedItem="{Binding SelectedClockDateFormat}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ClockDateFormatOption">
+                                    <TextBlock Text="{Binding DisplayName}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <CheckBox Content="Show external IP address" IsChecked="{Binding ShowExternalIpAddress}" />
                         <TextBlock
                             FontSize="{DynamicResource FontSizeCaption}"

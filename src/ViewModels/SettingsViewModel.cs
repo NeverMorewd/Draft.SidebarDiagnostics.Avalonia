@@ -53,6 +53,11 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial bool Use24HourClock { get; set; }
 
     [ObservableProperty]
+    public partial ClockDateFormatOption SelectedClockDateFormat { get; set; } = ClockDateFormatOption.All[^1];
+
+    public IReadOnlyList<ClockDateFormatOption> ClockDateFormats { get; } = ClockDateFormatOption.All;
+
+    [ObservableProperty]
     public partial bool ShowExternalIpAddress { get; set; }
 
     [ObservableProperty]
@@ -135,6 +140,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         ShowMachineName = settings.ShowMachineName;
         ShowClock = settings.ShowClock;
         Use24HourClock = settings.Use24HourClock;
+        SelectedClockDateFormat = ClockDateFormats.Single(option => option.Value == settings.ClockDateFormat);
         ShowExternalIpAddress = settings.ShowExternalIpAddress;
         UseFahrenheit = settings.UseFahrenheit;
         SidebarWidth = settings.SidebarWidth;
@@ -197,6 +203,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             ShowMachineName = ShowMachineName,
             ShowClock = ShowClock,
             Use24HourClock = Use24HourClock,
+            ClockDateFormat = SelectedClockDateFormat.Value,
             ShowExternalIpAddress = ShowExternalIpAddress,
             UseFahrenheit = UseFahrenheit,
             SidebarWidth = SidebarWidth,

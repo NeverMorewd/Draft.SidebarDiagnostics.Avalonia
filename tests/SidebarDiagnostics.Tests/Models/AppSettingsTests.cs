@@ -66,6 +66,14 @@ public sealed class AppSettingsTests : IDisposable
         Assert.Equal(ApplicationTheme.Sidebar, settings.Normalize().Theme);
     }
 
+    [Fact]
+    public void NormalizeReplacesUnknownClockDateFormat()
+    {
+        var settings = new AppSettings { ClockDateFormat = (ClockDateFormat)999 };
+
+        Assert.Equal(ClockDateFormat.LongDate, settings.Normalize().ClockDateFormat);
+    }
+
     [Theory]
     [InlineData(" #ffa500 ", "#FFA500")]
     [InlineData("invalid", AppSettings.DefaultPipboyPrimaryColor)]

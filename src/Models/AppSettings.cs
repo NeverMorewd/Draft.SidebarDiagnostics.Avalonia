@@ -20,6 +20,7 @@ public sealed record AppSettings
     public bool ShowMachineName { get; init; } = true;
     public bool ShowClock { get; init; } = true;
     public bool Use24HourClock { get; init; } = true;
+    public ClockDateFormat ClockDateFormat { get; init; } = ClockDateFormat.LongDate;
     public bool ShowExternalIpAddress { get; init; }
     public bool UseFahrenheit { get; init; }
     public int SidebarWidth { get; init; } = 360;
@@ -48,6 +49,7 @@ public sealed record AppSettings
         SidebarWidth = Math.Clamp(SidebarWidth, 320, 640),
         BackgroundOpacity = Math.Clamp(BackgroundOpacity, 0.35, 1),
         Theme = Enum.IsDefined(Theme) ? Theme : ApplicationTheme.Sidebar,
+        ClockDateFormat = Enum.IsDefined(ClockDateFormat) ? ClockDateFormat : ClockDateFormat.LongDate,
         PipboyPrimaryColor = NormalizePipboyPrimaryColor(PipboyPrimaryColor),
         VerticalPosition = Math.Clamp(VerticalPosition, 0, 1),
         SensorPreferences = SensorPreferences

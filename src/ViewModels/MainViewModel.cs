@@ -161,9 +161,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             LatestGpuSnapshots = GpuMetricsMapper.Map(hardwareReadings);
             PlatformName = snapshot.Platform;
             LastUpdated = snapshot.Timestamp.ToLocalTime().ToString("HH:mm:ss", CultureInfo.CurrentCulture);
-            ClockText = snapshot.Timestamp.ToLocalTime().ToString(
-                Settings.Use24HourClock ? "HH:mm\ndddd, MMMM d" : "h:mm tt\ndddd, MMMM d",
-                CultureInfo.CurrentCulture);
+            ClockText = FormatClock(snapshot.Timestamp.ToLocalTime(), Settings);
             StatusText = "Live monitoring";
 
             Metrics[0].Update($"{snapshot.CpuUsagePercent:F0}%", "SYSTEM LOAD", snapshot.CpuUsagePercent);
@@ -232,6 +230,22 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         }
 
         return $"{value:F1} {units[unit]}";
+    }
+
+    internal static string FormatClock(DateTimeOffset timestamp, AppSettings settings)
+    {
+        var time = timestamp.ToString(settings.Use24HourClock ? "HH:mm" : "h:mm tt", CultureInfo.CurrentCulture);
+        var dateFormat = settings.ClockDateFormat switch
+        {
+            ClockDateFormat.None => null,
+            ClockDateFormat.MonthDay => "M",
+            ClockDateFormat.ShortDate => "d",
+            ClockDateFormat.LongDate => "D",
+            _ => "D"
+        };
+        return dateFormat is null
+            ? time
+            : $"{time}\n{timestamp.ToString(dateFormat, CultureInfo.CurrentCulture)}";
     }
 
     private void UpdateGpuMetric()
