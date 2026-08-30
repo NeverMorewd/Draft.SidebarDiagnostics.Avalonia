@@ -65,8 +65,16 @@ public sealed class ApplicationThemeService(Application application)
     private ApplicationTheme? _activeTheme;
     private IStyle? _baseTheme;
 
-    public void Apply(ApplicationTheme theme)
+    public void Apply(
+        ApplicationTheme theme,
+        string pipboyPrimaryColor = AppSettings.DefaultPipboyPrimaryColor)
     {
+        if (theme == ApplicationTheme.Pipboy
+            && !PipboyThemeManager.Instance.TrySetPrimaryColor(pipboyPrimaryColor))
+        {
+            throw new ArgumentException("The Pip-Boy primary color is invalid.", nameof(pipboyPrimaryColor));
+        }
+
         if (_activeTheme == theme)
         {
             return;

@@ -21,7 +21,7 @@ public sealed partial class ApplicationViewModel(
         mainViewModel.SettingsApplied += OnSettingsApplied;
         shortcuts.StatusChanged += OnShortcutStatusChanged;
         lifetime.Exit += OnExit;
-        themeService.Apply(mainViewModel.Settings.Theme);
+        themeService.Apply(mainViewModel.Settings.Theme, mainViewModel.Settings.PipboyPrimaryColor);
         mainViewModel.RefreshThemeResources();
         ApplyShortcuts();
     }
@@ -65,7 +65,7 @@ public sealed partial class ApplicationViewModel(
 
     private void OnSettingsApplied(object? sender, EventArgs e)
     {
-        themeService.Apply(mainViewModel.Settings.Theme);
+        themeService.Apply(mainViewModel.Settings.Theme, mainViewModel.Settings.PipboyPrimaryColor);
         mainViewModel.RefreshThemeResources();
         ApplyShortcuts();
     }
