@@ -1,5 +1,6 @@
 using System.Net.NetworkInformation;
 using SidebarDiagnostics.App.Models;
+using SidebarDiagnostics.App.Services.Diagnostics;
 using SidebarDiagnostics.App.Services.Platform;
 
 namespace SidebarDiagnostics.App.Services;
@@ -8,9 +9,7 @@ public sealed class SystemMetricsService : ISystemMetricsService
 {
     private readonly IPlatformMetricsProvider _platformMetricsProvider;
     private readonly object _syncRoot = new();
-    private DateTimeOffset _lastSampledAt = DateTimeOffset.UtcNow;
-    private long _lastReceivedBytes;
-    private long _lastSentBytes;
+    private readonly NetworkTrafficRateTracker _networkTraffic = new();
 
     public SystemMetricsService()
         : this(PlatformMetricsProviderFactory.Create())
@@ -20,7 +19,6 @@ public sealed class SystemMetricsService : ISystemMetricsService
     public SystemMetricsService(IPlatformMetricsProvider platformMetricsProvider)
     {
         _platformMetricsProvider = platformMetricsProvider;
-        (_lastReceivedBytes, _lastSentBytes) = ReadNetworkTotals();
     }
 
     public async ValueTask<SystemMetricsSnapshot> GetSnapshotAsync(CancellationToken cancellationToken)
@@ -31,20 +29,15 @@ public sealed class SystemMetricsService : ISystemMetricsService
         lock (_syncRoot)
         {
             var now = DateTimeOffset.UtcNow;
-            var elapsed = Math.Max((now - _lastSampledAt).TotalSeconds, 0.001);
             var memoryUsage = platformMetrics.MemoryTotalBytes > 0
                 ? platformMetrics.MemoryUsedBytes * 100d / platformMetrics.MemoryTotalBytes
                 : 0;
             var storage = ReadStorage();
 
-            var (receivedBytes, sentBytes) = ReadNetworkTotals();
-            var downloadRate = Math.Max(0, receivedBytes - _lastReceivedBytes) / elapsed;
-            var uploadRate = Math.Max(0, sentBytes - _lastSentBytes) / elapsed;
+            var networkRate = _networkTraffic.Update(ReadPrimaryNetworkTraffic(), now);
+            var downloadRate = networkRate.DownloadBytesPerSecond;
+            var uploadRate = networkRate.UploadBytesPerSecond;
             var networkActivity = Math.Min(100, (downloadRate + uploadRate) / 1_250_000d * 100);
-
-            _lastSampledAt = now;
-            _lastReceivedBytes = receivedBytes;
-            _lastSentBytes = sentBytes;
 
             return new SystemMetricsSnapshot(
                 now,
@@ -73,31 +66,25 @@ public sealed class SystemMetricsService : ISystemMetricsService
         return (used * 100d / drive.TotalSize, used, drive.TotalSize);
     }
 
-    private static (long Received, long Sent) ReadNetworkTotals()
+    private static NetworkTrafficSample? ReadPrimaryNetworkTraffic()
     {
-        long received = 0;
-        long sent = 0;
-
-        foreach (var networkInterface in NetworkInterface.GetAllNetworkInterfaces())
+        var networks = DiagnosticDeviceSelection.SelectPrimaryNetworks(NetworkInterface.GetAllNetworkInterfaces());
+        if (networks.Count == 0)
         {
-            if (networkInterface.OperationalStatus != OperationalStatus.Up ||
-                networkInterface.NetworkInterfaceType == NetworkInterfaceType.Loopback)
-            {
-                continue;
-            }
-
-            try
-            {
-                var statistics = networkInterface.GetIPStatistics();
-                received += statistics.BytesReceived;
-                sent += statistics.BytesSent;
-            }
-            catch (Exception exception) when (exception is NetworkInformationException or PlatformNotSupportedException)
-            {
-            }
+            return null;
         }
 
-        return (received, sent);
+        var networkInterface = networks[0];
+
+        try
+        {
+            var statistics = networkInterface.GetIPStatistics();
+            return new NetworkTrafficSample(networkInterface.Id, statistics.BytesReceived, statistics.BytesSent);
+        }
+        catch (Exception exception) when (exception is NetworkInformationException or PlatformNotSupportedException)
+        {
+            return null;
+        }
     }
 
     public void Dispose()
