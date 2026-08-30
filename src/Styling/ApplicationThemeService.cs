@@ -62,17 +62,6 @@ public sealed class ApplicationThemeService(Application application)
             ["ChartPointOutlineBrush"] = "PipboyTextBrush"
         };
 
-    private static readonly string[] PipboySquareRadiusKeys =
-    [
-        "RadiusAccentBar",
-        "RadiusControl",
-        "RadiusSmall",
-        "RadiusMedium",
-        "RadiusAction",
-        "RadiusCard",
-        "RadiusPanel"
-    ];
-
     private ApplicationTheme? _activeTheme;
     private IStyle? _baseTheme;
 
@@ -135,22 +124,12 @@ public sealed class ApplicationThemeService(Application application)
             overrides.Add(semanticKey, resource);
         }
 
-        foreach (var semanticKey in PipboySquareRadiusKeys)
-        {
-            overrides.Add(semanticKey, new CornerRadius(0));
-        }
-
         return overrides;
     }
 
     private void RemoveResourceOverrides()
     {
         foreach (var semanticKey in PipboyResourceMap.Keys)
-        {
-            application.Resources.Remove(semanticKey);
-        }
-
-        foreach (var semanticKey in PipboySquareRadiusKeys)
         {
             application.Resources.Remove(semanticKey);
         }

@@ -110,16 +110,6 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BorderDisabledBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextDimBrush}" />
     </Style>
-    <Style Selector="NumericUpDown RepeatButton, ComboBox ToggleButton">
-        <Setter Property="Background" Value="{DynamicResource BackgroundControlSecondaryBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
-    </Style>
-    <Style Selector="NumericUpDown RepeatButton:pointerover, ComboBox ToggleButton:pointerover">
-        <Setter Property="Background" Value="{DynamicResource BackgroundControlSecondaryHoverBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderHoverBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextAccentStrongBrush}" />
-    </Style>
     <Style Selector="Button">
         <Setter Property="Background" Value="{DynamicResource BackgroundControlBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
@@ -137,6 +127,16 @@
         <Setter Property="Background" Value="{DynamicResource BackgroundControlDisabledBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderDisabledBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextDimBrush}" />
+    </Style>
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccentBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextAccentStrongBrush}" />
+    </Style>
+    <Style Selector="Button.primary:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BackgroundAccentHoverBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
     <Style Selector="CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource TextBodyBrush}" />

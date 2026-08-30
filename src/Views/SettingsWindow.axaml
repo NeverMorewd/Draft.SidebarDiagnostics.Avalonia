@@ -267,7 +267,7 @@
                     TextTrimming="CharacterEllipsis"
                     ToolTip.Tip="{Binding ThemePreviewError}" />
                 <Button Grid.Column="1" Content="Cancel" Command="{Binding CancelCommand}" />
-                <Button Grid.Column="2" Content="Save changes" Command="{Binding SaveCommand}" Classes="accent" />
+                <Button Grid.Column="2" Content="Save changes" Command="{Binding SaveCommand}" Classes="primary" />
             </Grid>
         </Border>
     </Grid>
