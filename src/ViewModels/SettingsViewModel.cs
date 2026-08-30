@@ -53,6 +53,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial bool Use24HourClock { get; set; }
 
     [ObservableProperty]
+    public partial bool ShowExternalIpAddress { get; set; }
+
+    [ObservableProperty]
     public partial bool UseFahrenheit { get; set; }
 
     [ObservableProperty]
@@ -132,6 +135,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         ShowMachineName = settings.ShowMachineName;
         ShowClock = settings.ShowClock;
         Use24HourClock = settings.Use24HourClock;
+        ShowExternalIpAddress = settings.ShowExternalIpAddress;
         UseFahrenheit = settings.UseFahrenheit;
         SidebarWidth = settings.SidebarWidth;
         BackgroundOpacity = settings.BackgroundOpacity;
@@ -193,6 +197,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             ShowMachineName = ShowMachineName,
             ShowClock = ShowClock,
             Use24HourClock = Use24HourClock,
+            ShowExternalIpAddress = ShowExternalIpAddress,
             UseFahrenheit = UseFahrenheit,
             SidebarWidth = SidebarWidth,
             BackgroundOpacity = BackgroundOpacity,
