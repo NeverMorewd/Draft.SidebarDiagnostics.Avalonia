@@ -78,9 +78,9 @@
       },
       "Pipboy.Avalonia": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "ZxANDp3ZXYVTsNrwwhfGOFVuJBUoAi3XhQPnaNUb+nw5yPQA3LhCitfotByvalA81PwE1xdzt3aB52z45y9X6A==",
+        "requested": "[1.1.2, )",
+        "resolved": "1.1.2",
+        "contentHash": "cF7f148BxgRpuP4236xh0F3UQsYG1fLXyh2r6WSp29dgQMNMT/U/a7LfZaO6SAr+6Ae6CdpakxoD61lVVJ4AeA==",
         "dependencies": {
           "Avalonia": "12.0.1"
         }
