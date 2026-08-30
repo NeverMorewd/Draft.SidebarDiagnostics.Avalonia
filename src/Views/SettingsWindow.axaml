@@ -10,18 +10,24 @@
         MinHeight="600"
         WindowStartupLocation="CenterOwner"
         Background="{DynamicResource BackgroundWindowBrush}">
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <Grid RowDefinitions="Auto,*,Auto">
+        <StackPanel
+            Grid.Row="0"
+            MaxWidth="920"
+            Margin="28,24,28,16"
+            HorizontalAlignment="Stretch"
+            Spacing="4">
+            <TextBlock Text="SETTINGS" FontSize="{DynamicResource FontSizeBody}" FontWeight="SemiBold" Foreground="{DynamicResource TextAccentBrush}" LetterSpacing="1.8" />
+            <TextBlock Text="Monitoring preferences" FontSize="{DynamicResource FontSizePageTitle}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+            <TextBlock Text="Changes apply immediately and persist after saving." FontSize="{DynamicResource FontSizeDescription}" Foreground="{DynamicResource TextMutedBrush}" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
         <StackPanel
             MaxWidth="920"
-            Margin="28"
+            Margin="28,0,28,24"
             HorizontalAlignment="Stretch"
             Spacing="22">
-            <StackPanel Spacing="4">
-                <TextBlock Text="SETTINGS" FontSize="{DynamicResource FontSizeBody}" FontWeight="SemiBold" Foreground="{DynamicResource TextAccentBrush}" LetterSpacing="1.8" />
-                <TextBlock Text="Monitoring preferences" FontSize="{DynamicResource FontSizePageTitle}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
-                <TextBlock Text="Changes apply immediately and persist across sessions." FontSize="{DynamicResource FontSizeDescription}" Foreground="{DynamicResource TextMutedBrush}" />
-            </StackPanel>
-
             <Border Classes="card">
                 <StackPanel Spacing="10">
                     <TextBlock Text="Global shortcuts" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
@@ -48,7 +54,7 @@
             <Border Classes="card">
                 <StackPanel Spacing="12">
                     <TextBlock Text="Appearance" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" />
-                    <Grid ColumnDefinitions="*,110" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                    <Grid ColumnDefinitions="*,110" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
                         <TextBlock Text="Theme" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
                         <ComboBox Grid.Column="1" ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}">
                             <ComboBox.ItemTemplate>
@@ -57,17 +63,10 @@
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.ColumnSpan="2"
-                            Foreground="{DynamicResource TextDangerBrush}"
-                            IsVisible="{Binding !!ThemePreviewError}"
-                            Text="{Binding ThemePreviewError}"
-                            TextWrapping="Wrap" />
-                        <TextBlock Grid.Row="2" Text="Sidebar width" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SidebarWidth}" Minimum="320" Maximum="640" Increment="10" FormatString="0 px" />
-                        <TextBlock Grid.Row="3" Text="Opacity" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
-                        <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding BackgroundOpacity}" Minimum="0.35" Maximum="1" Increment="0.05" FormatString="0%" />
+                        <TextBlock Grid.Row="1" Text="Sidebar width" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
+                        <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding SidebarWidth}" Minimum="320" Maximum="640" Increment="10" FormatString="0 px" />
+                        <TextBlock Grid.Row="2" Text="Opacity" VerticalAlignment="Center" Foreground="{DynamicResource TextBodyBrush}" />
+                        <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding BackgroundOpacity}" Minimum="0.35" Maximum="1" Increment="0.05" FormatString="0%" />
                     </Grid>
                     <CheckBox Content="Show machine name" IsChecked="{Binding ShowMachineName}" />
                     <CheckBox Content="Show clock and date" IsChecked="{Binding ShowClock}" />
@@ -250,10 +249,26 @@
                 </StackPanel>
             </Border>
 
-            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+        </StackPanel>
+        </ScrollViewer>
+
+        <Border
+            Grid.Row="2"
+            Padding="28,14"
+            Background="{DynamicResource BackgroundPanelBrush}"
+            BorderBrush="{DynamicResource BorderChromeBrush}"
+            BorderThickness="{DynamicResource ThicknessChromeTop}">
+            <Grid MaxWidth="920" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource TextDangerBrush}"
+                    IsVisible="{Binding !!ThemePreviewError}"
+                    Text="{Binding ThemePreviewError}"
+                    TextTrimming="CharacterEllipsis"
+                    ToolTip.Tip="{Binding ThemePreviewError}" />
                 <Button Grid.Column="1" Content="Cancel" Command="{Binding CancelCommand}" />
                 <Button Grid.Column="2" Content="Save changes" Command="{Binding SaveCommand}" Classes="accent" />
             </Grid>
-        </StackPanel>
-    </ScrollViewer>
+        </Border>
+    </Grid>
 </Window>
