@@ -48,7 +48,8 @@
                         FontWeight="SemiBold"
                         Foreground="{DynamicResource TextPrimaryBrush}"
                         IsVisible="{Binding IsMachineNameVisible}"
-                        Text="{Binding MachineName}" />
+                        Text="{Binding MachineName}"
+                        TextWrapping="Wrap" />
                     <TextBlock
                         FontSize="{DynamicResource FontSizeCaption}"
                         Foreground="{DynamicResource TextMutedBrush}"
@@ -135,7 +136,7 @@
                                                 FontSize="{DynamicResource FontSizeCaption}"
                                                 Foreground="{DynamicResource TextDimBrush}"
                                                 Text="{Binding Subtitle}"
-                                                TextTrimming="CharacterEllipsis" />
+                                                TextWrapping="Wrap" />
                                         </StackPanel>
                                     </Grid>
                                     <ItemsControl ItemsSource="{Binding Metrics}">
@@ -145,15 +146,15 @@
                                                     Margin="0,2"
                                                     Background="{DynamicResource TransparentBrush}"
                                                     Classes="metric-row"
-                                                    ColumnDefinitions="110,*,Auto">
+                                                    ColumnDefinitions="1.05*,*,Auto"
+                                                    ColumnSpacing="8">
                                                     <TextBlock
                                                         FontSize="{DynamicResource FontSizeBody}"
                                                         Foreground="{DynamicResource TextMutedBrush}"
                                                         Text="{Binding Label}"
-                                                        TextTrimming="CharacterEllipsis" />
+                                                        TextWrapping="Wrap" />
                                                     <TextBlock
                                                         Grid.Column="1"
-                                                        Margin="10,0,0,0"
                                                         FontSize="{DynamicResource FontSizeBody}"
                                                         FontWeight="Medium"
                                                         Foreground="{DynamicResource TextSecondaryBrush}"
@@ -210,7 +211,9 @@
                     VerticalAlignment="Center"
                     FontSize="{DynamicResource FontSizeBody}"
                     Foreground="{DynamicResource TextMutedBrush}"
-                    Text="{Binding StatusText}" />
+                    Text="{Binding StatusText}"
+                    TextTrimming="CharacterEllipsis"
+                    ToolTip.Tip="{Binding StatusText}" />
                 <TextBlock
                     Grid.Column="2"
                     VerticalAlignment="Center"

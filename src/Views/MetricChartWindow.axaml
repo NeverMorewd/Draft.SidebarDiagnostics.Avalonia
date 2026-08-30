@@ -12,8 +12,11 @@
     ExtendClientAreaToDecorationsHint="True"
     WindowDecorations="BorderOnly"
     WindowStartupLocation="CenterScreen">
-    <Grid RowDefinitions="56,Auto,*">
-        <Border BorderBrush="{DynamicResource BorderChromeBrush}" BorderThickness="{DynamicResource ThicknessChromeBottom}">
+    <Grid RowDefinitions="Auto,Auto,*">
+        <Border
+            MinHeight="56"
+            BorderBrush="{DynamicResource BorderChromeBrush}"
+            BorderThickness="{DynamicResource ThicknessChromeBottom}">
             <Grid
                 Margin="16,0,12,0"
                 ColumnDefinitions="*,Auto,Auto"
@@ -51,7 +54,7 @@
                                 MaxWidth="480"
                                 FontSize="{DynamicResource FontSizeCaption}"
                                 Foreground="{DynamicResource TextSubtleBrush}"
-                                TextTrimming="CharacterEllipsis" />
+                                TextWrapping="Wrap" />
                         </StackPanel>
                     </Grid>
                 </Border>
