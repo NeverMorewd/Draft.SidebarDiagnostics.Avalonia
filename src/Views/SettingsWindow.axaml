@@ -181,6 +181,12 @@
                         <CheckBox Content="Show machine name" IsChecked="{Binding ShowMachineName}" />
                         <CheckBox Content="Show clock and date" IsChecked="{Binding ShowClock}" />
                         <CheckBox Content="Use 24-hour clock" IsChecked="{Binding Use24HourClock}" />
+                        <CheckBox Content="Show external IP address" IsChecked="{Binding ShowExternalIpAddress}" />
+                        <TextBlock
+                            FontSize="{DynamicResource FontSizeCaption}"
+                            Foreground="{DynamicResource TextMutedBrush}"
+                            Text="Uses api.ipify.org and caches the result for 30 minutes."
+                            TextWrapping="Wrap" />
                         <CheckBox Content="Show temperatures in Fahrenheit" IsChecked="{Binding UseFahrenheit}" />
                     </StackPanel>
                 </Border>

@@ -13,7 +13,7 @@ This audit compares the Avalonia port with the public features and settings of t
 | Hardware sensors | Platform-limited | Broad LibreHardwareMonitor support on Windows; standard hwmon sensors on Linux; no stable public macOS equivalent. |
 | Live graphs | Complete | Every primary metric has bounded history. |
 | Dedicated configurable graph window | Redesigned | Integrated charts replace the secondary window. |
-| External and local IP display | Not migrated | Omitted to avoid external calls and accidental address disclosure. |
+| External and local IP display | Complete | Local addresses are shown automatically. External address lookup is opt-in and cached. |
 
 ## Presentation and settings
 

@@ -20,6 +20,7 @@ public sealed record AppSettings
     public bool ShowMachineName { get; init; } = true;
     public bool ShowClock { get; init; } = true;
     public bool Use24HourClock { get; init; } = true;
+    public bool ShowExternalIpAddress { get; init; }
     public bool UseFahrenheit { get; init; }
     public int SidebarWidth { get; init; } = 360;
     public double BackgroundOpacity { get; init; } = 1;

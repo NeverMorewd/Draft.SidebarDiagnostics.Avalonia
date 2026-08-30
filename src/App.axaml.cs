@@ -9,6 +9,7 @@ using SidebarDiagnostics.App.Services.Startup;
 using SidebarDiagnostics.App.ViewModels;
 using SidebarDiagnostics.App.Views;
 using SidebarDiagnostics.App.Services.Shortcuts;
+using SidebarDiagnostics.App.Services.Networking;
 using SidebarDiagnostics.App.Styling;
 
 namespace SidebarDiagnostics.App;
@@ -36,7 +37,8 @@ public partial class App : Application
                 settingsStore,
                 hardwareSensorService,
                 autoStartService,
-                new ExternalMetricService());
+                new ExternalMetricService(),
+                new ExternalIpAddressService());
             var mainWindow = new MainWindow(themeService)
             {
                 DataContext = mainViewModel,

@@ -9,6 +9,7 @@ using SidebarDiagnostics.App.Services.ExternalMetrics;
 using SidebarDiagnostics.App.Services.Diagnostics;
 using SidebarDiagnostics.App.Services.Hardware;
 using SidebarDiagnostics.App.Services.Startup;
+using SidebarDiagnostics.App.Services.Networking;
 
 namespace SidebarDiagnostics.App.ViewModels;
 
@@ -19,6 +20,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     private readonly IHardwareSensorService _hardwareSensorService;
     private readonly IAutoStartService _autoStartService;
     private readonly IExternalMetricService _externalMetricService;
+    private readonly IExternalIpAddressService _externalIpAddressService;
     private readonly DispatcherTimer _timer;
     private readonly SemaphoreSlim _refreshGate = new(1, 1);
     private readonly CancellationTokenSource _lifetimeCancellation = new();
@@ -83,7 +85,8 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             new JsonSettingsStore(),
             HardwareSensorServiceFactory.Create(),
             AutoStartServiceFactory.Create(),
-            new ExternalMetricService())
+            new ExternalMetricService(),
+            new ExternalIpAddressService())
     {
     }
 
@@ -92,13 +95,15 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         ISettingsStore settingsStore,
         IHardwareSensorService hardwareSensorService,
         IAutoStartService autoStartService,
-        IExternalMetricService externalMetricService)
+        IExternalMetricService externalMetricService,
+        IExternalIpAddressService externalIpAddressService)
     {
         _metricsService = metricsService;
         _settingsStore = settingsStore;
         _hardwareSensorService = hardwareSensorService;
         _autoStartService = autoStartService;
         _externalMetricService = externalMetricService;
+        _externalIpAddressService = externalIpAddressService;
         _timer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Background, OnTick);
         _timer.Start();
         _ = InitializeAsync();
@@ -149,6 +154,9 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         {
             var snapshot = await _metricsService.GetSnapshotAsync(_lifetimeCancellation.Token);
             var hardwareReadings = await ReadHardwareSafelyAsync(_lifetimeCancellation.Token);
+            var externalIpAddress = Settings.ShowExternalIpAddress
+                ? await _externalIpAddressService.GetAddressAsync(_lifetimeCancellation.Token)
+                : null;
             LatestHardwareReadings = hardwareReadings;
             LatestGpuSnapshots = GpuMetricsMapper.Map(hardwareReadings);
             PlatformName = snapshot.Platform;
@@ -177,7 +185,8 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
                 snapshot,
                 visibleReadings,
                 Settings.UseFahrenheit,
-                LatestGpuSnapshots);
+                LatestGpuSnapshots,
+                externalIpAddress);
             MetricSeries.Update(DiagnosticSections, snapshot.Timestamp);
         }
         catch (OperationCanceledException) when (_lifetimeCancellation.IsCancellationRequested)
@@ -318,5 +327,6 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         _metricsService.Dispose();
         _hardwareSensorService.Dispose();
         _externalMetricService.Dispose();
+        _externalIpAddressService.Dispose();
     }
 }

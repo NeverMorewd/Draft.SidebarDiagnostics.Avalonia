@@ -12,13 +12,14 @@ public static class DetailedDiagnosticsBuilder
         SystemMetricsSnapshot snapshot,
         IReadOnlyList<HardwareSensorReading> readings,
         bool fahrenheit,
-        IReadOnlyList<GpuSnapshot>? gpuSnapshots = null)
+        IReadOnlyList<GpuSnapshot>? gpuSnapshots = null,
+        string? externalIpAddress = null)
     {
         var sections = new List<DiagnosticSection> { BuildCpu(snapshot, readings, fahrenheit), BuildMemory(snapshot, readings, fahrenheit) };
         AddSafely(sections, () => BuildGpus(readings, gpuSnapshots ?? GpuMetricsMapper.Map(readings), fahrenheit));
         AddSafely(sections, () => BuildStorageDevices(readings, fahrenheit));
         AddSafely(sections, () => BuildDrives(readings, fahrenheit));
-        AddSafely(sections, () => BuildNetworks(snapshot));
+        AddSafely(sections, () => BuildNetworks(snapshot, externalIpAddress));
         AddSafely(sections, () => BuildHardware(readings.Where(x => x.DeviceType is HardwareDeviceType.Motherboard or HardwareDeviceType.Controller), ThemeResourceKeys.HardwareAccent, fahrenheit));
         return sections.Where(x => x.Metrics.Count > 0).ToArray();
     }
@@ -141,7 +142,7 @@ public static class DetailedDiagnosticsBuilder
                 ThemeResourceKeys.StorageAccent,
                 Deduplicate([new("Model", group.First().Device), .. MapSensors(group, fahrenheit)])));
 
-    private static IEnumerable<DiagnosticSection> BuildNetworks(SystemMetricsSnapshot snapshot)
+    private static IEnumerable<DiagnosticSection> BuildNetworks(SystemMetricsSnapshot snapshot, string? externalIpAddress)
     {
         var activeNetworks = DiagnosticDeviceSelection.SelectPrimaryNetworks(NetworkInterface.GetAllNetworkInterfaces());
         for (var index = 0; index < activeNetworks.Count; index++)
@@ -163,6 +164,10 @@ public static class DetailedDiagnosticsBuilder
                 metrics.Add(Numeric("Upload", $"{FormatBytes(snapshot.UploadBytesPerSecond)}/s", $"network:{network.Id}:upload", snapshot.UploadBytesPerSecond / 1024d, "KB/s"));
             }
             if (addresses.Length > 0) metrics.Add(new("IP addresses", string.Join(", ", addresses)));
+            if (index == 0 && !string.IsNullOrWhiteSpace(externalIpAddress))
+            {
+                metrics.Add(new("External IP address", externalIpAddress));
+            }
             yield return new($"network:{network.Id}", "Network", network.Name, ThemeResourceKeys.NetworkAccent, metrics);
         }
     }
