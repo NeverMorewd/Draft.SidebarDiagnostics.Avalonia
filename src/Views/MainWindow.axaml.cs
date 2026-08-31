@@ -289,7 +289,7 @@ public partial class MainWindow : Window
 
     private void OpenMetricChart(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Control { DataContext: DiagnosticMetric metric }
+        if (sender is not Control { DataContext: DiagnosticMetricViewModel metric }
             || metric.SeriesId is null
             || _viewModel?.MetricSeries.Get(metric.SeriesId) is not { } series)
         {

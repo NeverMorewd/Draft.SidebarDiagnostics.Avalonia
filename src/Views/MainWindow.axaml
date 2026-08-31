@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:SidebarDiagnostics.App.Models"
     xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
     Title="Sidebar Diagnostics"
     Width="360"
@@ -113,7 +112,7 @@
             <StackPanel Margin="16,10">
                 <ItemsControl ItemsSource="{Binding DiagnosticSections}">
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="models:DiagnosticSection">
+                        <DataTemplate x:DataType="vm:DiagnosticSectionViewModel">
                             <Border
                                 Margin="0,0,0,10"
                                 Padding="{DynamicResource PaddingCompactCard}"
@@ -142,7 +141,7 @@
                                     </Grid>
                                     <ItemsControl ItemsSource="{Binding Metrics}">
                                         <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="models:DiagnosticMetric">
+                                            <DataTemplate x:DataType="vm:DiagnosticMetricViewModel">
                                                 <Grid
                                                     Margin="0,2"
                                                     Background="{DynamicResource TransparentBrush}"
