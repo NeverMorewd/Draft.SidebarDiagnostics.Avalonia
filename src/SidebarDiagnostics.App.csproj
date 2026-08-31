@@ -45,7 +45,7 @@
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" />
-    <PackageReference Include="Pipboy.Avalonia" Version="1.1.2" />
+    <PackageReference Include="Pipboy.Avalonia" Version="1.1.3-beta" />
     <PackageReference Include="SharpHook" Version="8.0.0" />
   </ItemGroup>
 
