@@ -108,7 +108,8 @@
         <ScrollViewer
             x:Name="MainScroll"
             Grid.Row="1"
-            VerticalScrollBarVisibility="Hidden">
+            Classes="sidebar-scroll"
+            VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="16,10">
                 <ItemsControl ItemsSource="{Binding DiagnosticSections}">
                     <ItemsControl.ItemTemplate>
