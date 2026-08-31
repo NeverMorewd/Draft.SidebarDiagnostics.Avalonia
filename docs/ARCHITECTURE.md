@@ -10,8 +10,9 @@ The port is designed around four constraints: platform parity, predictable resou
 2. The provider samples system-wide CPU and memory data.
 3. `SystemMetricsService` combines native data with portable storage and network statistics.
 4. The service returns an immutable `SystemMetricsSnapshot`.
-5. `MainViewModel` formats the snapshot and updates bounded histories.
-6. Avalonia views render cards, progress states, and sparklines.
+5. `MainViewModel` merges visible hardware and external readings into diagnostic sections.
+6. `MetricSeriesCatalog` maintains bounded histories for graphable rows.
+7. Avalonia views render responsive sections and open dedicated live chart windows on demand.
 
 ## Platform boundary
 
@@ -19,7 +20,7 @@ All operating-system calls live under `Services/Platform`. Code outside that dir
 
 ## Data lifetime
 
-Sampling is performed on a fixed interval controlled by user settings. Every metric keeps a bounded 60-sample history. Settings are normalized before use and written through a temporary file followed by an atomic replacement.
+Sampling is performed on a fixed interval controlled by user settings. Every graphable metric keeps bounded history. Remote external-IP lookup runs outside the core sampling path and uses a cached result. Settings are normalized before use and written through a temporary file followed by an atomic replacement.
 
 ## Theme boundary
 

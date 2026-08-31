@@ -27,6 +27,61 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 - Automated dependency, legacy-driver artifact, and long-running stability audits
 - Self-contained release archives, macOS app bundles, and SHA-256 checksums
 
+## Avalonia Port Challenge
+
+This project is an entry in the [2026 Avalonia Port Challenge](https://avaloniaui.net/blog/avalonia-port-challenge). It targets **Best Cross-Platform Port**, **Best Legacy Revival**, **Best Everyday Tool**, and **Best IT Pro Tool**: Sidebar Diagnostics is a mature Windows utility whose core job—keeping detailed machine health visible at a glance—benefits directly from a careful cross-platform rebuild.
+
+### Before and after
+
+| Original .NET Framework 4.7.2 WPF application | Avalonia 12 and .NET 10 port |
+| --- | --- |
+| <img src="docs/images/wpf-before-windows.png" alt="Original WPF Sidebar Diagnostics on Windows" width="180"> | <img src="docs/images/avalonia-after-windows.png" alt="Avalonia Sidebar Diagnostics on Windows using the Pip-Boy theme" width="360"> |
+
+The new UI keeps the dense, glanceable sidebar rather than reducing the application to a generic dashboard. It adds complete model and capacity information, per-core and hardware-sensor rows, responsive text layout, per-metric live chart windows, searchable sensor configuration, two live-switchable themes, and modern tray and settings experiences. Nonessential chrome still disappears when the pointer leaves the sidebar.
+
+<p align="center">
+  <img src="docs/images/avalonia-settings.png" alt="Avalonia settings window using the Pip-Boy theme" width="440">
+</p>
+
+### What the migration cost
+
+This was a rewrite across four intensive calendar days, not a namespace substitution. The repository reached its first submission-ready state through 95 focused commits. At the time of this write-up, the hand-written application contains approximately 6,100 lines across 93 C# and AXAML files, plus approximately 1,300 lines of tests. The original application contains approximately 11,700 lines across 44 C# and XAML files when generated output is excluded. Those counts are a scale indicator, not a claim that fewer lines mean less work: most of the effort went into recovering behavior behind Windows-specific APIs and then proving the replacement on three operating systems.
+
+The largest costs were outside the visual tree:
+
+- separating monitoring, settings, window management, startup integration, shortcuts, and packaging from the WPF application singleton;
+- replacing Windows performance counters with native Windows, Mach, `/proc`, and hwmon providers;
+- preserving Windows AppBar work-area reservation without leaking that behavior into macOS or Linux code;
+- making tray activation, close-to-tray, global shortcuts, launch-at-login, multi-display placement, and application reopen behavior honest on each desktop;
+- making JSON, view creation, hardware integration, and packaging survive full trimming and Native AOT;
+- repeatedly comparing the running port with the original so detailed information was restored instead of merely producing a visually similar shell.
+
+### What translated cleanly
+
+Avalonia's XAML, binding model, styles, resources, and desktop lifetime made the high-level WPF concepts familiar. Immutable snapshots and `CommunityToolkit.Mvvm` also made the presentation layer smaller and easier to test. Once each operating system produced the same metric models, CPU, memory, storage, network, GPU, sensor cards, alert state, and chart history could share one UI and one ViewModel.
+
+The theme boundary worked especially well. Application views consume semantic resources instead of theme-specific colors. The default design uses Fluent control templates and the Sidebar palette; [Pipboy.Avalonia](https://github.com/NeverMorewd/Pipboy.Avalonia) can replace that theme at runtime and generate the monochromatic palette from one selected primary color. Existing windows update without reconstruction, while a cancelled settings preview restores the previous theme.
+
+### What required rethinking
+
+The original mixed WPF controls, performance counters, hardware access, shell integration, update behavior, and mutable settings in one Windows-oriented project. Translating those files directly would have produced a Windows application wearing Avalonia controls. The port instead starts at explicit boundaries: platform metric providers return immutable snapshots; hardware sensors, startup registration, global shortcuts, external sources, window placement, and reserved screen space are independent services; the ViewModels never need to know how `/proc/stat`, Mach host statistics, or `GetSystemTimes` work.
+
+Some behavior was deliberately redesigned. Every graphable row now opens its own draggable, pinnable live chart instead of using one global graph configuration window. A curated semantic design system replaces arbitrary per-control fonts and colors. Updates are immutable GitHub Release artifacts with checksums rather than an in-process updater. The tray remains available because it is the safe recovery path for a hidden or click-through sidebar.
+
+### The surprises
+
+- Cross-platform did not mean using the same API everywhere. It meant presenting the same contract while respecting what each operating system can truthfully report.
+- Network and volume enumeration needed selection policies. Virtual adapters, tunnels, container mounts, pseudo-filesystems, and WSL devices otherwise overwhelmed the sidebar.
+- A visually successful port can still be functionally incomplete. Two late audits found settings that were persisted but no longer affected the current visual tree, and external JSON values that were sampled into an obsolete card pipeline. Tests and WPF-to-port parity reviews caught both.
+- Native AOT exposed assumptions hidden by ordinary JIT builds. Source-generated JSON metadata, explicit view construction, platform-specific publish runners, and an isolated LibreHardwareMonitor compatibility boundary were necessary.
+- Desktop integration is where platform differences are sharpest. Windows supports a true AppBar and native pointer pass-through; macOS and Linux use their own startup, activation, shortcut, tray, and window-manager conventions rather than pretending those Windows shell concepts exist unchanged.
+
+### Result
+
+One source tree now builds trimmed Native AOT artifacts for `win-x64`, `linux-x64`, `linux-arm64`, `osx-x64`, and `osx-arm64`. CI builds and tests on Windows, Ubuntu, and macOS, validates every Native AOT target on matching runners, packages conventional macOS `.app` bundles and Debian packages, generates WinGet and Homebrew metadata, and publishes checksums. The current test suite covers platform parsing, selection policies, settings normalization, chart histories, placement, alerts, startup files, package metadata, security checks, and failure recovery.
+
+The result is not identical platform data disguised as parity. Windows retains broad LibreHardwareMonitor coverage and AppBar integration; Linux reads standard hwmon sensors; macOS uses stable public Mach and `sysctl` metrics and reports the absence of a public general-purpose hardware sensor API honestly. The detailed feature comparison is maintained in [the parity audit](docs/PARITY.md), and the implementation boundaries are documented in [the architecture notes](docs/ARCHITECTURE.md).
+
 ## Platform support
 
 | Capability | Windows | macOS | Linux |
