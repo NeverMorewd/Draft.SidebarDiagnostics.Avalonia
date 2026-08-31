@@ -24,9 +24,9 @@ This approach avoids carrying Windows assumptions into cross-platform code and g
 
 All platforms report interval CPU utilization, with per-core load on macOS and Linux. Hardware temperature and device-sensor coverage still differs because macOS does not expose a stable public equivalent to LibreHardwareMonitor or Linux hwmon. Platform providers report only values supported by the operating system rather than presenting placeholders as measurements.
 
-## Remaining migration work
+## Release preparation still requiring external credentials or hardware
 
-- Additional hardware clocks, fan speeds, and per-device utilization where native APIs permit
 - macOS signing and notarization
-- Native installers and signed release artifacts
-- Before-and-after screenshots and measured resource comparisons
+- Windows code signing
+- Final macOS and Linux screenshots captured on physical or representative target desktops
+- Submission of generated WinGet and Homebrew metadata to their community indexes after the first stable release
