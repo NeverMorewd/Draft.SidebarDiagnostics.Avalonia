@@ -18,6 +18,7 @@
         <SolidColorBrush x:Key="BackgroundAccentHoverBrush" Color="#17314A" />
         <SolidColorBrush x:Key="BackgroundDangerSubtleBrush" Color="#2A1720" />
         <SolidColorBrush x:Key="BackgroundDangerHoverBrush" Color="#7F1D2D" />
+        <SolidColorBrush x:Key="BackgroundChromeCloseHoverBrush" Color="#7F1D2D" />
         <SolidColorBrush x:Key="BackgroundSuccessBrush" Color="#0D332D" />
         <SolidColorBrush x:Key="BackgroundMenuBrush" Color="#0D1521" />
         <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
@@ -31,6 +32,7 @@
         <SolidColorBrush x:Key="BorderChromeBrush" Color="#1B283A" />
         <SolidColorBrush x:Key="BorderAccentBrush" Color="#4EA7D8" />
         <SolidColorBrush x:Key="BorderDangerBrush" Color="#BE3651" />
+        <SolidColorBrush x:Key="BorderChromeCloseHoverBrush" Color="#BE3651" />
 
         <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F8FAFC" />
         <SolidColorBrush x:Key="TextSecondaryBrush" Color="#E2E8F0" />
@@ -41,6 +43,7 @@
         <SolidColorBrush x:Key="TextAccentBrush" Color="#7DD3FC" />
         <SolidColorBrush x:Key="TextAccentStrongBrush" Color="#BAE6FD" />
         <SolidColorBrush x:Key="TextDangerBrush" Color="#FDA4AF" />
+        <SolidColorBrush x:Key="TextChromeCloseHoverBrush" Color="#F8FAFC" />
         <SolidColorBrush x:Key="TextSuccessBrush" Color="#6EE7B7" />
 
         <SolidColorBrush x:Key="AccentCpuBrush" Color="#7DD3FC" />
@@ -264,12 +267,12 @@
         <Setter Property="Stroke" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
     <Style Selector="Button.chrome.close:pointerover">
-        <Setter Property="Background" Value="{DynamicResource BackgroundDangerHoverBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderDangerBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundChromeCloseHoverBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderChromeCloseHoverBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextChromeCloseHoverBrush}" />
     </Style>
     <Style Selector="Button.chrome.close:pointerover Path.chrome-icon">
-        <Setter Property="Stroke" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource TextChromeCloseHoverBrush}" />
     </Style>
     <Style Selector="Button.pinned">
         <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
