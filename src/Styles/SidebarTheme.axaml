@@ -203,14 +203,13 @@
         <Setter Property="Background" Value="{DynamicResource BackgroundAccentSubtleBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextAccentStrongBrush}" />
     </Style>
-    <Style Selector="ScrollBar">
-        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+    <Style Selector="ScrollViewer.sidebar-scroll /template/ ScrollBar#PART_VerticalScrollBar">
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="IsHitTestVisible" Value="False" />
     </Style>
-    <Style Selector="ScrollBar /template/ Thumb">
-        <Setter Property="Background" Value="{DynamicResource BorderHoverBrush}" />
-    </Style>
-    <Style Selector="ScrollBar /template/ Thumb:pointerover">
-        <Setter Property="Background" Value="{DynamicResource TextSubtleBrush}" />
+    <Style Selector="ScrollViewer.sidebar-scroll.chrome-visible /template/ ScrollBar#PART_VerticalScrollBar">
+        <Setter Property="Opacity" Value="1" />
+        <Setter Property="IsHitTestVisible" Value="True" />
     </Style>
     <Style Selector="MenuFlyoutPresenter">
         <Setter Property="MinWidth" Value="220" />

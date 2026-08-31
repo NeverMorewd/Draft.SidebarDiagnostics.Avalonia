@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
@@ -75,9 +74,7 @@ public partial class MainWindow : Window
     {
         HeaderChrome.IsVisible = isVisible;
         FooterChrome.IsVisible = isVisible;
-        MainScroll.VerticalScrollBarVisibility = isVisible
-            ? ScrollBarVisibility.Auto
-            : ScrollBarVisibility.Hidden;
+        MainScroll.Classes.Set("chrome-visible", isVisible);
     }
 
     private void OnDataContextChanged(object? sender, EventArgs e)
