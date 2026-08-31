@@ -9,6 +9,7 @@ using SidebarDiagnostics.App.Services.Diagnostics;
 using SidebarDiagnostics.App.Services.Hardware;
 using SidebarDiagnostics.App.Services.Startup;
 using SidebarDiagnostics.App.Services.Networking;
+using System.Collections.ObjectModel;
 
 namespace SidebarDiagnostics.App.ViewModels;
 
@@ -27,6 +28,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     private Task? _externalIpRefreshTask;
     private string? _externalIpAddress;
     private IReadOnlyList<DiagnosticSection> _externalMetricSections = [];
+    private readonly DiagnosticSectionCollection _diagnosticSections = new();
 
     [ObservableProperty]
     public partial string MachineName { get; set; } = Environment.MachineName;
@@ -57,8 +59,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     public IReadOnlyList<DisplayDescriptor> AvailableDisplays { get; private set; } = [];
     public MetricSeriesCatalog MetricSeries { get; } = new();
 
-    [ObservableProperty]
-    public partial IReadOnlyList<DiagnosticSection> DiagnosticSections { get; set; } = [];
+    public ObservableCollection<DiagnosticSectionViewModel> DiagnosticSections => _diagnosticSections.Items;
 
     public AppSettings Settings { get; private set; } = AppSettings.Default;
 
@@ -66,7 +67,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     public string ShortcutStatus { get; private set; } = "Global shortcuts are initializing.";
 
     public void UpdateShortcutStatus(string status) => ShortcutStatus = status;
-    public void RefreshThemeResources() => DiagnosticSections = [.. DiagnosticSections];
+    public void RefreshThemeResources() => _diagnosticSections.RefreshThemeResources();
     public event EventHandler? DisplaysChanged;
 
     public MainViewModel()
@@ -160,11 +161,12 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
                 Settings.UseFahrenheit,
                 LatestGpuSnapshots,
                 _externalIpAddress);
-            DiagnosticSections = DiagnosticAlertPolicy.Apply(
+            var diagnosticSnapshots = DiagnosticAlertPolicy.Apply(
                 [.. sections, .. _externalMetricSections],
                 Settings,
                 snapshot.NetworkActivityPercent);
-            MetricSeries.Update(DiagnosticSections, snapshot.Timestamp);
+            _diagnosticSections.Update(diagnosticSnapshots);
+            MetricSeries.Update(diagnosticSnapshots, snapshot.Timestamp);
         }
         catch (OperationCanceledException) when (_lifetimeCancellation.IsCancellationRequested)
         {
