@@ -34,7 +34,8 @@
             <TextBlock
                 FontSize="{DynamicResource FontSizeDescription}"
                 Foreground="{DynamicResource TextMutedBrush}"
-                Text="Changes apply immediately and persist after saving." />
+                Text="Changes apply immediately and persist after saving."
+                TextWrapping="Wrap" />
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
@@ -181,6 +182,23 @@
                         <CheckBox Content="Show machine name" IsChecked="{Binding ShowMachineName}" />
                         <CheckBox Content="Show clock and date" IsChecked="{Binding ShowClock}" />
                         <CheckBox Content="Use 24-hour clock" IsChecked="{Binding Use24HourClock}" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextBodyBrush}"
+                                Text="Date format" />
+                            <ComboBox
+                                Grid.Column="1"
+                                MinWidth="140"
+                                ItemsSource="{Binding ClockDateFormats}"
+                                SelectedItem="{Binding SelectedClockDateFormat}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ClockDateFormatOption">
+                                        <TextBlock Text="{Binding DisplayName}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
                         <CheckBox Content="Show external IP address" IsChecked="{Binding ShowExternalIpAddress}" />
                         <TextBlock
                             FontSize="{DynamicResource FontSizeCaption}"
@@ -371,7 +389,7 @@
                                                     FontSize="{DynamicResource FontSizeCaption}"
                                                     Foreground="{DynamicResource TextDimBrush}"
                                                     Text="{Binding Device}"
-                                                    TextTrimming="CharacterEllipsis" />
+                                                    TextWrapping="Wrap" />
                                             </StackPanel>
                                             <StackPanel
                                                 Grid.Column="2"
@@ -497,6 +515,11 @@
                 <Border Classes="card">
                     <StackPanel Spacing="12">
                         <CheckBox Content="Keep the sidebar above other windows" IsChecked="{Binding AlwaysOnTop}" />
+                        <CheckBox
+                            Content="Let pointer input pass through the sidebar"
+                            IsChecked="{Binding ClickThrough}"
+                            IsEnabled="{Binding IsClickThroughSupported}"
+                            ToolTip.Tip="Windows only. Use the tray menu or a global shortcut to open settings again." />
                         <CheckBox Content="Launch at login" IsChecked="{Binding LaunchAtLogin}" />
                         <CheckBox Content="Start minimized" IsChecked="{Binding StartMinimized}" />
                     </StackPanel>

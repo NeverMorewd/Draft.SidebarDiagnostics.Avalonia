@@ -1,5 +1,4 @@
 using SidebarDiagnostics.App.Styling;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -25,7 +24,9 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     private readonly SemaphoreSlim _refreshGate = new(1, 1);
     private readonly CancellationTokenSource _lifetimeCancellation = new();
     private bool _isDisposed;
-    private readonly Dictionary<string, MetricCardViewModel> _externalMetricCards = new(StringComparer.Ordinal);
+    private Task? _externalIpRefreshTask;
+    private string? _externalIpAddress;
+    private IReadOnlyList<DiagnosticSection> _externalMetricSections = [];
 
     [ObservableProperty]
     public partial string MachineName { get; set; } = Environment.MachineName;
@@ -50,17 +51,6 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     public partial string HardwareStatus { get; set; } = "Detecting hardware sensors";
-
-    public ObservableCollection<MetricCardViewModel> Metrics { get; } =
-    [
-        new("CPU", "0%", "SYSTEM LOAD", ThemeResourceKeys.CpuAccent, AppSettings.Default.CpuAlertThreshold),
-        new("Memory", "0 MB", "SYSTEM USED", ThemeResourceKeys.MemoryAccent, AppSettings.Default.MemoryAlertThreshold),
-        new("Storage", "0%", "PRIMARY VOLUME", ThemeResourceKeys.StorageAccent, AppSettings.Default.StorageAlertThreshold),
-        new("Network", "0 B/s", "DOWNLOAD", ThemeResourceKeys.NetworkAccent, AppSettings.Default.NetworkAlertThreshold),
-        new("GPU", "Unavailable", "NO SUPPORTED GPU METRICS", ThemeResourceKeys.GpuAccent, AppSettings.Default.GpuAlertThreshold)
-    ];
-
-    public ObservableCollection<HardwareSensorViewModel> HardwareSensors { get; } = [];
 
     public IReadOnlyList<HardwareSensorReading> LatestHardwareReadings { get; private set; } = [];
     public IReadOnlyList<GpuSnapshot> LatestGpuSnapshots { get; private set; } = [];
@@ -129,11 +119,6 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     private void ApplySettings(AppSettings settings)
     {
         _timer.Interval = TimeSpan.FromMilliseconds(settings.RefreshIntervalMilliseconds);
-        Metrics[0].AlertThreshold = settings.CpuAlertThreshold;
-        Metrics[1].AlertThreshold = settings.MemoryAlertThreshold;
-        Metrics[2].AlertThreshold = settings.StorageAlertThreshold;
-        Metrics[3].AlertThreshold = settings.NetworkAlertThreshold;
-        Metrics[4].AlertThreshold = settings.GpuAlertThreshold;
         IsMachineNameVisible = settings.ShowMachineName;
         IsClockVisible = settings.ShowClock;
     }
@@ -152,41 +137,33 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
 
         try
         {
-            var snapshot = await _metricsService.GetSnapshotAsync(_lifetimeCancellation.Token);
-            var hardwareReadings = await ReadHardwareSafelyAsync(_lifetimeCancellation.Token);
-            var externalIpAddress = Settings.ShowExternalIpAddress
-                ? await _externalIpAddressService.GetAddressAsync(_lifetimeCancellation.Token)
-                : null;
+            var snapshotTask = _metricsService.GetSnapshotAsync(_lifetimeCancellation.Token).AsTask();
+            var hardwareReadingsTask = ReadHardwareSafelyAsync(_lifetimeCancellation.Token).AsTask();
+            await Task.WhenAll(snapshotTask, hardwareReadingsTask);
+            var snapshot = await snapshotTask;
+            var hardwareReadings = await hardwareReadingsTask;
+            ScheduleExternalIpRefresh();
             LatestHardwareReadings = hardwareReadings;
             LatestGpuSnapshots = GpuMetricsMapper.Map(hardwareReadings);
             PlatformName = snapshot.Platform;
             LastUpdated = snapshot.Timestamp.ToLocalTime().ToString("HH:mm:ss", CultureInfo.CurrentCulture);
-            ClockText = snapshot.Timestamp.ToLocalTime().ToString(
-                Settings.Use24HourClock ? "HH:mm\ndddd, MMMM d" : "h:mm tt\ndddd, MMMM d",
-                CultureInfo.CurrentCulture);
+            ClockText = FormatClock(snapshot.Timestamp.ToLocalTime(), Settings);
             StatusText = "Live monitoring";
 
-            Metrics[0].Update($"{snapshot.CpuUsagePercent:F0}%", "SYSTEM LOAD", snapshot.CpuUsagePercent);
-            Metrics[1].Update(
-                $"{snapshot.MemoryUsagePercent:F0}%",
-                $"{FormatBytes(snapshot.MemoryUsedBytes)} USED · {FormatBytes(snapshot.MemoryTotalBytes)} TOTAL",
-                snapshot.MemoryUsagePercent);
-            Metrics[2].Update(
-                $"{snapshot.StorageUsagePercent:F0}%",
-                $"{FormatBytes(snapshot.StorageUsedBytes)} USED · {FormatBytes(snapshot.StorageTotalBytes)} TOTAL",
-                snapshot.StorageUsagePercent);
-            Metrics[3].Update($"{FormatBytes(snapshot.DownloadBytesPerSecond)}/s", $"UP {FormatBytes(snapshot.UploadBytesPerSecond)}/s", snapshot.NetworkActivityPercent);
-            UpdateGpuMetric();
             await UpdateExternalMetricsAsync();
 
             var visibleReadings = SensorCatalog.SelectVisible(hardwareReadings, Settings.SensorPreferences).ToArray();
             HardwareStatus = _hardwareSensorService.CapabilityMessage;
-            DiagnosticSections = DetailedDiagnosticsBuilder.Build(
+            var sections = DetailedDiagnosticsBuilder.Build(
                 snapshot,
                 visibleReadings,
                 Settings.UseFahrenheit,
                 LatestGpuSnapshots,
-                externalIpAddress);
+                _externalIpAddress);
+            DiagnosticSections = DiagnosticAlertPolicy.Apply(
+                [.. sections, .. _externalMetricSections],
+                Settings,
+                snapshot.NetworkActivityPercent);
             MetricSeries.Update(DiagnosticSections, snapshot.Timestamp);
         }
         catch (OperationCanceledException) when (_lifetimeCancellation.IsCancellationRequested)
@@ -199,6 +176,35 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         finally
         {
             _refreshGate.Release();
+        }
+    }
+
+    private void ScheduleExternalIpRefresh()
+    {
+        if (!Settings.ShowExternalIpAddress)
+        {
+            _externalIpAddress = null;
+            return;
+        }
+
+        if (_externalIpRefreshTask is null || _externalIpRefreshTask.IsCompleted)
+        {
+            _externalIpRefreshTask = RefreshExternalIpAddressAsync();
+        }
+    }
+
+    private async Task RefreshExternalIpAddressAsync()
+    {
+        try
+        {
+            _externalIpAddress = await _externalIpAddressService.GetAddressAsync(_lifetimeCancellation.Token);
+        }
+        catch (OperationCanceledException) when (_lifetimeCancellation.IsCancellationRequested)
+        {
+        }
+        catch (Exception exception)
+        {
+            SafeDiagnosticLog.Write("ExternalIp", "RefreshFailure", exception);
         }
     }
 
@@ -219,55 +225,20 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         }
     }
 
-    private static string FormatBytes(double bytes)
+    internal static string FormatClock(DateTimeOffset timestamp, AppSettings settings)
     {
-        string[] units = ["B", "KB", "MB", "GB", "TB"];
-        var value = Math.Max(0, bytes);
-        var unit = 0;
-
-        while (value >= 1024 && unit < units.Length - 1)
+        var time = timestamp.ToString(settings.Use24HourClock ? "HH:mm" : "h:mm tt", CultureInfo.CurrentCulture);
+        var dateFormat = settings.ClockDateFormat switch
         {
-            value /= 1024;
-            unit++;
-        }
-
-        return $"{value:F1} {units[unit]}";
-    }
-
-    private void UpdateGpuMetric()
-    {
-        var gpu = LatestGpuSnapshots.FirstOrDefault(candidate => candidate.DeviceId == Settings.SelectedGpuId)
-            ?? (LatestGpuSnapshots.Count > 0 ? LatestGpuSnapshots[0] : null);
-        if (gpu is null)
-        {
-            Metrics[4].Update("Unavailable", "NO SUPPORTED GPU METRICS", 0);
-            return;
-        }
-
-        var value = gpu.LoadPercent is { } load ? $"{load:F0}%" : "Available";
-        var details = new List<string>();
-        if (gpu.TemperatureCelsius is { } temperature)
-        {
-            details.Add(Settings.UseFahrenheit
-                ? $"{(temperature * 9 / 5) + 32:F0}°F"
-                : $"{temperature:F0}°C");
-        }
-
-        if (gpu.DedicatedMemoryUsedBytes is { } used)
-        {
-            details.Add(gpu.DedicatedMemoryTotalBytes is { } total
-                ? $"{FormatBytes(used)} / {FormatBytes(total)} VRAM"
-                : $"{FormatBytes(used)} VRAM USED");
-        }
-        else if (gpu.SharedMemoryUsedBytes is { } shared)
-        {
-            details.Add($"{FormatBytes(shared)} SHARED");
-        }
-
-        Metrics[4].Update(
-            value,
-            details.Count > 0 ? string.Join(" · ", details) : gpu.Name.ToUpperInvariant(),
-            gpu.LoadPercent ?? 0);
+            ClockDateFormat.None => null,
+            ClockDateFormat.MonthDay => "M",
+            ClockDateFormat.ShortDate => "d",
+            ClockDateFormat.LongDate => "D",
+            _ => "D"
+        };
+        return dateFormat is null
+            ? time
+            : $"{time}\n{timestamp.ToString(dateFormat, CultureInfo.CurrentCulture)}";
     }
 
     public ValueTask<ExternalMetricSnapshot> PreviewExternalMetricAsync(
@@ -283,39 +254,23 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     private async Task UpdateExternalMetricsAsync()
     {
         var snapshots = await _externalMetricService.ReadAsync(Settings.ExternalMetrics, _lifetimeCancellation.Token);
-        var activeIds = snapshots.Select(snapshot => snapshot.Id).ToHashSet(StringComparer.Ordinal);
-        foreach (var obsolete in _externalMetricCards.Where(pair => !activeIds.Contains(pair.Key)).ToArray())
-        {
-            Metrics.Remove(obsolete.Value);
-            _externalMetricCards.Remove(obsolete.Key);
-        }
-
-        foreach (var snapshot in snapshots)
-        {
-            if (!_externalMetricCards.TryGetValue(snapshot.Id, out var card))
-            {
-                card = new MetricCardViewModel(snapshot.Title, "Waiting", "EXTERNAL JSON", ThemeResourceKeys.ExternalAccent, 101);
-                _externalMetricCards.Add(snapshot.Id, card);
-                Metrics.Add(card);
-            }
-
-            card.Title = snapshot.Title;
-            card.Update(
-                snapshot.Value is { } value ? $"{value:F2}{snapshot.Unit}" : "Unavailable",
-                snapshot.IsSuccess ? "EXTERNAL JSON" : snapshot.Status.ToUpperInvariant(),
-                snapshot.Progress);
-        }
+        _externalMetricSections = BuildExternalMetricSections(snapshots);
     }
 
-    private string FormatSensorValue(HardwareSensorReading reading)
+    internal static IReadOnlyList<DiagnosticSection> BuildExternalMetricSections(
+        IReadOnlyList<ExternalMetricSnapshot> snapshots) => snapshots.Select(snapshot =>
     {
-        if (Settings.UseFahrenheit && reading.Unit == "°C")
-        {
-            return $"{(reading.Value * 9 / 5) + 32:F1}°F";
-        }
-
-        return $"{reading.Value:F1}{reading.Unit}";
-    }
+        var value = snapshot.Value is { } numericValue ? $"{numericValue:F2}{snapshot.Unit}" : "Unavailable";
+        var metric = snapshot.Value is { } number
+            ? new DiagnosticMetric("Value", value, $"external:{snapshot.Id}:value", number, snapshot.Unit)
+            : new DiagnosticMetric("Value", value);
+        return new DiagnosticSection(
+            $"external:{snapshot.Id}",
+            snapshot.Title,
+            snapshot.IsSuccess ? "External JSON metric" : snapshot.Status,
+            ThemeResourceKeys.ExternalAccent,
+            [metric]);
+    }).ToArray();
 
     public void Dispose()
     {

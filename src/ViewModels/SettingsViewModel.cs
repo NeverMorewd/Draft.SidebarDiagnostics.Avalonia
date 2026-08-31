@@ -38,6 +38,11 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial bool AlwaysOnTop { get; set; }
 
     [ObservableProperty]
+    public partial bool ClickThrough { get; set; }
+
+    public bool IsClickThroughSupported { get; } = OperatingSystem.IsWindows();
+
+    [ObservableProperty]
     public partial bool LaunchAtLogin { get; set; }
 
     [ObservableProperty]
@@ -51,6 +56,11 @@ public sealed partial class SettingsViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial bool Use24HourClock { get; set; }
+
+    [ObservableProperty]
+    public partial ClockDateFormatOption SelectedClockDateFormat { get; set; } = ClockDateFormatOption.All[^1];
+
+    public IReadOnlyList<ClockDateFormatOption> ClockDateFormats { get; } = ClockDateFormatOption.All;
 
     [ObservableProperty]
     public partial bool ShowExternalIpAddress { get; set; }
@@ -130,11 +140,13 @@ public sealed partial class SettingsViewModel : ViewModelBase
         NetworkAlertThreshold = settings.NetworkAlertThreshold;
         GpuAlertThreshold = settings.GpuAlertThreshold;
         AlwaysOnTop = settings.AlwaysOnTop;
+        ClickThrough = settings.ClickThrough;
         LaunchAtLogin = settings.LaunchAtLogin;
         StartMinimized = settings.StartMinimized;
         ShowMachineName = settings.ShowMachineName;
         ShowClock = settings.ShowClock;
         Use24HourClock = settings.Use24HourClock;
+        SelectedClockDateFormat = ClockDateFormats.Single(option => option.Value == settings.ClockDateFormat);
         ShowExternalIpAddress = settings.ShowExternalIpAddress;
         UseFahrenheit = settings.UseFahrenheit;
         SidebarWidth = settings.SidebarWidth;
@@ -192,11 +204,13 @@ public sealed partial class SettingsViewModel : ViewModelBase
             NetworkAlertThreshold = NetworkAlertThreshold,
             GpuAlertThreshold = GpuAlertThreshold,
             AlwaysOnTop = AlwaysOnTop,
+            ClickThrough = ClickThrough,
             LaunchAtLogin = LaunchAtLogin,
             StartMinimized = StartMinimized,
             ShowMachineName = ShowMachineName,
             ShowClock = ShowClock,
             Use24HourClock = Use24HourClock,
+            ClockDateFormat = SelectedClockDateFormat.Value,
             ShowExternalIpAddress = ShowExternalIpAddress,
             UseFahrenheit = UseFahrenheit,
             SidebarWidth = SidebarWidth,

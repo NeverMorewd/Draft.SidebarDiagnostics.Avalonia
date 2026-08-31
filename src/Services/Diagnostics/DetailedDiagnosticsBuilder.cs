@@ -30,8 +30,9 @@ public static class DetailedDiagnosticsBuilder
         {
             sections.AddRange(build());
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            SafeDiagnosticLog.Write("Diagnostics", "SectionBuildFailure", exception);
         }
     }
 

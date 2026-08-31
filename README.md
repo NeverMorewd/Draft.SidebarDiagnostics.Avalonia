@@ -7,17 +7,18 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 ## Highlights
 
 - One native Avalonia application for Windows, macOS, and Linux
-- CPU, memory, primary-volume, and aggregate network monitoring
+- CPU, memory, all mounted-volume, and primary-network monitoring
 - Live bounded charts and configurable alert thresholds
 - Broad hardware sensor support on Windows and standard hwmon sensors on Linux
 - Searchable hardware sensor catalog with visibility, pinning, ordering, and custom names
 - Vendor-neutral multi-GPU summaries for Intel, AMD, and NVIDIA devices
-- Safe external JSON metric cards from local files or explicit HTTP endpoints
+- Safe, graphable external JSON metrics from local files or explicit HTTP endpoints
 - Resilient multi-display placement with mixed-DPI edge docking and primary-display fallback
 - Native Windows AppBar integration that reserves the docked desktop work area
 - Configurable global shortcuts for show/focus, hide, and visibility toggle
 - High-density CPU, memory, GPU, drive, network, and hardware detail sections
-- Configurable clock, machine name, units, sidebar width, and opacity
+- Configurable clock and date format, machine name, units, sidebar width, and opacity
+- Optional cached external IP display with an explicit privacy control
 - Live switching between the default Fluent-based appearance and the monochromatic Pip-Boy theme
 - Tray controls and native launch-at-login integration on all three platforms
 - Atomic JSON settings persistence
@@ -35,6 +36,7 @@ This repository is a modified work based on [ArcadeRenegade/SidebarDiagnostics](
 | Storage and network | .NET platform APIs | .NET platform APIs | .NET platform APIs |
 | Hardware sensors | LibreHardwareMonitor | No stable public system API | hwmon temperature, fan, voltage, current, power, and clock readings |
 | Tray and launch at login | Supported | Supported | Supported |
+| Pointer pass-through | Supported | Not exposed | Not exposed |
 
 Linux tray availability depends on StatusNotifierItem/AppIndicator support in the desktop environment. KDE Plasma supports it natively; GNOME may require the AppIndicator extension.
 
