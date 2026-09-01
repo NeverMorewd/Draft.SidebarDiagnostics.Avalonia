@@ -69,23 +69,5 @@ permissions:
 
 jobs:
   profile:
-    name: Profile external application on ${{ inputs.platform }}
-    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/profile-external.yml@fix/cross-repository-calls
-    with:
-      platform: ${{ inputs.platform }}
-      executable-path: ${{ inputs.executable-path }}
-      allowed-root: ${{ inputs.allowed-root }}
-      working-directory: ${{ inputs.working-directory }}
-      arguments-json: ${{ inputs.arguments-json }}
-      report-label: ${{ inputs.report-label }}
-      warmup-seconds: ${{ inputs.warmup-seconds }}
-      measurement-seconds: ${{ inputs.measurement-seconds }}
-      sample-interval-ms: 1000
-      cooldown-seconds: 10
-      iterations: ${{ inputs.iterations }}
-      collect-counters: ${{ inputs.collect-counters }}
-      counter-duration-seconds: 30
-      collect-trace: ${{ inputs.collect-trace }}
-      trace-duration-seconds: 30
-      fail-on-target-exit: true
-      artifact-retention-days: 14
+    name: Test cross-repository workflow access
+    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/cross-repository-probe.yml@fix/cross-repository-calls
