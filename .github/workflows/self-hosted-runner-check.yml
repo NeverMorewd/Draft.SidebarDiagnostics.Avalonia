@@ -37,7 +37,7 @@ jobs:
           cache-dependency-path: '**/packages.lock.json'
 
       - name: Verify runner environment
-        shell: pwsh
+        shell: powershell
         run: |
           $process = Get-Process -Id $PID
           $sessionId = $process.SessionId
@@ -56,13 +56,13 @@ jobs:
           dotnet --info
 
       - name: Restore locked dependencies
-        shell: pwsh
+        shell: powershell
         run: dotnet restore SidebarDiagnostics.slnx --locked-mode
 
       - name: Build Release
-        shell: pwsh
+        shell: powershell
         run: dotnet build SidebarDiagnostics.slnx --configuration Release --no-restore
 
       - name: Run tests
-        shell: pwsh
+        shell: powershell
         run: dotnet test SidebarDiagnostics.slnx --configuration Release --no-build
