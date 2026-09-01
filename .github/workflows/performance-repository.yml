@@ -42,7 +42,7 @@ permissions:
 jobs:
   profile:
     name: Profile Native AOT application on ${{ inputs.platform }}
-    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/profile-repository.yml@v1
+    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/profile-repository.yml@fix/diagnostic-tool-timeout
     with:
       platform: ${{ inputs.platform }}
       project-path: src/SidebarDiagnostics.App.csproj
