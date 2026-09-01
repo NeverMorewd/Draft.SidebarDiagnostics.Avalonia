@@ -78,14 +78,14 @@ jobs:
       working-directory: ${{ inputs.working-directory }}
       arguments-json: ${{ inputs.arguments-json }}
       report-label: ${{ inputs.report-label }}
-      warmup-seconds: ${{ inputs.warmup-seconds }}
-      measurement-seconds: ${{ inputs.measurement-seconds }}
+      warmup-seconds: ${{ fromJSON(github.event.inputs['warmup-seconds']) }}
+      measurement-seconds: ${{ fromJSON(github.event.inputs['measurement-seconds']) }}
       sample-interval-ms: 1000
       cooldown-seconds: 10
-      iterations: ${{ inputs.iterations }}
-      collect-counters: ${{ inputs.collect-counters }}
+      iterations: ${{ fromJSON(github.event.inputs.iterations) }}
+      collect-counters: ${{ fromJSON(github.event.inputs['collect-counters']) }}
       counter-duration-seconds: 30
-      collect-trace: ${{ inputs.collect-trace }}
+      collect-trace: ${{ fromJSON(github.event.inputs['collect-trace']) }}
       trace-duration-seconds: 30
       fail-on-target-exit: true
       artifact-retention-days: 14
