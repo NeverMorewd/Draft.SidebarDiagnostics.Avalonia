@@ -70,7 +70,7 @@ permissions:
 jobs:
   profile:
     name: Profile external application on ${{ inputs.platform }}
-    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/profile-external.yml@v1
+    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/profile-external.yml@fix/cross-repository-calls
     with:
       platform: ${{ inputs.platform }}
       executable-path: ${{ inputs.executable-path }}
