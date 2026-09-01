@@ -20,8 +20,6 @@ jobs:
     name: Verify Windows metric runner
     runs-on: [self-hosted, Windows, X64, metric-test]
     timeout-minutes: 15
-    env:
-      DOTNET_INSTALL_DIR: ${{ runner.temp }}\dotnet
 
     steps:
       - name: Checkout
@@ -31,6 +29,8 @@ jobs:
 
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v4
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}\dotnet
         with:
           dotnet-version: 10.0.302
           cache: true
