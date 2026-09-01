@@ -71,3 +71,5 @@ jobs:
   profile:
     name: Test cross-repository workflow access
     uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/cross-repository-probe.yml@fix/cross-repository-calls
+    with:
+      platform: ${{ inputs.platform }}
