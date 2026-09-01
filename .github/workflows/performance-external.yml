@@ -75,3 +75,6 @@ jobs:
       platform: ${{ inputs.platform }}
       executable-path: ${{ inputs.executable-path }}
       allowed-root: ${{ inputs.allowed-root }}
+      working-directory: ${{ inputs.working-directory }}
+      arguments-json: ${{ inputs.arguments-json }}
+      report-label: ${{ inputs.report-label }}
