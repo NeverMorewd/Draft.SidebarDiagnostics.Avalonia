@@ -1,0 +1,91 @@
+name: Performance - External executable
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Operating system of the dedicated metric runner
+        required: true
+        type: choice
+        options:
+          - Windows
+          - Linux
+          - macOS
+      executable-path:
+        description: Absolute path to the executable on the runner
+        required: true
+        type: string
+      allowed-root:
+        description: Absolute directory that contains the executable
+        required: true
+        type: string
+      working-directory:
+        description: Optional absolute working directory inside the allowed root
+        required: false
+        default: ''
+        type: string
+      arguments-json:
+        description: Command arguments encoded as a JSON array
+        required: true
+        default: '[]'
+        type: string
+      report-label:
+        description: Application name shown in the report
+        required: true
+        default: External .NET application
+        type: string
+      warmup-seconds:
+        description: Warm-up time before each baseline measurement
+        required: true
+        default: 60
+        type: number
+      measurement-seconds:
+        description: Baseline measurement time per iteration
+        required: true
+        default: 300
+        type: number
+      iterations:
+        description: Number of independent baseline iterations
+        required: true
+        default: 3
+        type: number
+      collect-counters:
+        description: Collect a separate managed runtime counter pass
+        required: true
+        default: true
+        type: boolean
+      collect-trace:
+        description: Collect a separate 30-second EventPipe trace
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: performance-external-${{ inputs.platform }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    name: Profile external application on ${{ inputs.platform }}
+    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/profile-external.yml@v1
+    with:
+      platform: ${{ inputs.platform }}
+      executable-path: ${{ inputs.executable-path }}
+      allowed-root: ${{ inputs.allowed-root }}
+      working-directory: ${{ inputs.working-directory }}
+      arguments-json: ${{ inputs.arguments-json }}
+      report-label: ${{ inputs.report-label }}
+      warmup-seconds: ${{ inputs.warmup-seconds }}
+      measurement-seconds: ${{ inputs.measurement-seconds }}
+      sample-interval-ms: 1000
+      cooldown-seconds: 10
+      iterations: ${{ inputs.iterations }}
+      collect-counters: ${{ inputs.collect-counters }}
+      counter-duration-seconds: 30
+      collect-trace: ${{ inputs.collect-trace }}
+      trace-duration-seconds: 30
+      fail-on-target-exit: true
+      artifact-retention-days: 14
