@@ -34,6 +34,7 @@ public partial class MetricChartWindow : Window
         DurationSelector.SelectedIndex = 1;
         series.Changed += OnSeriesChanged;
         Closed += OnClosed;
+        series.StartRecording();
         UpdateValue();
     }
 
@@ -64,7 +65,14 @@ public partial class MetricChartWindow : Window
 
     private void OnClosed(object? sender, EventArgs e)
     {
-        if (_series is not null) _series.Changed -= OnSeriesChanged;
+        if (_series is not null)
+        {
+            _series.Changed -= OnSeriesChanged;
+            Chart.Series = null;
+            _series.StopRecording();
+            _series = null;
+        }
+
         Closed -= OnClosed;
     }
 }

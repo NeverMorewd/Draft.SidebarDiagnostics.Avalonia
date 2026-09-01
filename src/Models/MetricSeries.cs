@@ -2,8 +2,9 @@ namespace SidebarDiagnostics.App.Models;
 
 public sealed class MetricSeries(string id)
 {
-    private readonly List<MetricSample> _samples = [];
-    private static readonly TimeSpan Retention = TimeSpan.FromMinutes(15);
+    private List<MetricSample> _samples = [];
+    private static readonly TimeSpan Retention = TimeSpan.FromMinutes(5);
+    private DateTimeOffset? _lastTimestamp;
 
     public string Id { get; } = id;
     public string Title { get; private set; } = string.Empty;
@@ -11,6 +12,7 @@ public sealed class MetricSeries(string id)
     public string Unit { get; private set; } = string.Empty;
     public string AccentResourceKey { get; private set; } = Styling.ThemeResourceKeys.CpuAccent;
     public double CurrentValue { get; private set; }
+    public bool IsRecording { get; private set; }
 
     public event EventHandler? Changed;
 
@@ -32,10 +34,43 @@ public sealed class MetricSeries(string id)
         Unit = unit;
         AccentResourceKey = accentResourceKey;
         CurrentValue = value;
-        _samples.Add(new(timestamp, value));
-        var cutoff = timestamp - Retention;
-        _samples.RemoveAll(sample => sample.Timestamp < cutoff);
+        _lastTimestamp = timestamp;
+        if (IsRecording)
+        {
+            _samples.Add(new(timestamp, value));
+            var cutoff = timestamp - Retention;
+            _samples.RemoveAll(sample => sample.Timestamp < cutoff);
+        }
+
         Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void StartRecording()
+    {
+        if (IsRecording)
+        {
+            return;
+        }
+
+        IsRecording = true;
+        _samples = [];
+        if (_lastTimestamp is { } timestamp)
+        {
+            _samples.Add(new(timestamp, CurrentValue));
+        }
+
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void StopRecording()
+    {
+        if (!IsRecording)
+        {
+            return;
+        }
+
+        IsRecording = false;
+        _samples = [];
     }
 
     public IReadOnlyList<MetricSample> GetSamples(TimeSpan duration, DateTimeOffset now)

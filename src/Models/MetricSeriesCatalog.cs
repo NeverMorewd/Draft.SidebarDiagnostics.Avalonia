@@ -8,11 +8,13 @@ public sealed class MetricSeriesCatalog
 
     public void Update(IReadOnlyList<DiagnosticSection> sections, DateTimeOffset timestamp)
     {
+        var activeIds = new HashSet<string>(StringComparer.Ordinal);
         foreach (var section in sections)
         {
             foreach (var metric in section.Metrics.Where(metric => metric.CanGraph))
             {
                 var id = metric.SeriesId!;
+                activeIds.Add(id);
                 if (!_series.TryGetValue(id, out var series))
                 {
                     series = new MetricSeries(id);
@@ -27,6 +29,14 @@ public sealed class MetricSeriesCatalog
                     metric.NumericValue!.Value,
                     timestamp);
             }
+        }
+
+        foreach (var id in _series
+                     .Where(item => !activeIds.Contains(item.Key) && !item.Value.IsRecording)
+                     .Select(item => item.Key)
+                     .ToArray())
+        {
+            _series.Remove(id);
         }
     }
 }
