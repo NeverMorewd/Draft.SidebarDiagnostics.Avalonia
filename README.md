@@ -143,6 +143,17 @@ sudo apt install ./SidebarDiagnostics-linux-x64.deb
 
 The WinGet manifest and Homebrew Cask are inside the release metadata bundle. Public-index commands become available after their external repository reviews; the Debian package works directly with APT.
 
+## Performance analysis
+
+Two manually dispatched workflows use [DotNetPerformanceLab](https://github.com/NeverMorewd/DotNetPerformanceLab) to produce repeatable CPU and memory reports on dedicated self-hosted runners:
+
+- **Performance - Repository application** publishes the selected x64 target as trimmed Native AOT and measures Sidebar Diagnostics.
+- **Performance - External executable** measures an executable that already exists below an explicitly allowed directory on the runner. This is suitable for controlled comparisons with the original WPF application.
+
+Each performance runner must have the `self-hosted`, `metric-test`, and matching `Windows`, `Linux`, or `macOS` labels. Configure required reviewers on the repository's `performance-lab` environment and run desktop applications from a signed-in interactive session. Reports include Markdown, JSON, CSV, SVG charts, managed runtime counters when supported, and an optional EventPipe trace.
+
+Use the same physical machine, power profile, application state, duration, and iteration count when comparing builds. Results from different operating systems or machines are not directly comparable.
+
 ## Security and stability
 
 The hardware access trust model and vulnerability reporting process are documented in [SECURITY.md](SECURITY.md). Repeatable timeout, artifact, dependency, and soak-test procedures are documented in [docs/STABILITY.md](docs/STABILITY.md).
