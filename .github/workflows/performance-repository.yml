@@ -63,3 +63,4 @@ jobs:
       collect-trace: ${{ fromJSON(github.event.inputs['collect-trace']) }}
       trace-duration-seconds: 30
       artifact-retention-days: 14
+      toolkit-ref: fix/diagnostic-tool-timeout
