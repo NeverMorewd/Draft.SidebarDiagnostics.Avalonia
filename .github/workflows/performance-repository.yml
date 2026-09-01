@@ -53,13 +53,13 @@ jobs:
       publish-aot: true
       publish-trimmed: true
       locked-restore: true
-      warmup-seconds: ${{ inputs.warmup-seconds }}
-      measurement-seconds: ${{ inputs.measurement-seconds }}
+      warmup-seconds: ${{ fromJSON(github.event.inputs['warmup-seconds']) }}
+      measurement-seconds: ${{ fromJSON(github.event.inputs['measurement-seconds']) }}
       sample-interval-ms: 1000
       cooldown-seconds: 10
-      iterations: ${{ inputs.iterations }}
+      iterations: ${{ fromJSON(github.event.inputs.iterations) }}
       collect-counters: true
       counter-duration-seconds: 30
-      collect-trace: ${{ inputs.collect-trace }}
+      collect-trace: ${{ fromJSON(github.event.inputs['collect-trace']) }}
       trace-duration-seconds: 30
       artifact-retention-days: 14
