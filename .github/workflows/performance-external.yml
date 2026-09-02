@@ -59,6 +59,11 @@ on:
         required: true
         default: false
         type: boolean
+      meters-json:
+        description: Additional System.Diagnostics.Metrics meters encoded as a JSON array
+        required: true
+        default: '[]'
+        type: string
 
 concurrency:
   group: performance-external-${{ inputs.platform }}
@@ -66,11 +71,14 @@ concurrency:
 
 permissions:
   contents: read
+  actions: read
+  pages: write
+  id-token: write
 
 jobs:
   profile:
     name: Profile external application on ${{ inputs.platform }}
-    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/profile-external.yml@v1
+    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/profile-external.yml@67cd09c8b926973abd0fa87b0cab9b206da2f675
     with:
       platform: ${{ inputs.platform }}
       executable-path: ${{ inputs.executable-path }}
@@ -85,7 +93,18 @@ jobs:
       iterations: ${{ fromJSON(github.event.inputs.iterations) }}
       collect-counters: ${{ fromJSON(github.event.inputs['collect-counters']) }}
       counter-duration-seconds: 30
+      meters-json: ${{ inputs.meters-json }}
       collect-trace: ${{ fromJSON(github.event.inputs['collect-trace']) }}
       trace-duration-seconds: 30
       fail-on-target-exit: true
       artifact-retention-days: 14
+      toolkit-ref: 67cd09c8b926973abd0fa87b0cab9b206da2f675
+
+  pages:
+    name: Deploy performance history
+    needs: profile
+    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/deploy-pages.yml@67cd09c8b926973abd0fa87b0cab9b206da2f675
+    with:
+      history-days: 14
+      maximum-runs: 50
+      toolkit-ref: 67cd09c8b926973abd0fa87b0cab9b206da2f675

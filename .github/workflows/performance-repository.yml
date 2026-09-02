@@ -31,6 +31,11 @@ on:
         required: true
         default: false
         type: boolean
+      meters-json:
+        description: Additional System.Diagnostics.Metrics meters encoded as a JSON array
+        required: true
+        default: '["System.Net.Http","System.Net.NameResolution","System.Net.Sockets"]'
+        type: string
 
 concurrency:
   group: performance-repository-${{ inputs.platform }}
@@ -38,11 +43,14 @@ concurrency:
 
 permissions:
   contents: read
+  actions: read
+  pages: write
+  id-token: write
 
 jobs:
   profile:
     name: Profile Native AOT application on ${{ inputs.platform }}
-    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/profile-repository.yml@v1
+    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/profile-repository.yml@67cd09c8b926973abd0fa87b0cab9b206da2f675
     with:
       platform: ${{ inputs.platform }}
       project-path: src/SidebarDiagnostics.App.csproj
@@ -60,6 +68,17 @@ jobs:
       iterations: ${{ fromJSON(github.event.inputs.iterations) }}
       collect-counters: true
       counter-duration-seconds: 30
+      meters-json: ${{ inputs.meters-json }}
       collect-trace: ${{ fromJSON(github.event.inputs['collect-trace']) }}
       trace-duration-seconds: 30
       artifact-retention-days: 14
+      toolkit-ref: 67cd09c8b926973abd0fa87b0cab9b206da2f675
+
+  pages:
+    name: Deploy performance history
+    needs: profile
+    uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/deploy-pages.yml@67cd09c8b926973abd0fa87b0cab9b206da2f675
+    with:
+      history-days: 14
+      maximum-runs: 50
+      toolkit-ref: 67cd09c8b926973abd0fa87b0cab9b206da2f675
