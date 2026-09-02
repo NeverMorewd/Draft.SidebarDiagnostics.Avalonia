@@ -102,6 +102,7 @@ jobs:
 
   pages:
     name: Deploy performance history
+    if: ${{ vars.PERFORMANCE_PAGES_ENABLED == 'true' }}
     needs: profile
     uses: NeverMorewd/DotNetPerformanceLab/.github/workflows/deploy-pages.yml@67cd09c8b926973abd0fa87b0cab9b206da2f675
     with:
