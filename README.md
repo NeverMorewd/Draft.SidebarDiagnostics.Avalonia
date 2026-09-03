@@ -145,16 +145,7 @@ The WinGet manifest and Homebrew Cask are inside the release metadata bundle. Pu
 
 ## Performance analysis
 
-Two manually dispatched workflows use [DotNetPerformanceLab](https://github.com/NeverMorewd/DotNetPerformanceLab) to produce repeatable process, operating-system, and managed-runtime reports on dedicated self-hosted runners:
-
-- **Performance - Repository application** publishes the selected x64 target as trimmed Native AOT and measures Sidebar Diagnostics.
-- **Performance - External executable** measures an executable that already exists below an explicitly allowed directory on the runner. This is suitable for controlled comparisons with the original WPF application.
-
-Each performance runner must have the `self-hosted`, `metric-test`, and matching `Windows`, `Linux`, or `macOS` labels. Configure required reviewers on the repository's `performance-lab` environment and run desktop applications from a signed-in interactive session. Reports include synchronized process and host metrics, complete `System.Runtime` counters, optional application meters, Markdown, normalized JSON and CSV, an offline Plotly dashboard, SVG charts, and an optional EventPipe trace.
-
-Successful profiling runs can update a GitHub Pages performance history containing unexpired report artifacts. In **Settings → Pages**, select **GitHub Actions** as the deployment source, then create the repository variable `PERFORMANCE_PAGES_ENABLED` with the value `true`. Pages deployment remains safely skipped when the hosting plan or repository visibility does not support it. Reports are retained for 14 days; the scheduled `Performance - Refresh report history` workflow rebuilds the site daily so expired artifacts also disappear from Pages when no new profile is executed.
-
-Use the same physical machine, power profile, application state, duration, and iteration count when comparing builds. Results from different operating systems or machines are not directly comparable.
+Repeatable performance measurements and report history are maintained independently in [DotNetPerformanceDashboard](https://github.com/NeverMorewd/DotNetPerformanceDashboard). Keeping profiling orchestration outside this repository avoids coupling application CI and GitHub Pages to benchmark infrastructure.
 
 ## Security and stability
 
