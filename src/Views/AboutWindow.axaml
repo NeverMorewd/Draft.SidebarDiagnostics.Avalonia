@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:SidebarDiagnostics.App.Models"
     Title="About Sidebar Diagnostics"
-    Width="540"
-    Height="570"
+    Width="420"
+    Height="380"
     x:DataType="models:AboutInfo"
     Background="{DynamicResource BackgroundWindowBrush}"
     CanResize="False"
@@ -15,8 +15,8 @@
     WindowStartupLocation="CenterScreen">
     <Grid
         Margin="28"
-        RowDefinitions="Auto,Auto,Auto,*,Auto"
-        RowSpacing="18">
+        RowDefinitions="Auto,*,Auto,Auto"
+        RowSpacing="20">
         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
             <Border
                 Width="48"
@@ -42,118 +42,117 @@
                     Text="Sidebar Diagnostics" />
                 <TextBlock
                     FontSize="{DynamicResource FontSizeBody}"
-                    FontWeight="SemiBold"
-                    Foreground="{DynamicResource TextAccentBrush}"
-                    LetterSpacing="1.2"
-                    Text="CROSS-PLATFORM SYSTEM MONITOR" />
+                    Foreground="{DynamicResource TextMutedBrush}"
+                    Text="{Binding Author}" />
             </StackPanel>
         </Grid>
 
-        <TextBlock
-            Grid.Row="1"
-            FontSize="{DynamicResource FontSizeDescription}"
-            Foreground="{DynamicResource TextMutedBrush}"
-            Text="A modern Avalonia port of Sidebar Diagnostics for Windows, macOS, and Linux."
-            TextWrapping="Wrap" />
-
         <Border
-            Grid.Row="2"
-            Padding="16"
+            Grid.Row="1"
+            Padding="14"
             Background="{DynamicResource BackgroundCardBrush}"
             BorderBrush="{DynamicResource BorderPanelBrush}"
             BorderThickness="{DynamicResource ThicknessBorder}"
             CornerRadius="{DynamicResource RadiusCard}">
             <Grid
-                ColumnDefinitions="140,*"
-                RowDefinitions="Auto,Auto,Auto,Auto,Auto"
-                RowSpacing="10">
-                <TextBlock Foreground="{DynamicResource TextSubtleBrush}" Text="Application version" />
+                ColumnDefinitions="Auto,*"
+                RowDefinitions="Auto,Auto"
+                RowSpacing="12">
+                <Border
+                    Width="28"
+                    Height="28"
+                    Background="{DynamicResource BackgroundAccentSubtleBrush}"
+                    CornerRadius="6">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        FontWeight="Bold"
+                        Foreground="{DynamicResource TextAccentBrush}"
+                        Text=".NET" />
+                </Border>
                 <TextBlock
                     Grid.Column="1"
-                    Foreground="{DynamicResource TextSecondaryBrush}"
-                    Text="{Binding ApplicationVersion}" />
-                <TextBlock
-                    Grid.Row="1"
-                    Foreground="{DynamicResource TextSubtleBrush}"
-                    Text="Avalonia" />
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Foreground="{DynamicResource TextSecondaryBrush}"
-                    Text="{Binding AvaloniaVersion}" />
-                <TextBlock
-                    Grid.Row="2"
-                    Foreground="{DynamicResource TextSubtleBrush}"
-                    Text=".NET runtime" />
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="1"
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
                     Foreground="{DynamicResource TextSecondaryBrush}"
                     Text="{Binding DotNetVersion}" />
+
+                <Border
+                    Grid.Row="1"
+                    Width="28"
+                    Height="28"
+                    Background="{DynamicResource BackgroundAccentSubtleBrush}"
+                    CornerRadius="6">
+                    <Viewbox
+                        Margin="4"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Stretch="Uniform">
+                        <Canvas
+                            Width="48.0"
+                            Height="48.0"
+                            UseLayoutRounding="False">
+                            <Canvas.Clip>
+                                <RectangleGeometry Rect="0.0,0.0,48.0,48.0" />
+                            </Canvas.Clip>
+                            <Path Fill="{DynamicResource TextAccentBrush}">
+                                <Path.Data>
+                                    <PathGeometry Figures="M 24 0 C 37.2548 0 48 10.7452 48 24 V 42 C 48 45.3137 45.3137 48 42 48 H 24 C 10.7452 48 0 37.2548 0 24 C 0 10.7452 10.7452 0 24 0 Z M 24 7 C 16.3489 7 9.87832 12.0545 7.74496 19.0065 C 10.3931 19.1342 12.5 21.321 12.5 24 C 12.5 26.6793 10.3926 28.8664 7.74496 28.9941 C 9.83517 35.8054 16.0901 40.7958 23.5395 40.9939 C 26.6226 40.9252 29.1092 40.2605 31 39 V 41 H 41 V 24 C 41 14.827 33.7348 7.35088 24.6446 7.012 L 24.323 7.00301 L 24 7 Z M 24 16 C 28.4183 16 32 19.5817 32 24 C 32 28.4183 28.4183 32 24 32 C 19.5817 32 16 28.4183 16 24 C 16 19.5817 19.5817 16 24 16 Z M 7.5 20.5 C 5.567 20.5 4 22.067 4 24 C 4 25.933 5.567 27.5 7.5 27.5 C 9.433 27.5 11 25.933 11 24 C 11 22.067 9.433 20.5 7.5 20.5 Z" FillRule="NonZero" />
+                                </Path.Data>
+                            </Path>
+                        </Canvas>
+                    </Viewbox>
+                </Border>
                 <TextBlock
-                    Grid.Row="3"
-                    Foreground="{DynamicResource TextSubtleBrush}"
-                    Text="Author" />
-                <TextBlock
-                    Grid.Row="3"
+                    Grid.Row="1"
                     Grid.Column="1"
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
                     Foreground="{DynamicResource TextSecondaryBrush}"
-                    Text="{Binding Author}"
-                    TextWrapping="Wrap" />
-                <TextBlock
-                    Grid.Row="4"
-                    Foreground="{DynamicResource TextSubtleBrush}"
-                    Text="License" />
-                <TextBlock
-                    Grid.Row="4"
-                    Grid.Column="1"
-                    Foreground="{DynamicResource TextSecondaryBrush}"
-                    Text="{Binding License}" />
+                    Text="{Binding AvaloniaVersion}" />
             </Grid>
         </Border>
 
-        <StackPanel Grid.Row="3" Spacing="10">
-            <TextBlock
-                FontWeight="SemiBold"
-                Foreground="{DynamicResource TextSecondaryBrush}"
-                Text="Open source" />
-            <TextBlock
-                Foreground="{DynamicResource TextMutedBrush}"
-                Text="Source code, releases, and project documentation are available on GitHub."
-                TextWrapping="Wrap" />
-            <Button
-                HorizontalAlignment="Left"
-                Click="OpenRepository"
-                Content="Open repository" />
-            <TextBlock
-                Margin="0,6,0,0"
-                FontWeight="SemiBold"
-                Foreground="{DynamicResource TextSecondaryBrush}"
-                Text="Need help or found a problem?" />
-            <TextBlock
-                Foreground="{DynamicResource TextMutedBrush}"
-                Text="Please report bugs and feature requests through GitHub Issues."
-                TextWrapping="Wrap" />
-            <Button
-                HorizontalAlignment="Left"
-                Click="OpenIssues"
-                Content="Report an issue" />
-        </StackPanel>
+        <Button
+            Grid.Row="2"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Click="OpenRepository">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border
+                    Width="28"
+                    Height="28"
+                    Background="{DynamicResource BackgroundAccentSubtleBrush}"
+                    CornerRadius="14">
+                    <Viewbox
+                        Margin="4"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Stretch="Uniform">
+                        <Path Data="M 12,1 C 5.9,1 1,5.9 1,12 C 1,16.9 4.15,21 8.5,22.4 C 9.05,22.5 9.25,22.15 9.25,21.85 C 9.25,21.6 9.25,20.85 9.25,19.95 C 6.3,20.6 5.65,18.5 5.65,18.5 C 5.15,17.25 4.45,16.9 4.45,16.9 C 3.5,16.25 4.5,16.25 4.5,16.25 C 5.55,16.35 6.1,17.35 6.1,17.35 C 7,18.9 8.5,18.45 9.1,18.2 C 9.2,17.55 9.45,17.1 9.75,16.85 C 7.4,16.6 4.9,15.7 4.9,11.65 C 4.9,10.45 5.3,9.5 6.1,8.75 C 6,8.5 5.6,7.4 6.2,5.95 C 6.2,5.95 7.15,5.65 9.25,7.05 C 10.1,6.8 11.05,6.7 12,6.7 C 12.95,6.7 13.9,6.8 14.75,7.05 C 16.85,5.65 17.8,5.95 17.8,5.95 C 18.4,7.4 18,8.5 17.9,8.75 C 18.7,9.5 19.1,10.45 19.1,11.65 C 19.1,15.7 16.6,16.6 14.25,16.85 C 14.6,17.15 14.95,17.75 14.95,18.65 C 14.95,19.95 14.95,21.4 14.95,21.85 C 14.95,22.15 15.15,22.5 15.7,22.4 C 20.05,21 23.2,16.9 23.2,12 C 23.2,5.9 18.1,1 12,1 Z" Fill="{DynamicResource TextAccentBrush}" />
+                    </Viewbox>
+                </Border>
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="GitHub Repository" />
+                <TextBlock
+                    Grid.Column="2"
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="{DynamicResource FontSizeCaption}"
+                    Foreground="{DynamicResource TextMutedBrush}"
+                    Text="{Binding License}" />
+            </Grid>
+        </Button>
 
-        <StackPanel
-            Grid.Row="4"
+        <Button
+            Grid.Row="3"
+            MinWidth="88"
             HorizontalAlignment="Center"
-            Spacing="8">
-            <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="{DynamicResource FontSizeCaption}"
-                Foreground="{DynamicResource TextDimBrush}"
-                Text="{Binding LicenseNotice}" />
-            <Button
-                MinWidth="88"
-                HorizontalAlignment="Center"
-                Click="CloseWindow"
-                Content="Close" />
-        </StackPanel>
+            Click="CloseWindow"
+            Content="Close" />
     </Grid>
 </Window>
