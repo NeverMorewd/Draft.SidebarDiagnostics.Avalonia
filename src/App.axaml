@@ -23,8 +23,14 @@
                 ToolTipText="Sidebar Diagnostics">
                 <TrayIcon.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Command="{Binding ShowWindowCommand}" Header="Show Sidebar" />
-                        <NativeMenuItem Command="{Binding HideWindowCommand}" Header="Hide Sidebar" />
+                        <NativeMenuItem
+                            Command="{Binding ShowWindowCommand}"
+                            Header="Show Sidebar"
+                            ToggleType="Radio" />
+                        <NativeMenuItem
+                            Command="{Binding HideWindowCommand}"
+                            Header="Hide Sidebar"
+                            ToggleType="Radio" />
                         <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding ShowSettingsCommand}" Header="Settings…" />
                         <NativeMenuItem Command="{Binding ShowAboutCommand}" Header="About Sidebar Diagnostics" />
