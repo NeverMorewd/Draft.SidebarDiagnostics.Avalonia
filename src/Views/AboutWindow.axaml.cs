@@ -15,9 +15,6 @@ public partial class AboutWindow : Window
     private async void OpenRepository(object? sender, RoutedEventArgs e) =>
         await OpenUriAsync(AboutInfo.Repository);
 
-    private async void OpenIssues(object? sender, RoutedEventArgs e) =>
-        await OpenUriAsync(AboutInfo.Issues);
-
     private async Task OpenUriAsync(string address)
     {
         var launcher = GetTopLevel(this)?.Launcher;
