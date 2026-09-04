@@ -25,7 +25,7 @@ public sealed record AppSettings
     public bool ShowExternalIpAddress { get; init; }
     public bool UseFahrenheit { get; init; }
     public int SidebarWidth { get; init; } = 360;
-    public double BackgroundOpacity { get; init; } = 0.92;
+    public double BackgroundOpacity { get; init; } = 0.66;
     public ApplicationTheme Theme { get; init; } = ApplicationTheme.Sidebar;
     public string PipboyPrimaryColor { get; init; } = DefaultPipboyPrimaryColor;
     public List<SensorPreference> SensorPreferences { get; init; } = [];
