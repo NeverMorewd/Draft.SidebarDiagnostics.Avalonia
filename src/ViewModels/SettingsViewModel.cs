@@ -14,6 +14,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
     private readonly ApplicationThemeService _themeService;
     private readonly ApplicationTheme _originalTheme;
     private readonly string _originalPipboyPrimaryColor;
+    private readonly double _originalWindowOpacity;
     private int _themePreviewVersion;
 
     [ObservableProperty]
@@ -72,7 +73,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
     public partial int SidebarWidth { get; set; }
 
     [ObservableProperty]
-    public partial double BackgroundOpacity { get; set; }
+    public partial double WindowOpacity { get; set; }
+
+    public int WindowOpacityPercent => (int)Math.Round(WindowOpacity * 100);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsPipboyTheme))]
@@ -125,6 +128,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
 
     public event EventHandler? Saved;
     public event EventHandler? Cancelled;
+    public event EventHandler<double>? WindowOpacityPreviewChanged;
 
     public SettingsViewModel(MainViewModel mainViewModel, ApplicationThemeService themeService)
     {
@@ -133,6 +137,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         var settings = mainViewModel.Settings;
         _originalTheme = settings.Theme;
         _originalPipboyPrimaryColor = settings.PipboyPrimaryColor;
+        _originalWindowOpacity = settings.BackgroundOpacity;
         RefreshIntervalMilliseconds = settings.RefreshIntervalMilliseconds;
         CpuAlertThreshold = settings.CpuAlertThreshold;
         MemoryAlertThreshold = settings.MemoryAlertThreshold;
@@ -150,7 +155,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         ShowExternalIpAddress = settings.ShowExternalIpAddress;
         UseFahrenheit = settings.UseFahrenheit;
         SidebarWidth = settings.SidebarWidth;
-        BackgroundOpacity = settings.BackgroundOpacity;
+        WindowOpacity = settings.BackgroundOpacity;
         SelectedPipboyColor = PipboyColors.FirstOrDefault(option =>
                 string.Equals(option.HexColor, settings.PipboyPrimaryColor, StringComparison.OrdinalIgnoreCase))
             ?? PipboyColors[0];
@@ -214,7 +219,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             ShowExternalIpAddress = ShowExternalIpAddress,
             UseFahrenheit = UseFahrenheit,
             SidebarWidth = SidebarWidth,
-            BackgroundOpacity = BackgroundOpacity,
+            BackgroundOpacity = WindowOpacity,
             Theme = SelectedTheme.Value,
             PipboyPrimaryColor = SelectedPipboyColor.HexColor,
             SensorPreferences = Sensors
@@ -247,6 +252,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         _themePreviewVersion++;
         _themeService.Apply(_originalTheme, _originalPipboyPrimaryColor);
         _mainViewModel.RefreshThemeResources();
+        WindowOpacityPreviewChanged?.Invoke(this, _originalWindowOpacity);
     }
 
     partial void OnSelectedThemeChanged(ApplicationThemeOption value)
@@ -268,6 +274,12 @@ public sealed partial class SettingsViewModel : ViewModelBase
         Dispatcher.UIThread.Post(
             () => ApplyThemePreview(ApplicationTheme.Pipboy, value.HexColor, version),
             DispatcherPriority.Background);
+    }
+
+    partial void OnWindowOpacityChanged(double value)
+    {
+        OnPropertyChanged(nameof(WindowOpacityPercent));
+        WindowOpacityPreviewChanged?.Invoke(this, Math.Clamp(value, 0.4, 1));
     }
 
     private void ApplyThemePreview(ApplicationTheme theme, string pipboyPrimaryColor, int version)
