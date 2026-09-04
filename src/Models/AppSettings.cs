@@ -25,7 +25,7 @@ public sealed record AppSettings
     public bool ShowExternalIpAddress { get; init; }
     public bool UseFahrenheit { get; init; }
     public int SidebarWidth { get; init; } = 360;
-    public double BackgroundOpacity { get; init; } = 1;
+    public double BackgroundOpacity { get; init; } = 0.92;
     public ApplicationTheme Theme { get; init; } = ApplicationTheme.Sidebar;
     public string PipboyPrimaryColor { get; init; } = DefaultPipboyPrimaryColor;
     public List<SensorPreference> SensorPreferences { get; init; } = [];
@@ -48,7 +48,7 @@ public sealed record AppSettings
         NetworkAlertThreshold = Math.Clamp(NetworkAlertThreshold, 1, 100),
         GpuAlertThreshold = Math.Clamp(GpuAlertThreshold, 1, 100),
         SidebarWidth = Math.Clamp(SidebarWidth, 320, 640),
-        BackgroundOpacity = Math.Clamp(BackgroundOpacity, 0.35, 1),
+        BackgroundOpacity = Math.Clamp(BackgroundOpacity, 0.4, 1),
         Theme = Enum.IsDefined(Theme) ? Theme : ApplicationTheme.Sidebar,
         ClockDateFormat = Enum.IsDefined(ClockDateFormat) ? ClockDateFormat : ClockDateFormat.LongDate,
         PipboyPrimaryColor = NormalizePipboyPrimaryColor(PipboyPrimaryColor),

@@ -19,6 +19,7 @@ public sealed class AppSettingsTests : IDisposable
             StorageAlertThreshold = 0,
             NetworkAlertThreshold = 500,
             GpuAlertThreshold = 500,
+            BackgroundOpacity = 0.1,
             VerticalPosition = 2
         };
 
@@ -30,6 +31,7 @@ public sealed class AppSettingsTests : IDisposable
         Assert.Equal(1, normalized.StorageAlertThreshold);
         Assert.Equal(100, normalized.NetworkAlertThreshold);
         Assert.Equal(100, normalized.GpuAlertThreshold);
+        Assert.Equal(0.4, normalized.BackgroundOpacity);
         Assert.Equal(1, normalized.VerticalPosition);
     }
 

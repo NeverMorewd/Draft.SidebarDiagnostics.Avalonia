@@ -21,6 +21,7 @@ public partial class SettingsWindow : Window
         {
             _viewModel.Saved -= OnSaved;
             _viewModel.Cancelled -= OnCancelled;
+            _viewModel.WindowOpacityPreviewChanged -= OnWindowOpacityPreviewChanged;
         }
 
         if (DataContext is not SettingsViewModel viewModel)
@@ -32,6 +33,7 @@ public partial class SettingsWindow : Window
         _viewModel = viewModel;
         viewModel.Saved += OnSaved;
         viewModel.Cancelled += OnCancelled;
+        viewModel.WindowOpacityPreviewChanged += OnWindowOpacityPreviewChanged;
     }
 
     private void OnSaved(object? sender, EventArgs e)
@@ -41,6 +43,14 @@ public partial class SettingsWindow : Window
     }
 
     private void OnCancelled(object? sender, EventArgs e) => Close(false);
+
+    private void OnWindowOpacityPreviewChanged(object? sender, double opacity)
+    {
+        if (Owner is Window owner)
+        {
+            owner.Opacity = opacity;
+        }
+    }
 
     private void OnClosing(object? sender, WindowClosingEventArgs e)
     {
