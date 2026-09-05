@@ -53,7 +53,7 @@ public sealed record AppSettings
         ClockDateFormat = Enum.IsDefined(ClockDateFormat) ? ClockDateFormat : ClockDateFormat.LongDate,
         PipboyPrimaryColor = NormalizePipboyPrimaryColor(PipboyPrimaryColor),
         VerticalPosition = Math.Clamp(VerticalPosition, 0, 1),
-        SensorPreferences = SensorPreferences
+        SensorPreferences = [.. SensorPreferences
             .Where(preference => !string.IsNullOrWhiteSpace(preference.SensorId))
             .Select(preference => preference with { SensorId = preference.SensorId.Trim() })
             .GroupBy(preference => preference.SensorId, StringComparer.Ordinal)
@@ -63,8 +63,7 @@ public sealed record AppSettings
             {
                 CustomName = string.IsNullOrWhiteSpace(preference.CustomName) ? null : preference.CustomName.Trim(),
                 SortOrder = index
-            })
-            .ToList(),
+            })],
         ExternalMetrics = ExternalMetrics
             .Where(definition => !string.IsNullOrWhiteSpace(definition.Id))
             .GroupBy(definition => definition.Id, StringComparer.Ordinal)

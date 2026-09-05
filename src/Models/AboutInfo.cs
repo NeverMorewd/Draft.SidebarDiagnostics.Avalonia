@@ -18,7 +18,7 @@ public sealed record AboutInfo(
     public string LicenseNotice => $"Licensed under {License}";
 
     public static AboutInfo Create() => new(
-        GetVersion(typeof(SidebarDiagnostics.App.App).Assembly),
+        GetVersion(typeof(App).Assembly),
         GetVersion(typeof(Application).Assembly),
         RuntimeInformation.FrameworkDescription,
         "Wang Dong; original project by ArcadeRenegade",
