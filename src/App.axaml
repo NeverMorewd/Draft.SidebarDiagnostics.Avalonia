@@ -20,16 +20,16 @@
             <TrayIcon
                 Command="{Binding ShowWindowCommand}"
                 Icon="/Assets/sidebar.ico"
-                ToolTipText="Sidebar Diagnostics">
+                ToolTipText="{DynamicResource TextSidebarDiagnostics}">
                 <TrayIcon.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Command="{Binding ShowWindowCommand}" Header="Show Sidebar" />
-                        <NativeMenuItem Command="{Binding HideWindowCommand}" Header="Hide Sidebar" />
+                        <NativeMenuItem Command="{Binding ShowWindowCommand}" Header="{DynamicResource TextShowSidebar}" />
+                        <NativeMenuItem Command="{Binding HideWindowCommand}" Header="{DynamicResource TextHideSidebar}" />
                         <NativeMenuItemSeparator />
-                        <NativeMenuItem Command="{Binding ShowSettingsCommand}" Header="Settings…" />
-                        <NativeMenuItem Command="{Binding ShowAboutCommand}" Header="About Sidebar Diagnostics" />
+                        <NativeMenuItem Command="{Binding ShowSettingsCommand}" Header="{DynamicResource TextSettings}" />
+                        <NativeMenuItem Command="{Binding ShowAboutCommand}" Header="{DynamicResource TextAboutSidebarDiagnostics}" />
                         <NativeMenuItemSeparator />
-                        <NativeMenuItem Command="{Binding ExitCommand}" Header="Exit" />
+                        <NativeMenuItem Command="{Binding ExitCommand}" Header="{DynamicResource TextExit}" />
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>

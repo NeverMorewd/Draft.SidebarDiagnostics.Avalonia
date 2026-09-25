@@ -32,7 +32,7 @@ public sealed partial class SensorOptionViewModel : ViewModelBase
         Device = entry.Device;
         Sensor = entry.Sensor;
         Type = entry.Type.ToString();
-        Availability = entry.IsAvailable ? "Available" : "Unavailable";
+        Availability = Localization.UiText.Translate(entry.IsAvailable ? "Available" : "Unavailable");
         CustomName = entry.CustomName;
         IsVisible = entry.IsVisible;
         IsPinned = entry.IsPinned;

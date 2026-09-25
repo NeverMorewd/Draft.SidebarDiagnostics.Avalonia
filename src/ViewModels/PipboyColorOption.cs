@@ -2,8 +2,9 @@ using Avalonia.Media;
 
 namespace SidebarDiagnostics.App.ViewModels;
 
-public sealed record PipboyColorOption(string DisplayName, string HexColor)
+public sealed record PipboyColorOption(string Name, string HexColor)
 {
+    public string DisplayName => Localization.UiText.Translate(Name);
     public IBrush PreviewBrush { get; } = new SolidColorBrush(Color.Parse(HexColor));
 
     public static IReadOnlyList<PipboyColorOption> All { get; } =

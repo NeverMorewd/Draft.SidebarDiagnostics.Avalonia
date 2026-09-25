@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <data name="TextAboutSidebarDiagnostics" xml:space="preserve"><value>About Sidebar Diagnostics</value></data>
+  <data name="TextSidebarDiagnostics" xml:space="preserve"><value>Sidebar Diagnostics</value></data>
+  <data name="TextCROSSPLATFORMSYSTEMMONITOR" xml:space="preserve"><value>CROSS-PLATFORM SYSTEM MONITOR</value></data>
+  <data name="TextAModernAvaloniaPortOfSidebarDiagnosticsForWindowsMacOSAndLinux" xml:space="preserve"><value>A modern Avalonia port of Sidebar Diagnostics for Windows, macOS, and Linux.</value></data>
+  <data name="TextApplicationVersion" xml:space="preserve"><value>Application version</value></data>
+  <data name="TextAvalonia" xml:space="preserve"><value>Avalonia</value></data>
+  <data name="TextNETRuntime" xml:space="preserve"><value>.NET runtime</value></data>
+  <data name="TextAuthor" xml:space="preserve"><value>Author</value></data>
+  <data name="TextLicense" xml:space="preserve"><value>License</value></data>
+  <data name="TextOpenSource" xml:space="preserve"><value>Open source</value></data>
+  <data name="TextSourceCodeReleasesAndProjectDocumentationAreAvailableOnGitHub" xml:space="preserve"><value>Source code, releases, and project documentation are available on GitHub.</value></data>
+  <data name="TextOpenRepository" xml:space="preserve"><value>Open repository</value></data>
+  <data name="TextNeedHelpOrFoundAProblem" xml:space="preserve"><value>Need help or found a problem?</value></data>
+  <data name="TextPleaseReportBugsAndFeatureRequestsThroughGitHubIssues" xml:space="preserve"><value>Please report bugs and feature requests through GitHub Issues.</value></data>
+  <data name="TextReportAnIssue" xml:space="preserve"><value>Report an issue</value></data>
+  <data name="TextClose" xml:space="preserve"><value>Close</value></data>
+  <data name="TextSidebarBrandHeading" xml:space="preserve"><value>SIDEBAR DIAGNOSTICS</value></data>
+  <data name="TextOpenLiveChart" xml:space="preserve"><value>Open live chart</value></data>
+  <data name="TextLiveMetric" xml:space="preserve"><value>Live metric</value></data>
+  <data name="TextKeepOnTop" xml:space="preserve"><value>Keep on top</value></data>
+  <data name="TextCloseChart" xml:space="preserve"><value>Close chart</value></data>
+  <data name="TextLIVE" xml:space="preserve"><value>LIVE</value></data>
+  <data name="TextTIMERANGE" xml:space="preserve"><value>TIME RANGE</value></data>
+  <data name="TextSidebarDiagnosticsSettings" xml:space="preserve"><value>Sidebar Diagnostics Settings</value></data>
+  <data name="TextSettingsHeading" xml:space="preserve"><value>SETTINGS</value></data>
+  <data name="TextMonitoringPreferences" xml:space="preserve"><value>Monitoring preferences</value></data>
+  <data name="TextChangesApplyImmediatelyAndPersistAfterSaving" xml:space="preserve"><value>Preview theme and opacity immediately. Other changes apply after saving.</value></data>
+  <data name="TextGlobalShortcuts" xml:space="preserve"><value>Global shortcuts</value></data>
+  <data name="TextUseModifiersPlusALetterNumberOrFunctionKeyClearAFieldToDisableIt" xml:space="preserve"><value>Use modifiers plus a letter, number, or function key. Clear a field to disable it.</value></data>
+  <data name="TextShowAndFocus" xml:space="preserve"><value>Show and focus</value></data>
+  <data name="TextHide" xml:space="preserve"><value>Hide</value></data>
+  <data name="TextToggle" xml:space="preserve"><value>Toggle</value></data>
+  <data name="TextRefreshInterval" xml:space="preserve"><value>Refresh interval</value></data>
+  <data name="TextAppearance" xml:space="preserve"><value>Appearance</value></data>
+  <data name="TextTheme" xml:space="preserve"><value>Theme</value></data>
+  <data name="TextPrimaryColor" xml:space="preserve"><value>Primary color</value></data>
+  <data name="TextSidebarWidth" xml:space="preserve"><value>Sidebar width</value></data>
+  <data name="TextWindowOpacity" xml:space="preserve"><value>Window opacity</value></data>
+  <data name="TextShowMachineName" xml:space="preserve"><value>Show machine name</value></data>
+  <data name="TextShowClockAndDate" xml:space="preserve"><value>Show clock and date</value></data>
+  <data name="TextUse24HourClock" xml:space="preserve"><value>Use 24-hour clock</value></data>
+  <data name="TextDateFormat" xml:space="preserve"><value>Date format</value></data>
+  <data name="TextShowExternalIPAddress" xml:space="preserve"><value>Show external IP address</value></data>
+  <data name="TextUsesApiIpifyOrgAndCachesTheResultFor30Minutes" xml:space="preserve"><value>Uses api.ipify.org and caches the result for 30 minutes.</value></data>
+  <data name="TextShowTemperaturesInFahrenheit" xml:space="preserve"><value>Show temperatures in Fahrenheit</value></data>
+  <data name="TextDisplayPlacement" xml:space="preserve"><value>Display placement</value></data>
+  <data name="TextDockRelativeToADisplayWorkingAreaThePrimaryDisplayIsUsedIfTheSelectedDisplayIsUnavailable" xml:space="preserve"><value>Dock relative to a display working area. The primary display is used if the selected display is unavailable.</value></data>
+  <data name="TextDockEdge" xml:space="preserve"><value>Dock edge</value></data>
+  <data name="TextVerticalPosition" xml:space="preserve"><value>Vertical position</value></data>
+  <data name="TextReserveTheDockedAreaOnWindows" xml:space="preserve"><value>Reserve the docked area on Windows</value></data>
+  <data name="TextAlertThresholds" xml:space="preserve"><value>Alert thresholds</value></data>
+  <data name="TextCPU" xml:space="preserve"><value>CPU</value></data>
+  <data name="TextMemory" xml:space="preserve"><value>Memory</value></data>
+  <data name="TextStorage" xml:space="preserve"><value>Storage</value></data>
+  <data name="TextNetwork" xml:space="preserve"><value>Network</value></data>
+  <data name="TextGPU" xml:space="preserve"><value>GPU</value></data>
+  <data name="TextPrimaryGPU" xml:space="preserve"><value>Primary GPU</value></data>
+  <data name="TextSelectTheDeviceRepresentedByTheGPUSummaryCard" xml:space="preserve"><value>Choose the GPU shown first. Other GPUs remain visible.</value></data>
+  <data name="TextHardwareSensors" xml:space="preserve"><value>Hardware sensors</value></data>
+  <data name="TextChooseRenamePinAndOrderTheReadingsShownInTheSidebar" xml:space="preserve"><value>Choose, rename, pin, and order the readings shown in the sidebar.</value></data>
+  <data name="TextSearchSensors" xml:space="preserve"><value>Search sensors</value></data>
+  <data name="TextCustomDisplayName" xml:space="preserve"><value>Custom display name</value></data>
+  <data name="TextPinToTop" xml:space="preserve"><value>Pin to top</value></data>
+  <data name="TextExternalJSONMetrics" xml:space="preserve"><value>External JSON metrics</value></data>
+  <data name="TextReadNumericValuesFromLocalFilesOrExplicitHTTPEndpoints" xml:space="preserve"><value>Read numeric values from local files or explicit HTTP endpoints.</value></data>
+  <data name="TextAddSource" xml:space="preserve"><value>Add source</value></data>
+  <data name="TextCardTitle" xml:space="preserve"><value>Card title</value></data>
+  <data name="TextEnabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="TextRemove" xml:space="preserve"><value>Remove</value></data>
+  <data name="TextFilePathOrHttpsEndpoint" xml:space="preserve"><value>File path or https:// endpoint</value></data>
+  <data name="TextJSONPathForExampleRouterDownload" xml:space="preserve"><value>JSON path, for example router.download</value></data>
+  <data name="TextUnit" xml:space="preserve"><value>Unit</value></data>
+  <data name="TextTestSource" xml:space="preserve"><value>Test source</value></data>
+  <data name="TextKeepTheSidebarAboveOtherWindows" xml:space="preserve"><value>Keep the sidebar above other windows</value></data>
+  <data name="TextLetPointerInputPassThroughTheSidebar" xml:space="preserve"><value>Let pointer input pass through the sidebar</value></data>
+  <data name="TextWindowsOnlyUseTheTrayMenuOrAGlobalShortcutToOpenSettingsAgain" xml:space="preserve"><value>Windows only. Use the tray menu or a global shortcut to open settings again.</value></data>
+  <data name="TextLaunchAtLogin" xml:space="preserve"><value>Launch at login</value></data>
+  <data name="TextStartMinimized" xml:space="preserve"><value>Start minimized</value></data>
+  <data name="TextCancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="TextSaveChanges" xml:space="preserve"><value>Save changes</value></data>
+  <data name="TextShowSidebar" xml:space="preserve"><value>Show Sidebar</value></data>
+  <data name="TextHideSidebar" xml:space="preserve"><value>Hide Sidebar</value></data>
+  <data name="TextSettings" xml:space="preserve"><value>Settings…</value></data>
+  <data name="TextExit" xml:space="preserve"><value>Exit</value></data>
+  <data name="TextAbout" xml:space="preserve"><value>About</value></data>
+  <data name="TextSettingsLabel" xml:space="preserve"><value>Settings</value></data>
+  <data name="TextHideToTray" xml:space="preserve"><value>Hide to tray</value></data>
+  <data name="TextLanguage" xml:space="preserve"><value>Language</value></data>
+  <data name="TextLanguageChangesApplyAfterSaving" xml:space="preserve"><value>Language changes apply after saving.</value></data>
+  <data name="TextEnglish" xml:space="preserve"><value>English</value></data>
+  <data name="TextSimplifiedChinese" xml:space="preserve"><value>Simplified Chinese</value></data>
+  <data name="TextModel" xml:space="preserve"><value>Model</value></data>
+  <data name="TextVendor" xml:space="preserve"><value>Vendor</value></data>
+  <data name="TextArchitecture" xml:space="preserve"><value>Architecture</value></data>
+  <data name="TextLoad" xml:space="preserve"><value>Load</value></data>
+  <data name="TextLogicalProcessors" xml:space="preserve"><value>Logical processors</value></data>
+  <data name="TextUsed" xml:space="preserve"><value>Used</value></data>
+  <data name="TextFree" xml:space="preserve"><value>Free</value></data>
+  <data name="TextTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="TextFormat" xml:space="preserve"><value>Format</value></data>
+  <data name="TextVRAMUsed" xml:space="preserve"><value>VRAM used</value></data>
+  <data name="TextVRAMTotal" xml:space="preserve"><value>VRAM total</value></data>
+  <data name="TextVRAMFree" xml:space="preserve"><value>VRAM free</value></data>
+  <data name="TextSharedMemoryUsed" xml:space="preserve"><value>Shared memory used</value></data>
+  <data name="TextType" xml:space="preserve"><value>Type</value></data>
+  <data name="TextMACAddress" xml:space="preserve"><value>MAC address</value></data>
+  <data name="TextLinkSpeed" xml:space="preserve"><value>Link speed</value></data>
+  <data name="TextDownload" xml:space="preserve"><value>Download</value></data>
+  <data name="TextUpload" xml:space="preserve"><value>Upload</value></data>
+  <data name="TextIPAddresses" xml:space="preserve"><value>IP addresses</value></data>
+  <data name="TextExternalIPAddress" xml:space="preserve"><value>External IP address</value></data>
+  <data name="TextVolume" xml:space="preserve"><value>Volume</value></data>
+  <data name="TextStorageDevice" xml:space="preserve"><value>Storage device</value></data>
+  <data name="TextMotherboard" xml:space="preserve"><value>Motherboard</value></data>
+  <data name="TextController" xml:space="preserve"><value>Controller</value></data>
+  <data name="TextRAM" xml:space="preserve"><value>RAM</value></data>
+  <data name="TextLiveMonitoring" xml:space="preserve"><value>Live monitoring</value></data>
+  <data name="Text15Seconds" xml:space="preserve"><value>15 seconds</value></data>
+  <data name="Text30Seconds" xml:space="preserve"><value>30 seconds</value></data>
+  <data name="Text1Minute" xml:space="preserve"><value>1 minute</value></data>
+  <data name="Text5Minutes" xml:space="preserve"><value>5 minutes</value></data>
+  <data name="Text15Minutes" xml:space="preserve"><value>15 minutes</value></data>
+  <data name="TextTimeOnly" xml:space="preserve"><value>Time only</value></data>
+  <data name="TextMonthAndDay" xml:space="preserve"><value>Month and day</value></data>
+  <data name="TextShortDate" xml:space="preserve"><value>Short date</value></data>
+  <data name="TextLongDate" xml:space="preserve"><value>Long date</value></data>
+  <data name="TextNone" xml:space="preserve"><value>None</value></data>
+  <data name="TextLeft" xml:space="preserve"><value>Left</value></data>
+  <data name="TextRight" xml:space="preserve"><value>Right</value></data>
+  <data name="TextAvailable" xml:space="preserve"><value>Available</value></data>
+  <data name="TextUnavailable" xml:space="preserve"><value>Unavailable</value></data>
+  <data name="TextPrimary" xml:space="preserve"><value>Primary</value></data>
+  <data name="TextPipBoyGreen" xml:space="preserve"><value>Pip-Boy Green</value></data>
+  <data name="TextAmber" xml:space="preserve"><value>Amber</value></data>
+  <data name="TextIceBlue" xml:space="preserve"><value>Ice Blue</value></data>
+  <data name="TextCyan" xml:space="preserve"><value>Cyan</value></data>
+  <data name="TextRed" xml:space="preserve"><value>Red</value></data>
+  <data name="TextPurple" xml:space="preserve"><value>Purple</value></data>
+  <data name="TextGold" xml:space="preserve"><value>Gold</value></data>
+  <data name="TextRose" xml:space="preserve"><value>Rose</value></data>
+  <data name="TextNotTested" xml:space="preserve"><value>Not tested</value></data>
+  <data name="TextTesting" xml:space="preserve"><value>Testing</value></data>
+  <data name="TextStarting" xml:space="preserve"><value>Starting</value></data>
+  <data name="TextCollectingSystemData" xml:space="preserve"><value>Collecting system data</value></data>
+  <data name="TextDetectingHardwareSensors" xml:space="preserve"><value>Detecting hardware sensors</value></data>
+  <data name="TextShortcutsInitializing" xml:space="preserve"><value>Global shortcuts are initializing.</value></data>
+  <data name="TextMetricsUnavailable" xml:space="preserve"><value>Metrics unavailable: {0}</value></data>
+  <data name="TextHardwareUnavailable" xml:space="preserve"><value>Hardware sensors unavailable: {0}</value></data>
+  <data name="TextThemePreviewFailed" xml:space="preserve"><value>Theme preview failed: {0}</value></data>
+  <data name="TextValue" xml:space="preserve"><value>Value</value></data>
+  <data name="TextExternalJsonMetric" xml:space="preserve"><value>External JSON metric</value></data>
+</root>

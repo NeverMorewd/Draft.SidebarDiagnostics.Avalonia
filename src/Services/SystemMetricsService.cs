@@ -34,10 +34,11 @@ public sealed class SystemMetricsService : ISystemMetricsService
                 : 0;
             var storage = ReadStorage();
 
-            var networkRate = _networkTraffic.Update(ReadPrimaryNetworkTraffic(), now);
+            var networkSample = ReadPrimaryNetworkTraffic();
+            var networkRate = _networkTraffic.Update(networkSample, now);
             var downloadRate = networkRate.DownloadBytesPerSecond;
             var uploadRate = networkRate.UploadBytesPerSecond;
-            var networkActivity = Math.Min(100, (downloadRate + uploadRate) / 1_250_000d * 100);
+            var networkActivity = NetworkTrafficRateTracker.CalculateActivityPercent(networkRate, networkSample?.LinkSpeedBitsPerSecond ?? 0);
 
             return new SystemMetricsSnapshot(
                 now,
@@ -79,7 +80,7 @@ public sealed class SystemMetricsService : ISystemMetricsService
         try
         {
             var statistics = networkInterface.GetIPStatistics();
-            return new NetworkTrafficSample(networkInterface.Id, statistics.BytesReceived, statistics.BytesSent);
+            return new NetworkTrafficSample(networkInterface.Id, statistics.BytesReceived, statistics.BytesSent, networkInterface.Speed);
         }
         catch (Exception exception) when (exception is NetworkInformationException or PlatformNotSupportedException)
         {

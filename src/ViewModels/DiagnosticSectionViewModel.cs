@@ -7,7 +7,7 @@ namespace SidebarDiagnostics.App.ViewModels;
 public sealed partial class DiagnosticSectionViewModel : ViewModelBase
 {
     private readonly Dictionary<string, DiagnosticMetricViewModel> _metricsById =
-        new(StringComparer.OrdinalIgnoreCase);
+        new(StringComparer.Ordinal);
 
     public DiagnosticSectionViewModel(DiagnosticSection snapshot)
     {
@@ -30,7 +30,7 @@ public sealed partial class DiagnosticSectionViewModel : ViewModelBase
 
     internal void Apply(DiagnosticSection snapshot)
     {
-        Title = snapshot.Title;
+        Title = Localization.UiText.Translate(snapshot.Title);
         Subtitle = snapshot.Subtitle;
         AccentResourceKey = snapshot.AccentResourceKey;
         ReconcileMetrics(snapshot.Metrics);
@@ -40,12 +40,12 @@ public sealed partial class DiagnosticSectionViewModel : ViewModelBase
 
     private void ReconcileMetrics(IReadOnlyList<DiagnosticMetric> snapshots)
     {
-        var activeIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var activeIds = new HashSet<string>(StringComparer.Ordinal);
 
         for (var index = 0; index < snapshots.Count; index++)
         {
             var snapshot = snapshots[index];
-            var id = snapshot.Label;
+            var id = snapshot.Id;
             if (!activeIds.Add(id))
             {
                 continue;

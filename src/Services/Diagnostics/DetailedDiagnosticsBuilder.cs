@@ -189,7 +189,7 @@ public static class DetailedDiagnosticsBuilder
                 ? (reading.Value * 9 / 5) + 32
                 : reading.Value;
             var unit = fahrenheit && reading.Type == HardwareSensorType.Temperature ? "°F" : reading.Unit;
-            return Numeric(reading.Sensor, FormatSensor(reading, fahrenheit), reading.Id, value, unit);
+            return Numeric(reading.Sensor, FormatSensor(reading, fahrenheit), reading.Id, value, unit) with { StableId = reading.Id };
         });
 
     private static int NaturalSensorOrder(string sensor)
@@ -209,7 +209,7 @@ public static class DetailedDiagnosticsBuilder
     private static string FormatBitsPerSecond(long bitsPerSecond) => bitsPerSecond <= 0 ? "Unknown" : $"{bitsPerSecond / 1_000_000d:F0} Mbps";
 
     private static DiagnosticMetric[] Deduplicate(IEnumerable<DiagnosticMetric> metrics) =>
-        metrics.GroupBy(x => x.Label, StringComparer.OrdinalIgnoreCase).Select(x => x.First()).ToArray();
+        metrics.GroupBy(x => x.Id, StringComparer.Ordinal).Select(x => x.First()).ToArray();
 
     private static string FormatSensor(HardwareSensorReading reading, bool fahrenheit) =>
         fahrenheit && reading.Type == HardwareSensorType.Temperature ? $"{(reading.Value * 9 / 5) + 32:F1}°F" : $"{reading.Value:F1}{reading.Unit}";

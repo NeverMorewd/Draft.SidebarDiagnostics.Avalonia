@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
-    Title="Sidebar Diagnostics"
+    Title="{DynamicResource TextSidebarDiagnostics}"
     Width="360"
     Height="920"
     MinWidth="320"
@@ -41,7 +41,7 @@
                         FontWeight="SemiBold"
                         Foreground="{DynamicResource TextAccentBrush}"
                         LetterSpacing="1.4"
-                        Text="SIDEBAR DIAGNOSTICS" />
+                        Text="{DynamicResource TextSidebarBrandHeading}" />
                     <TextBlock
                         FontSize="{DynamicResource FontSizeHeading}"
                         FontWeight="SemiBold"
@@ -170,7 +170,7 @@
                                                         Click="OpenMetricChart"
                                                         Foreground="{DynamicResource TextAccentBrush}"
                                                         IsVisible="{Binding CanGraph}"
-                                                        ToolTip.Tip="Open live chart">
+                                                        ToolTip.Tip="{DynamicResource TextOpenLiveChart}">
                                                         <Path
                                                             Width="14"
                                                             Height="12"

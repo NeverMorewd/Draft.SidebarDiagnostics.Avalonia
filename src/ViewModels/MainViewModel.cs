@@ -37,7 +37,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     public partial string PlatformName { get; set; } = SystemMetricsSnapshot.Empty.Platform;
 
     [ObservableProperty]
-    public partial string LastUpdated { get; set; } = "Starting";
+    public partial string LastUpdated { get; set; } = Localization.UiText.Get("TextStarting");
 
     [ObservableProperty]
     public partial string ClockText { get; set; } = string.Empty;
@@ -49,10 +49,10 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
     public partial bool IsClockVisible { get; set; } = true;
 
     [ObservableProperty]
-    public partial string StatusText { get; set; } = "Collecting system data";
+    public partial string StatusText { get; set; } = Localization.UiText.Get("TextCollectingSystemData");
 
     [ObservableProperty]
-    public partial string HardwareStatus { get; set; } = "Detecting hardware sensors";
+    public partial string HardwareStatus { get; set; } = Localization.UiText.Get("TextDetectingHardwareSensors");
 
     public IReadOnlyList<HardwareSensorReading> LatestHardwareReadings { get; private set; } = [];
     public IReadOnlyList<GpuSnapshot> LatestGpuSnapshots { get; private set; } = [];
@@ -119,6 +119,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
 
     private void ApplySettings(AppSettings settings)
     {
+        Localization.ApplicationLanguage.Apply(settings.Language);
         _timer.Interval = TimeSpan.FromMilliseconds(settings.RefreshIntervalMilliseconds);
         IsMachineNameVisible = settings.ShowMachineName;
         IsClockVisible = settings.ShowClock;
@@ -149,22 +150,22 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
             PlatformName = snapshot.Platform;
             LastUpdated = snapshot.Timestamp.ToLocalTime().ToString("HH:mm:ss", CultureInfo.CurrentCulture);
             ClockText = FormatClock(snapshot.Timestamp.ToLocalTime(), Settings);
-            StatusText = "Live monitoring";
+            StatusText = Localization.UiText.Get("TextLiveMonitoring");
 
             await UpdateExternalMetricsAsync();
 
-            var visibleReadings = SensorCatalog.SelectVisible(hardwareReadings, Settings.SensorPreferences).ToArray();
             HardwareStatus = _hardwareSensorService.CapabilityMessage;
             var sections = DetailedDiagnosticsBuilder.Build(
                 snapshot,
-                visibleReadings,
+                hardwareReadings,
                 Settings.UseFahrenheit,
-                LatestGpuSnapshots,
+                LatestGpuSnapshots.OrderByDescending(gpu => gpu.DeviceId == Settings.SelectedGpuId).ToArray(),
                 _externalIpAddress);
             var diagnosticSnapshots = DiagnosticAlertPolicy.Apply(
                 [.. sections, .. _externalMetricSections],
                 Settings,
                 snapshot.NetworkActivityPercent);
+            diagnosticSnapshots = DiagnosticPresentationPolicy.Apply(diagnosticSnapshots, Settings);
             _diagnosticSections.Update(diagnosticSnapshots);
             MetricSeries.Update(diagnosticSnapshots, snapshot.Timestamp);
         }
@@ -173,7 +174,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         }
         catch (Exception exception)
         {
-            StatusText = $"Metrics unavailable: {exception.GetType().Name}";
+            StatusText = Localization.UiText.Format("TextMetricsUnavailable", exception.GetType().Name);
         }
         finally
         {
@@ -222,7 +223,7 @@ public sealed partial class MainViewModel : ViewModelBase, IDisposable
         }
         catch (Exception exception)
         {
-            HardwareStatus = $"Hardware sensors unavailable: {exception.GetType().Name}";
+            HardwareStatus = Localization.UiText.Format("TextHardwareUnavailable", exception.GetType().Name);
             return [];
         }
     }

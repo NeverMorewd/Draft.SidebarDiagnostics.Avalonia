@@ -7,5 +7,8 @@ public sealed record DiagnosticMetric(
     double? NumericValue = null,
     string Unit = "")
 {
+    public string? StableId { get; init; }
+    public string Id => StableId ?? Label;
+
     public bool CanGraph => !string.IsNullOrWhiteSpace(SeriesId) && NumericValue is not null;
 }

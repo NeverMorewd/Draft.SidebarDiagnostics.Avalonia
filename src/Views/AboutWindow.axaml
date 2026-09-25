@@ -3,7 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:SidebarDiagnostics.App.Models"
-    Title="About Sidebar Diagnostics"
+    Title="{DynamicResource TextAboutSidebarDiagnostics}"
     Width="540"
     Height="570"
     x:DataType="models:AboutInfo"
@@ -39,13 +39,13 @@
                     FontSize="{DynamicResource FontSizeTitle}"
                     FontWeight="SemiBold"
                     Foreground="{DynamicResource TextPrimaryBrush}"
-                    Text="Sidebar Diagnostics" />
+                    Text="{DynamicResource TextSidebarDiagnostics}" />
                 <TextBlock
                     FontSize="{DynamicResource FontSizeBody}"
                     FontWeight="SemiBold"
                     Foreground="{DynamicResource TextAccentBrush}"
                     LetterSpacing="1.2"
-                    Text="CROSS-PLATFORM SYSTEM MONITOR" />
+                    Text="{DynamicResource TextCROSSPLATFORMSYSTEMMONITOR}" />
             </StackPanel>
         </Grid>
 
@@ -53,7 +53,7 @@
             Grid.Row="1"
             FontSize="{DynamicResource FontSizeDescription}"
             Foreground="{DynamicResource TextMutedBrush}"
-            Text="A modern Avalonia port of Sidebar Diagnostics for Windows, macOS, and Linux."
+            Text="{DynamicResource TextAModernAvaloniaPortOfSidebarDiagnosticsForWindowsMacOSAndLinux}"
             TextWrapping="Wrap" />
 
         <Border
@@ -67,7 +67,7 @@
                 ColumnDefinitions="140,*"
                 RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                 RowSpacing="10">
-                <TextBlock Foreground="{DynamicResource TextSubtleBrush}" Text="Application version" />
+                <TextBlock Foreground="{DynamicResource TextSubtleBrush}" Text="{DynamicResource TextApplicationVersion}" />
                 <TextBlock
                     Grid.Column="1"
                     Foreground="{DynamicResource TextSecondaryBrush}"
@@ -75,7 +75,7 @@
                 <TextBlock
                     Grid.Row="1"
                     Foreground="{DynamicResource TextSubtleBrush}"
-                    Text="Avalonia" />
+                    Text="{DynamicResource TextAvalonia}" />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="1"
@@ -84,7 +84,7 @@
                 <TextBlock
                     Grid.Row="2"
                     Foreground="{DynamicResource TextSubtleBrush}"
-                    Text=".NET runtime" />
+                    Text="{DynamicResource TextNETRuntime}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="1"
@@ -93,7 +93,7 @@
                 <TextBlock
                     Grid.Row="3"
                     Foreground="{DynamicResource TextSubtleBrush}"
-                    Text="Author" />
+                    Text="{DynamicResource TextAuthor}" />
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="1"
@@ -103,7 +103,7 @@
                 <TextBlock
                     Grid.Row="4"
                     Foreground="{DynamicResource TextSubtleBrush}"
-                    Text="License" />
+                    Text="{DynamicResource TextLicense}" />
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="1"
@@ -116,28 +116,28 @@
             <TextBlock
                 FontWeight="SemiBold"
                 Foreground="{DynamicResource TextSecondaryBrush}"
-                Text="Open source" />
+                Text="{DynamicResource TextOpenSource}" />
             <TextBlock
                 Foreground="{DynamicResource TextMutedBrush}"
-                Text="Source code, releases, and project documentation are available on GitHub."
+                Text="{DynamicResource TextSourceCodeReleasesAndProjectDocumentationAreAvailableOnGitHub}"
                 TextWrapping="Wrap" />
             <Button
                 HorizontalAlignment="Left"
                 Click="OpenRepository"
-                Content="Open repository" />
+                Content="{DynamicResource TextOpenRepository}" />
             <TextBlock
                 Margin="0,6,0,0"
                 FontWeight="SemiBold"
                 Foreground="{DynamicResource TextSecondaryBrush}"
-                Text="Need help or found a problem?" />
+                Text="{DynamicResource TextNeedHelpOrFoundAProblem}" />
             <TextBlock
                 Foreground="{DynamicResource TextMutedBrush}"
-                Text="Please report bugs and feature requests through GitHub Issues."
+                Text="{DynamicResource TextPleaseReportBugsAndFeatureRequestsThroughGitHubIssues}"
                 TextWrapping="Wrap" />
             <Button
                 HorizontalAlignment="Left"
                 Click="OpenIssues"
-                Content="Report an issue" />
+                Content="{DynamicResource TextReportAnIssue}" />
         </StackPanel>
 
         <StackPanel
@@ -153,7 +153,7 @@
                 MinWidth="88"
                 HorizontalAlignment="Center"
                 Click="CloseWindow"
-                Content="Close" />
+                Content="{DynamicResource TextClose}" />
         </StackPanel>
     </Grid>
 </Window>

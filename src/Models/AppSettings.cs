@@ -9,6 +9,7 @@ public sealed record AppSettings
     public static AppSettings Default { get; } = new();
 
     public int RefreshIntervalMilliseconds { get; init; } = 1000;
+    public string Language { get; init; } = "en";
     public double CpuAlertThreshold { get; init; } = 85;
     public double MemoryAlertThreshold { get; init; } = 85;
     public double StorageAlertThreshold { get; init; } = 90;
@@ -41,6 +42,7 @@ public sealed record AppSettings
 
     public AppSettings Normalize() => this with
     {
+        Language = Localization.LanguageOption.Normalize(Language),
         RefreshIntervalMilliseconds = Math.Clamp(RefreshIntervalMilliseconds, 250, 10000),
         CpuAlertThreshold = Math.Clamp(CpuAlertThreshold, 1, 100),
         MemoryAlertThreshold = Math.Clamp(MemoryAlertThreshold, 1, 100),
