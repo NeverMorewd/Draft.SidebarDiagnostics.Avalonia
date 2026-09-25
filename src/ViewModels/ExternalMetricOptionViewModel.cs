@@ -39,7 +39,7 @@ public sealed partial class ExternalMetricOptionViewModel : ViewModelBase
     public partial bool IsEnabled { get; set; }
 
     [ObservableProperty]
-    public partial string PreviewStatus { get; set; } = "Not tested";
+    public partial string PreviewStatus { get; set; } = Localization.UiText.Get("TextNotTested");
 
     public event Action<ExternalMetricOptionViewModel>? RemoveRequested;
 
@@ -77,7 +77,7 @@ public sealed partial class ExternalMetricOptionViewModel : ViewModelBase
     [RelayCommand]
     private async Task TestAsync(CancellationToken cancellationToken)
     {
-        PreviewStatus = "Testing";
+        PreviewStatus = Localization.UiText.Get("TextTesting");
         var snapshot = await _preview(ToDefinition(), cancellationToken);
         PreviewStatus = snapshot.IsSuccess
             ? $"{snapshot.Value:F2}{snapshot.Unit}"

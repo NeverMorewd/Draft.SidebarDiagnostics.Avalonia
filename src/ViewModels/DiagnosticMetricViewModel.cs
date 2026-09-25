@@ -7,7 +7,7 @@ public sealed partial class DiagnosticMetricViewModel : ViewModelBase
 {
     public DiagnosticMetricViewModel(DiagnosticMetric snapshot)
     {
-        Id = snapshot.Label;
+        Id = snapshot.Id;
         Apply(snapshot);
     }
 
@@ -34,7 +34,7 @@ public sealed partial class DiagnosticMetricViewModel : ViewModelBase
 
     internal void Apply(DiagnosticMetric snapshot)
     {
-        Label = snapshot.Label;
+        Label = snapshot.StableId is null ? Localization.UiText.Translate(snapshot.Label) : snapshot.Label;
         Value = snapshot.Value;
         SeriesId = snapshot.SeriesId;
         NumericValue = snapshot.NumericValue;

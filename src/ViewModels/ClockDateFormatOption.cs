@@ -2,8 +2,9 @@ using SidebarDiagnostics.App.Models;
 
 namespace SidebarDiagnostics.App.ViewModels;
 
-public sealed record ClockDateFormatOption(ClockDateFormat Value, string DisplayName)
+public sealed record ClockDateFormatOption(ClockDateFormat Value, string Name)
 {
+    public string DisplayName => Localization.UiText.Translate(Name);
     public static IReadOnlyList<ClockDateFormatOption> All { get; } =
     [
         new(ClockDateFormat.None, "Time only"),

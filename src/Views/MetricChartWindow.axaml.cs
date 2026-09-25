@@ -9,10 +9,10 @@ public partial class MetricChartWindow : Window
 {
     private static readonly (string Label, TimeSpan Duration)[] Durations =
     [
-        ("15 seconds", TimeSpan.FromSeconds(15)),
-        ("30 seconds", TimeSpan.FromSeconds(30)),
-        ("1 minute", TimeSpan.FromMinutes(1)),
-        ("5 minutes", TimeSpan.FromMinutes(5))
+        ("Text15Seconds", TimeSpan.FromSeconds(15)),
+        ("Text30Seconds", TimeSpan.FromSeconds(30)),
+        ("Text1Minute", TimeSpan.FromMinutes(1)),
+        ("Text5Minutes", TimeSpan.FromMinutes(5))
     ];
     private MetricSeries? _series;
 
@@ -30,7 +30,7 @@ public partial class MetricChartWindow : Window
         TitleText.Text = series.Title;
         SubtitleText.Text = series.Subtitle;
         Chart.Series = series;
-        DurationSelector.ItemsSource = Durations.Select(item => item.Label).ToArray();
+        DurationSelector.ItemsSource = Durations.Select(item => Localization.UiText.Get(item.Label)).ToArray();
         DurationSelector.SelectedIndex = 1;
         series.Changed += OnSeriesChanged;
         Closed += OnClosed;

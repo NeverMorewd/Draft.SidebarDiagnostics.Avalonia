@@ -1,10 +1,14 @@
 namespace SidebarDiagnostics.App.Services;
 
-internal readonly record struct NetworkTrafficSample(string InterfaceId, long ReceivedBytes, long SentBytes);
+internal readonly record struct NetworkTrafficSample(string InterfaceId, long ReceivedBytes, long SentBytes, long LinkSpeedBitsPerSecond = 0);
 internal readonly record struct NetworkTrafficRate(double DownloadBytesPerSecond, double UploadBytesPerSecond);
 
 internal sealed class NetworkTrafficRateTracker
 {
+    internal static double CalculateActivityPercent(NetworkTrafficRate rate, long linkSpeedBitsPerSecond) =>
+        linkSpeedBitsPerSecond <= 0 ? 0 : Math.Clamp(
+            Math.Max(rate.DownloadBytesPerSecond, rate.UploadBytesPerSecond) * 8 / linkSpeedBitsPerSecond * 100, 0, 100);
+
     private string? interfaceId;
     private DateTimeOffset sampledAt;
     private long receivedBytes;

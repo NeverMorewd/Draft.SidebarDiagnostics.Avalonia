@@ -19,6 +19,7 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        Localization.ApplicationLanguage.Apply("en");
     }
 
     public override void OnFrameworkInitializationCompleted()

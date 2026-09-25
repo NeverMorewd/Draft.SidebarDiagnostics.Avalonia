@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <data name="TextAboutSidebarDiagnostics" xml:space="preserve"><value>关于 Sidebar Diagnostics</value></data>
+  <data name="TextSidebarDiagnostics" xml:space="preserve"><value>Sidebar Diagnostics</value></data>
+  <data name="TextCROSSPLATFORMSYSTEMMONITOR" xml:space="preserve"><value>跨平台系统监控</value></data>
+  <data name="TextAModernAvaloniaPortOfSidebarDiagnosticsForWindowsMacOSAndLinux" xml:space="preserve"><value>使用 Avalonia 重构的 Sidebar Diagnostics，支持 Windows、macOS 和 Linux。</value></data>
+  <data name="TextApplicationVersion" xml:space="preserve"><value>应用版本</value></data>
+  <data name="TextAvalonia" xml:space="preserve"><value>Avalonia</value></data>
+  <data name="TextNETRuntime" xml:space="preserve"><value>.NET 运行时</value></data>
+  <data name="TextAuthor" xml:space="preserve"><value>作者</value></data>
+  <data name="TextLicense" xml:space="preserve"><value>许可证</value></data>
+  <data name="TextOpenSource" xml:space="preserve"><value>开源项目</value></data>
+  <data name="TextSourceCodeReleasesAndProjectDocumentationAreAvailableOnGitHub" xml:space="preserve"><value>源代码、发布版本和项目文档均可在 GitHub 上查看。</value></data>
+  <data name="TextOpenRepository" xml:space="preserve"><value>打开仓库</value></data>
+  <data name="TextNeedHelpOrFoundAProblem" xml:space="preserve"><value>需要帮助或发现问题？</value></data>
+  <data name="TextPleaseReportBugsAndFeatureRequestsThroughGitHubIssues" xml:space="preserve"><value>请通过 GitHub Issues 反馈问题或提出功能建议。</value></data>
+  <data name="TextReportAnIssue" xml:space="preserve"><value>反馈问题</value></data>
+  <data name="TextClose" xml:space="preserve"><value>关闭</value></data>
+  <data name="TextSidebarBrandHeading" xml:space="preserve"><value>SIDEBAR DIAGNOSTICS</value></data>
+  <data name="TextOpenLiveChart" xml:space="preserve"><value>打开实时图表</value></data>
+  <data name="TextLiveMetric" xml:space="preserve"><value>实时指标</value></data>
+  <data name="TextKeepOnTop" xml:space="preserve"><value>置顶</value></data>
+  <data name="TextCloseChart" xml:space="preserve"><value>关闭图表</value></data>
+  <data name="TextLIVE" xml:space="preserve"><value>实时</value></data>
+  <data name="TextTIMERANGE" xml:space="preserve"><value>时间范围</value></data>
+  <data name="TextSidebarDiagnosticsSettings" xml:space="preserve"><value>Sidebar Diagnostics 设置</value></data>
+  <data name="TextSettingsHeading" xml:space="preserve"><value>设置</value></data>
+  <data name="TextMonitoringPreferences" xml:space="preserve"><value>监控偏好</value></data>
+  <data name="TextChangesApplyImmediatelyAndPersistAfterSaving" xml:space="preserve"><value>主题和透明度可即时预览，其他更改在保存后生效。</value></data>
+  <data name="TextGlobalShortcuts" xml:space="preserve"><value>全局快捷键</value></data>
+  <data name="TextUseModifiersPlusALetterNumberOrFunctionKeyClearAFieldToDisableIt" xml:space="preserve"><value>使用修饰键加字母、数字或功能键。清空输入框可禁用该快捷键。</value></data>
+  <data name="TextShowAndFocus" xml:space="preserve"><value>显示并聚焦</value></data>
+  <data name="TextHide" xml:space="preserve"><value>隐藏</value></data>
+  <data name="TextToggle" xml:space="preserve"><value>切换显示</value></data>
+  <data name="TextRefreshInterval" xml:space="preserve"><value>刷新间隔</value></data>
+  <data name="TextAppearance" xml:space="preserve"><value>外观</value></data>
+  <data name="TextTheme" xml:space="preserve"><value>主题</value></data>
+  <data name="TextPrimaryColor" xml:space="preserve"><value>主题色</value></data>
+  <data name="TextSidebarWidth" xml:space="preserve"><value>侧栏宽度</value></data>
+  <data name="TextWindowOpacity" xml:space="preserve"><value>窗口不透明度</value></data>
+  <data name="TextShowMachineName" xml:space="preserve"><value>显示计算机名称</value></data>
+  <data name="TextShowClockAndDate" xml:space="preserve"><value>显示时间和日期</value></data>
+  <data name="TextUse24HourClock" xml:space="preserve"><value>使用 24 小时制</value></data>
+  <data name="TextDateFormat" xml:space="preserve"><value>日期格式</value></data>
+  <data name="TextShowExternalIPAddress" xml:space="preserve"><value>显示外网 IP 地址</value></data>
+  <data name="TextUsesApiIpifyOrgAndCachesTheResultFor30Minutes" xml:space="preserve"><value>使用 api.ipify.org 查询，结果缓存 30 分钟。</value></data>
+  <data name="TextShowTemperaturesInFahrenheit" xml:space="preserve"><value>使用华氏温度</value></data>
+  <data name="TextDisplayPlacement" xml:space="preserve"><value>窗口位置</value></data>
+  <data name="TextDockRelativeToADisplayWorkingAreaThePrimaryDisplayIsUsedIfTheSelectedDisplayIsUnavailable" xml:space="preserve"><value>相对于显示器工作区停靠。所选显示器不可用时使用主显示器。</value></data>
+  <data name="TextDockEdge" xml:space="preserve"><value>停靠边缘</value></data>
+  <data name="TextVerticalPosition" xml:space="preserve"><value>垂直位置</value></data>
+  <data name="TextReserveTheDockedAreaOnWindows" xml:space="preserve"><value>在 Windows 上预留停靠区域</value></data>
+  <data name="TextAlertThresholds" xml:space="preserve"><value>告警阈值</value></data>
+  <data name="TextCPU" xml:space="preserve"><value>CPU</value></data>
+  <data name="TextMemory" xml:space="preserve"><value>内存</value></data>
+  <data name="TextStorage" xml:space="preserve"><value>存储</value></data>
+  <data name="TextNetwork" xml:space="preserve"><value>网络</value></data>
+  <data name="TextGPU" xml:space="preserve"><value>GPU</value></data>
+  <data name="TextPrimaryGPU" xml:space="preserve"><value>首选 GPU</value></data>
+  <data name="TextSelectTheDeviceRepresentedByTheGPUSummaryCard" xml:space="preserve"><value>选择优先显示的 GPU，其他 GPU 仍会显示。</value></data>
+  <data name="TextHardwareSensors" xml:space="preserve"><value>硬件传感器</value></data>
+  <data name="TextChooseRenamePinAndOrderTheReadingsShownInTheSidebar" xml:space="preserve"><value>选择、重命名、置顶和排序侧栏中显示的传感器。</value></data>
+  <data name="TextSearchSensors" xml:space="preserve"><value>搜索传感器</value></data>
+  <data name="TextCustomDisplayName" xml:space="preserve"><value>自定义显示名称</value></data>
+  <data name="TextPinToTop" xml:space="preserve"><value>置顶显示</value></data>
+  <data name="TextExternalJSONMetrics" xml:space="preserve"><value>外部 JSON 指标</value></data>
+  <data name="TextReadNumericValuesFromLocalFilesOrExplicitHTTPEndpoints" xml:space="preserve"><value>从本地文件或指定的 HTTP 端点读取数值。</value></data>
+  <data name="TextAddSource" xml:space="preserve"><value>添加数据源</value></data>
+  <data name="TextCardTitle" xml:space="preserve"><value>卡片标题</value></data>
+  <data name="TextEnabled" xml:space="preserve"><value>启用</value></data>
+  <data name="TextRemove" xml:space="preserve"><value>移除</value></data>
+  <data name="TextFilePathOrHttpsEndpoint" xml:space="preserve"><value>文件路径或 HTTPS 地址</value></data>
+  <data name="TextJSONPathForExampleRouterDownload" xml:space="preserve"><value>JSON 路径，例如 router.download</value></data>
+  <data name="TextUnit" xml:space="preserve"><value>单位</value></data>
+  <data name="TextTestSource" xml:space="preserve"><value>测试数据源</value></data>
+  <data name="TextKeepTheSidebarAboveOtherWindows" xml:space="preserve"><value>侧栏始终置顶</value></data>
+  <data name="TextLetPointerInputPassThroughTheSidebar" xml:space="preserve"><value>允许鼠标穿透侧栏</value></data>
+  <data name="TextWindowsOnlyUseTheTrayMenuOrAGlobalShortcutToOpenSettingsAgain" xml:space="preserve"><value>仅限 Windows。可通过托盘菜单或全局快捷键重新打开设置。</value></data>
+  <data name="TextLaunchAtLogin" xml:space="preserve"><value>登录时启动</value></data>
+  <data name="TextStartMinimized" xml:space="preserve"><value>启动时隐藏</value></data>
+  <data name="TextCancel" xml:space="preserve"><value>取消</value></data>
+  <data name="TextSaveChanges" xml:space="preserve"><value>保存更改</value></data>
+  <data name="TextShowSidebar" xml:space="preserve"><value>显示侧栏</value></data>
+  <data name="TextHideSidebar" xml:space="preserve"><value>隐藏侧栏</value></data>
+  <data name="TextSettings" xml:space="preserve"><value>设置…</value></data>
+  <data name="TextExit" xml:space="preserve"><value>退出</value></data>
+  <data name="TextAbout" xml:space="preserve"><value>关于</value></data>
+  <data name="TextSettingsLabel" xml:space="preserve"><value>设置</value></data>
+  <data name="TextHideToTray" xml:space="preserve"><value>隐藏到托盘</value></data>
+  <data name="TextLanguage" xml:space="preserve"><value>语言</value></data>
+  <data name="TextLanguageChangesApplyAfterSaving" xml:space="preserve"><value>语言更改在保存后生效。</value></data>
+  <data name="TextEnglish" xml:space="preserve"><value>English</value></data>
+  <data name="TextSimplifiedChinese" xml:space="preserve"><value>简体中文</value></data>
+  <data name="TextModel" xml:space="preserve"><value>型号</value></data>
+  <data name="TextVendor" xml:space="preserve"><value>厂商</value></data>
+  <data name="TextArchitecture" xml:space="preserve"><value>架构</value></data>
+  <data name="TextLoad" xml:space="preserve"><value>负载</value></data>
+  <data name="TextLogicalProcessors" xml:space="preserve"><value>逻辑处理器</value></data>
+  <data name="TextUsed" xml:space="preserve"><value>已用</value></data>
+  <data name="TextFree" xml:space="preserve"><value>可用</value></data>
+  <data name="TextTotal" xml:space="preserve"><value>总量</value></data>
+  <data name="TextFormat" xml:space="preserve"><value>文件系统</value></data>
+  <data name="TextVRAMUsed" xml:space="preserve"><value>已用显存</value></data>
+  <data name="TextVRAMTotal" xml:space="preserve"><value>显存总量</value></data>
+  <data name="TextVRAMFree" xml:space="preserve"><value>可用显存</value></data>
+  <data name="TextSharedMemoryUsed" xml:space="preserve"><value>已用共享显存</value></data>
+  <data name="TextType" xml:space="preserve"><value>类型</value></data>
+  <data name="TextMACAddress" xml:space="preserve"><value>MAC 地址</value></data>
+  <data name="TextLinkSpeed" xml:space="preserve"><value>连接速率</value></data>
+  <data name="TextDownload" xml:space="preserve"><value>下载</value></data>
+  <data name="TextUpload" xml:space="preserve"><value>上传</value></data>
+  <data name="TextIPAddresses" xml:space="preserve"><value>IP 地址</value></data>
+  <data name="TextExternalIPAddress" xml:space="preserve"><value>外网 IP 地址</value></data>
+  <data name="TextVolume" xml:space="preserve"><value>卷</value></data>
+  <data name="TextStorageDevice" xml:space="preserve"><value>存储设备</value></data>
+  <data name="TextMotherboard" xml:space="preserve"><value>主板</value></data>
+  <data name="TextController" xml:space="preserve"><value>控制器</value></data>
+  <data name="TextRAM" xml:space="preserve"><value>内存</value></data>
+  <data name="TextLiveMonitoring" xml:space="preserve"><value>实时监控</value></data>
+  <data name="Text15Seconds" xml:space="preserve"><value>15 秒</value></data>
+  <data name="Text30Seconds" xml:space="preserve"><value>30 秒</value></data>
+  <data name="Text1Minute" xml:space="preserve"><value>1 分钟</value></data>
+  <data name="Text5Minutes" xml:space="preserve"><value>5 分钟</value></data>
+  <data name="Text15Minutes" xml:space="preserve"><value>15 分钟</value></data>
+  <data name="TextTimeOnly" xml:space="preserve"><value>仅时间</value></data>
+  <data name="TextMonthAndDay" xml:space="preserve"><value>月和日</value></data>
+  <data name="TextShortDate" xml:space="preserve"><value>短日期</value></data>
+  <data name="TextLongDate" xml:space="preserve"><value>长日期</value></data>
+  <data name="TextNone" xml:space="preserve"><value>无</value></data>
+  <data name="TextLeft" xml:space="preserve"><value>左侧</value></data>
+  <data name="TextRight" xml:space="preserve"><value>右侧</value></data>
+  <data name="TextAvailable" xml:space="preserve"><value>可用</value></data>
+  <data name="TextUnavailable" xml:space="preserve"><value>不可用</value></data>
+  <data name="TextPrimary" xml:space="preserve"><value>主显示器</value></data>
+  <data name="TextPipBoyGreen" xml:space="preserve"><value>Pip-Boy 绿色</value></data>
+  <data name="TextAmber" xml:space="preserve"><value>琥珀色</value></data>
+  <data name="TextIceBlue" xml:space="preserve"><value>冰蓝色</value></data>
+  <data name="TextCyan" xml:space="preserve"><value>青色</value></data>
+  <data name="TextRed" xml:space="preserve"><value>红色</value></data>
+  <data name="TextPurple" xml:space="preserve"><value>紫色</value></data>
+  <data name="TextGold" xml:space="preserve"><value>金色</value></data>
+  <data name="TextRose" xml:space="preserve"><value>玫红色</value></data>
+  <data name="TextNotTested" xml:space="preserve"><value>尚未测试</value></data>
+  <data name="TextTesting" xml:space="preserve"><value>正在测试</value></data>
+  <data name="TextStarting" xml:space="preserve"><value>正在启动</value></data>
+  <data name="TextCollectingSystemData" xml:space="preserve"><value>正在采集系统数据</value></data>
+  <data name="TextDetectingHardwareSensors" xml:space="preserve"><value>正在检测硬件传感器</value></data>
+  <data name="TextShortcutsInitializing" xml:space="preserve"><value>正在初始化全局快捷键。</value></data>
+  <data name="TextMetricsUnavailable" xml:space="preserve"><value>指标暂不可用：{0}</value></data>
+  <data name="TextHardwareUnavailable" xml:space="preserve"><value>硬件传感器暂不可用：{0}</value></data>
+  <data name="TextThemePreviewFailed" xml:space="preserve"><value>主题预览失败：{0}</value></data>
+  <data name="TextValue" xml:space="preserve"><value>数值</value></data>
+  <data name="TextExternalJsonMetric" xml:space="preserve"><value>外部 JSON 指标</value></data>
+</root>

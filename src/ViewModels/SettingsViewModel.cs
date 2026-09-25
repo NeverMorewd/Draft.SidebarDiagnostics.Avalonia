@@ -17,6 +17,11 @@ public sealed partial class SettingsViewModel : ViewModelBase
     private readonly double _originalWindowOpacity;
     private int _themePreviewVersion;
 
+    public IReadOnlyList<Localization.LanguageOption> Languages { get; } = Localization.LanguageOption.All;
+
+    [ObservableProperty]
+    public partial Localization.LanguageOption SelectedLanguage { get; set; } = Localization.LanguageOption.All[0];
+
     [ObservableProperty]
     public partial int RefreshIntervalMilliseconds { get; set; }
 
@@ -135,6 +140,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         _mainViewModel = mainViewModel;
         _themeService = themeService;
         var settings = mainViewModel.Settings;
+        SelectedLanguage = Languages.Single(option => option.Code == settings.Language);
         _originalTheme = settings.Theme;
         _originalPipboyPrimaryColor = settings.PipboyPrimaryColor;
         _originalWindowOpacity = settings.BackgroundOpacity;
@@ -202,6 +208,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
     {
         var settings = new AppSettings
         {
+            Language = SelectedLanguage.Code,
             RefreshIntervalMilliseconds = RefreshIntervalMilliseconds,
             CpuAlertThreshold = CpuAlertThreshold,
             MemoryAlertThreshold = MemoryAlertThreshold,
@@ -297,7 +304,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         }
         catch (Exception exception)
         {
-            ThemePreviewError = $"Theme preview failed: {exception.Message}";
+            ThemePreviewError = Localization.UiText.Format("TextThemePreviewFailed", exception.Message);
         }
     }
 

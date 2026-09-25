@@ -3,7 +3,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:SidebarDiagnostics.App.ViewModels"
-    Title="Sidebar Diagnostics Settings"
+    xmlns:localization="using:SidebarDiagnostics.App.Localization"
+    Title="{DynamicResource TextSidebarDiagnosticsSettings}"
     Width="440"
     Height="780"
     MinWidth="400"
@@ -13,6 +14,9 @@
     ExtendClientAreaToDecorationsHint="True"
     WindowDecorations="BorderOnly"
     WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <localization:LocalizedEnumConverter x:Key="LocalizedEnumConverter" />
+    </Window.Resources>
     <Grid RowDefinitions="Auto,*,Auto">
         <StackPanel
             Grid.Row="0"
@@ -25,16 +29,16 @@
                 FontWeight="SemiBold"
                 Foreground="{DynamicResource TextAccentBrush}"
                 LetterSpacing="1.8"
-                Text="SETTINGS" />
+                Text="{DynamicResource TextSettingsHeading}" />
             <TextBlock
                 FontSize="{DynamicResource FontSizePageTitle}"
                 FontWeight="SemiBold"
                 Foreground="{DynamicResource TextPrimaryBrush}"
-                Text="Monitoring preferences" />
+                Text="{DynamicResource TextMonitoringPreferences}" />
             <TextBlock
                 FontSize="{DynamicResource FontSizeDescription}"
                 Foreground="{DynamicResource TextMutedBrush}"
-                Text="Changes apply immediately and persist after saving."
+                Text="{DynamicResource TextChangesApplyImmediatelyAndPersistAfterSaving}"
                 TextWrapping="Wrap" />
         </StackPanel>
 
@@ -46,26 +50,40 @@
                 Spacing="22">
                 <Border Classes="card">
                     <StackPanel Spacing="10">
+                        <TextBlock Text="{DynamicResource TextLanguage}" FontWeight="SemiBold" />
+                        <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}"
+                                  HorizontalAlignment="Stretch">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="localization:LanguageOption">
+                                    <TextBlock Text="{Binding DisplayName}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBlock Text="{DynamicResource TextLanguageChangesApplyAfterSaving}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="card">
+                    <StackPanel Spacing="10">
                         <TextBlock
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextSecondaryBrush}"
-                            Text="Global shortcuts" />
+                            Text="{DynamicResource TextGlobalShortcuts}" />
                         <TextBlock
                             FontSize="{DynamicResource FontSizeBody}"
                             Foreground="{DynamicResource TextMutedBrush}"
-                            Text="Use modifiers plus a letter, number, or function key. Clear a field to disable it."
+                            Text="{DynamicResource TextUseModifiersPlusALetterNumberOrFunctionKeyClearAFieldToDisableIt}"
                             TextWrapping="Wrap" />
                         <Grid
                             ColumnDefinitions="120,*"
                             ColumnSpacing="10"
                             RowDefinitions="Auto,Auto,Auto"
                             RowSpacing="8">
-                            <TextBlock VerticalAlignment="Center" Text="Show and focus" />
+                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource TextShowAndFocus}" />
                             <TextBox Grid.Column="1" Text="{Binding ShowShortcut}" />
                             <TextBlock
                                 Grid.Row="1"
                                 VerticalAlignment="Center"
-                                Text="Hide" />
+                                Text="{DynamicResource TextHide}" />
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="1"
@@ -73,7 +91,7 @@
                             <TextBlock
                                 Grid.Row="2"
                                 VerticalAlignment="Center"
-                                Text="Toggle" />
+                                Text="{DynamicResource TextToggle}" />
                             <TextBox
                                 Grid.Row="2"
                                 Grid.Column="1"
@@ -92,7 +110,7 @@
                         <TextBlock
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextSecondaryBrush}"
-                            Text="Refresh interval" />
+                            Text="{DynamicResource TextRefreshInterval}" />
                         <NumericUpDown
                             FormatString="0 ms"
                             Increment="250"
@@ -107,7 +125,7 @@
                         <TextBlock
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextSecondaryBrush}"
-                            Text="Appearance" />
+                            Text="{DynamicResource TextAppearance}" />
                         <Grid
                             ColumnDefinitions="*,180"
                             RowDefinitions="Auto,Auto,Auto,Auto"
@@ -115,7 +133,7 @@
                             <TextBlock
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="Theme" />
+                                Text="{DynamicResource TextTheme}" />
                             <ComboBox
                                 Grid.Column="1"
                                 ItemsSource="{Binding Themes}"
@@ -131,7 +149,7 @@
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
                                 IsVisible="{Binding IsPipboyTheme}"
-                                Text="Primary color" />
+                                Text="{DynamicResource TextPrimaryColor}" />
                             <ComboBox
                                 Grid.Row="1"
                                 Grid.Column="1"
@@ -156,7 +174,7 @@
                                 Grid.Row="2"
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="Sidebar width" />
+                                Text="{DynamicResource TextSidebarWidth}" />
                             <NumericUpDown
                                 Grid.Row="2"
                                 Grid.Column="1"
@@ -169,7 +187,7 @@
                                 Grid.Row="3"
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="Window opacity" />
+                                Text="{DynamicResource TextWindowOpacity}" />
                             <Grid
                                 Grid.Row="3"
                                 Grid.Column="1"
@@ -188,14 +206,14 @@
                                     Text="{Binding WindowOpacityPercent, StringFormat='{}{0}%'}" />
                             </Grid>
                         </Grid>
-                        <CheckBox Content="Show machine name" IsChecked="{Binding ShowMachineName}" />
-                        <CheckBox Content="Show clock and date" IsChecked="{Binding ShowClock}" />
-                        <CheckBox Content="Use 24-hour clock" IsChecked="{Binding Use24HourClock}" />
+                        <CheckBox Content="{DynamicResource TextShowMachineName}" IsChecked="{Binding ShowMachineName}" />
+                        <CheckBox Content="{DynamicResource TextShowClockAndDate}" IsChecked="{Binding ShowClock}" />
+                        <CheckBox Content="{DynamicResource TextUse24HourClock}" IsChecked="{Binding Use24HourClock}" />
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                             <TextBlock
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="Date format" />
+                                Text="{DynamicResource TextDateFormat}" />
                             <ComboBox
                                 Grid.Column="1"
                                 MinWidth="140"
@@ -208,13 +226,13 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </Grid>
-                        <CheckBox Content="Show external IP address" IsChecked="{Binding ShowExternalIpAddress}" />
+                        <CheckBox Content="{DynamicResource TextShowExternalIPAddress}" IsChecked="{Binding ShowExternalIpAddress}" />
                         <TextBlock
                             FontSize="{DynamicResource FontSizeCaption}"
                             Foreground="{DynamicResource TextMutedBrush}"
-                            Text="Uses api.ipify.org and caches the result for 30 minutes."
+                            Text="{DynamicResource TextUsesApiIpifyOrgAndCachesTheResultFor30Minutes}"
                             TextWrapping="Wrap" />
-                        <CheckBox Content="Show temperatures in Fahrenheit" IsChecked="{Binding UseFahrenheit}" />
+                        <CheckBox Content="{DynamicResource TextShowTemperaturesInFahrenheit}" IsChecked="{Binding UseFahrenheit}" />
                     </StackPanel>
                 </Border>
 
@@ -223,11 +241,11 @@
                         <TextBlock
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextSecondaryBrush}"
-                            Text="Display placement" />
+                            Text="{DynamicResource TextDisplayPlacement}" />
                         <TextBlock
                             FontSize="{DynamicResource FontSizeBody}"
                             Foreground="{DynamicResource TextMutedBrush}"
-                            Text="Dock relative to a display working area. The primary display is used if the selected display is unavailable."
+                            Text="{DynamicResource TextDockRelativeToADisplayWorkingAreaThePrimaryDisplayIsUsedIfTheSelectedDisplayIsUnavailable}"
                             TextWrapping="Wrap" />
                         <ComboBox ItemsSource="{Binding Displays}" SelectedItem="{Binding SelectedDisplay}">
                             <ComboBox.ItemTemplate>
@@ -244,16 +262,22 @@
                             <TextBlock
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="Dock edge" />
+                                Text="{DynamicResource TextDockEdge}" />
                             <ComboBox
                                 Grid.Column="1"
                                 ItemsSource="{Binding DockEdges}"
-                                SelectedItem="{Binding DockEdge}" />
+                                SelectedItem="{Binding DockEdge}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource LocalizedEnumConverter}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                             <TextBlock
                                 Grid.Row="1"
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="Vertical position" />
+                                Text="{DynamicResource TextVerticalPosition}" />
                             <NumericUpDown
                                 Grid.Row="1"
                                 Grid.Column="1"
@@ -263,7 +287,7 @@
                                 Minimum="0"
                                 Value="{Binding VerticalPositionPercent}" />
                         </Grid>
-                        <CheckBox Content="Reserve the docked area on Windows" IsChecked="{Binding ReserveScreenSpace}" />
+                        <CheckBox Content="{DynamicResource TextReserveTheDockedAreaOnWindows}" IsChecked="{Binding ReserveScreenSpace}" />
                     </StackPanel>
                 </Border>
 
@@ -272,7 +296,7 @@
                         <TextBlock
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextSecondaryBrush}"
-                            Text="Alert thresholds" />
+                            Text="{DynamicResource TextAlertThresholds}" />
                         <Grid
                             ColumnDefinitions="*,100"
                             RowDefinitions="Auto,Auto,Auto,Auto,Auto"
@@ -280,7 +304,7 @@
                             <TextBlock
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="CPU" />
+                                Text="{DynamicResource TextCPU}" />
                             <NumericUpDown
                                 Grid.Column="1"
                                 FormatString="0%"
@@ -291,7 +315,7 @@
                                 Grid.Row="1"
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="Memory" />
+                                Text="{DynamicResource TextMemory}" />
                             <NumericUpDown
                                 Grid.Row="1"
                                 Grid.Column="1"
@@ -303,7 +327,7 @@
                                 Grid.Row="2"
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="Storage" />
+                                Text="{DynamicResource TextStorage}" />
                             <NumericUpDown
                                 Grid.Row="2"
                                 Grid.Column="1"
@@ -315,7 +339,7 @@
                                 Grid.Row="3"
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="Network" />
+                                Text="{DynamicResource TextNetwork}" />
                             <NumericUpDown
                                 Grid.Row="3"
                                 Grid.Column="1"
@@ -327,7 +351,7 @@
                                 Grid.Row="4"
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextBodyBrush}"
-                                Text="GPU" />
+                                Text="{DynamicResource TextGPU}" />
                             <NumericUpDown
                                 Grid.Row="4"
                                 Grid.Column="1"
@@ -344,11 +368,11 @@
                         <TextBlock
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextSecondaryBrush}"
-                            Text="Primary GPU" />
+                            Text="{DynamicResource TextPrimaryGPU}" />
                         <TextBlock
                             FontSize="{DynamicResource FontSizeBody}"
                             Foreground="{DynamicResource TextMutedBrush}"
-                            Text="Select the device represented by the GPU summary card."
+                            Text="{DynamicResource TextSelectTheDeviceRepresentedByTheGPUSummaryCard}"
                             TextWrapping="Wrap" />
                         <ComboBox ItemsSource="{Binding GpuDevices}" SelectedItem="{Binding SelectedGpu}">
                             <ComboBox.ItemTemplate>
@@ -365,13 +389,13 @@
                         <TextBlock
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextSecondaryBrush}"
-                            Text="Hardware sensors" />
+                            Text="{DynamicResource TextHardwareSensors}" />
                         <TextBlock
                             FontSize="{DynamicResource FontSizeBody}"
                             Foreground="{DynamicResource TextMutedBrush}"
-                            Text="Choose, rename, pin, and order the readings shown in the sidebar."
+                            Text="{DynamicResource TextChooseRenamePinAndOrderTheReadingsShownInTheSidebar}"
                             TextWrapping="Wrap" />
-                        <TextBox PlaceholderText="Search sensors" Text="{Binding SensorSearchText}" />
+                        <TextBox PlaceholderText="{DynamicResource TextSearchSensors}" Text="{Binding SensorSearchText}" />
                         <ItemsControl ItemsSource="{Binding Sensors}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="vm:SensorOptionViewModel">
@@ -417,12 +441,12 @@
                                                 Grid.Row="1"
                                                 Grid.Column="1"
                                                 Grid.ColumnSpan="2"
-                                                PlaceholderText="Custom display name"
+                                                PlaceholderText="{DynamicResource TextCustomDisplayName}"
                                                 Text="{Binding CustomName}" />
                                             <CheckBox
                                                 Grid.Row="2"
                                                 Grid.Column="1"
-                                                Content="Pin to top"
+                                                Content="{DynamicResource TextPinToTop}"
                                                 IsChecked="{Binding IsPinned}" />
                                             <TextBlock
                                                 Grid.Row="2"
@@ -446,17 +470,17 @@
                                 <TextBlock
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource TextSecondaryBrush}"
-                                    Text="External JSON metrics" />
+                                    Text="{DynamicResource TextExternalJSONMetrics}" />
                                 <TextBlock
                                     FontSize="{DynamicResource FontSizeBody}"
                                     Foreground="{DynamicResource TextMutedBrush}"
-                                    Text="Read numeric values from local files or explicit HTTP endpoints."
+                                    Text="{DynamicResource TextReadNumericValuesFromLocalFilesOrExplicitHTTPEndpoints}"
                                     TextWrapping="Wrap" />
                             </StackPanel>
                             <Button
                                 Grid.Column="1"
                                 Command="{Binding AddExternalMetricCommand}"
-                                Content="Add source" />
+                                Content="{DynamicResource TextAddSource}" />
                         </Grid>
                         <ItemsControl ItemsSource="{Binding ExternalMetrics}">
                             <ItemsControl.ItemTemplate>
@@ -470,24 +494,24 @@
                                         CornerRadius="{DynamicResource RadiusMedium}">
                                         <StackPanel Spacing="8">
                                             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-                                                <TextBox PlaceholderText="Card title" Text="{Binding Title}" />
+                                                <TextBox PlaceholderText="{DynamicResource TextCardTitle}" Text="{Binding Title}" />
                                                 <CheckBox
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
-                                                    Content="Enabled"
+                                                    Content="{DynamicResource TextEnabled}"
                                                     IsChecked="{Binding IsEnabled}" />
                                                 <Button
                                                     Grid.Column="2"
                                                     Command="{Binding RemoveCommand}"
-                                                    Content="Remove" />
+                                                    Content="{DynamicResource TextRemove}" />
                                             </Grid>
                                             <ComboBox ItemsSource="{Binding SourceKinds}" SelectedItem="{Binding SourceKind}" />
-                                            <TextBox PlaceholderText="File path or https:// endpoint" Text="{Binding Source}" />
+                                            <TextBox PlaceholderText="{DynamicResource TextFilePathOrHttpsEndpoint}" Text="{Binding Source}" />
                                             <Grid ColumnDefinitions="*,100" ColumnSpacing="8">
-                                                <TextBox PlaceholderText="JSON path, for example router.download" Text="{Binding JsonPath}" />
+                                                <TextBox PlaceholderText="{DynamicResource TextJSONPathForExampleRouterDownload}" Text="{Binding JsonPath}" />
                                                 <TextBox
                                                     Grid.Column="1"
-                                                    PlaceholderText="Unit"
+                                                    PlaceholderText="{DynamicResource TextUnit}"
                                                     Text="{Binding Unit}" />
                                             </Grid>
                                             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
@@ -504,7 +528,7 @@
                                                     Value="{Binding RefreshIntervalSeconds}" />
                                             </Grid>
                                             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
-                                                <Button Command="{Binding TestCommand}" Content="Test source" />
+                                                <Button Command="{Binding TestCommand}" Content="{DynamicResource TextTestSource}" />
                                                 <TextBlock
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
@@ -523,14 +547,14 @@
 
                 <Border Classes="card">
                     <StackPanel Spacing="12">
-                        <CheckBox Content="Keep the sidebar above other windows" IsChecked="{Binding AlwaysOnTop}" />
+                        <CheckBox Content="{DynamicResource TextKeepTheSidebarAboveOtherWindows}" IsChecked="{Binding AlwaysOnTop}" />
                         <CheckBox
-                            Content="Let pointer input pass through the sidebar"
+                            Content="{DynamicResource TextLetPointerInputPassThroughTheSidebar}"
                             IsChecked="{Binding ClickThrough}"
                             IsEnabled="{Binding IsClickThroughSupported}"
-                            ToolTip.Tip="Windows only. Use the tray menu or a global shortcut to open settings again." />
-                        <CheckBox Content="Launch at login" IsChecked="{Binding LaunchAtLogin}" />
-                        <CheckBox Content="Start minimized" IsChecked="{Binding StartMinimized}" />
+                            ToolTip.Tip="{DynamicResource TextWindowsOnlyUseTheTrayMenuOrAGlobalShortcutToOpenSettingsAgain}" />
+                        <CheckBox Content="{DynamicResource TextLaunchAtLogin}" IsChecked="{Binding LaunchAtLogin}" />
+                        <CheckBox Content="{DynamicResource TextStartMinimized}" IsChecked="{Binding StartMinimized}" />
                     </StackPanel>
                 </Border>
 
@@ -557,12 +581,12 @@
                 <Button
                     Grid.Column="1"
                     Command="{Binding CancelCommand}"
-                    Content="Cancel" />
+                    Content="{DynamicResource TextCancel}" />
                 <Button
                     Grid.Column="2"
                     Classes="primary"
                     Command="{Binding SaveCommand}"
-                    Content="Save changes" />
+                    Content="{DynamicResource TextSaveChanges}" />
             </Grid>
         </Border>
     </Grid>
